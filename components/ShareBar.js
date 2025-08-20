@@ -1,3 +1,5 @@
+// components/ShareBar.js
+
 import { siteConfig } from '@/lib/config'
 import dynamic from 'next/dynamic'
 
@@ -6,7 +8,7 @@ const ShareButtons = dynamic(() => import('@/components/ShareButtons'), {
 })
 
 /**
- * 分享栏
+ * 分享栏 (已修改为居中显示)
  * @param {} param0
  * @returns
  */
@@ -20,11 +22,13 @@ const ShareBar = ({ post }) => {
   }
 
   return (
+    // --- 关键修改在这里 ---
     <div className='m-1 overflow-x-auto'>
-      <div className='flex w-full md:justify-end'>
+      <div className='flex w-full justify-center'> {/* 将 md:justify-end 改为 justify-center */}
         <ShareButtons post={post} />
       </div>
     </div>
+    // --- 修改结束 ---
   )
 }
 export default ShareBar
