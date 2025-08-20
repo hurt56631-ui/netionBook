@@ -1,3 +1,5 @@
+// themes/heo/components/Hero.js
+
 // import Image from 'next/image'
 import { ArrowSmallRight, PlusSmall } from '@/components/HeroIcons'
 import LazyImage from '@/components/LazyImage'
@@ -171,11 +173,17 @@ function GroupMenu() {
   const title_1 = siteConfig('HEO_HERO_CATEGORY_1', {}, CONFIG)?.title || ''
   const url_2 = siteConfig('HEO_HERO_CATEGORY_2', {}, CONFIG)?.url || ''
   const title_2 = siteConfig('HEO_HERO_CATEGORY_2', {}, CONFIG)?.title || ''
-  const url_3 = siteConfig('HEO_HERO_CATEGORY_3', {}, CONFIG)?.url || ''
-  const title_3 = siteConfig('HEO_HERO_CATEGORY_3', {}, CONFIG)?.title || ''
+  
+  // 第三个按钮的数据将在这里硬编码
+  const liveButton = {
+    title: '直播',
+    url: 'https://youtu.be/h6ybmZY53zk', // <-- 您的直播间链接
+    icon: 'fa-solid fa-video' // 直播图标
+  }
 
   return (
     <div className='h-[165px] select-none xl:h-20 flex flex-col justify-between xl:space-y-0 xl:flex-row w-28 lg:w-48 xl:w-full xl:flex-nowrap xl:space-x-3'>
+      {/* 第一个按钮 */}
       <SmartLink
         href={url_1}
         className='group relative overflow-hidden bg-gradient-to-r from-blue-500 to-blue-400 flex h-20 justify-start items-center text-white rounded-xl xl:hover:w-1/2 xl:w-1/3 transition-all duration-500 ease-in'>
@@ -187,6 +195,8 @@ function GroupMenu() {
           <i className='fa-solid fa-star text-4xl'></i>
         </div>
       </SmartLink>
+
+      {/* 第二个按钮 */}
       <SmartLink
         href={url_2}
         className='group relative overflow-hidden bg-gradient-to-r from-red-500 to-yellow-500 flex h-20 justify-start items-center text-white rounded-xl xl:hover:w-1/2 xl:w-1/3 transition-all duration-500 ease-in'>
@@ -198,18 +208,22 @@ function GroupMenu() {
           <i className='fa-solid fa-fire-flame-curved text-4xl'></i>
         </div>
       </SmartLink>
-      {/* 第三个标签在小屏上不显示 */}
+      
+      {/* --- 第三个按钮 (直播入口，已修改) --- */}
+      {/* 将 'hidden xl:flex' 修改为 'flex'，确保在所有屏幕尺寸都显示 */}
       <SmartLink
-        href={url_3}
-        className='group relative overflow-hidden bg-gradient-to-r from-teal-300 to-cyan-300 hidden h-20 xl:flex justify-start items-center text-white rounded-xl xl:hover:w-1/2 xl:w-1/3 transition-all duration-500 ease-in'>
+        href={liveButton.url}
+        className='group relative overflow-hidden bg-gradient-to-r from-purple-500 to-pink-500 flex h-20 justify-start items-center text-white rounded-xl xl:hover:w-1/2 xl:w-1/3 transition-all duration-500 ease-in'
+      >
         <div className='font-bold text-lg pl-5 relative -mt-2'>
-          {title_3}
+          {liveButton.title}
           <span className='absolute -bottom-0.5 left-5 w-5 h-0.5 bg-white rounded-full'></span>
         </div>
         <div className='absolute right-6 duration-700 ease-in-out transition-all scale-[2] translate-y-6 rotate-12 opacity-20 group-hover:opacity-80 group-hover:scale-100 group-hover:translate-y-0 group-hover:rotate-0'>
-          <i className='fa-solid fa-book-bookmark text-4xl '></i>
+          <i className={`${liveButton.icon} text-4xl`}></i>
         </div>
       </SmartLink>
+      {/* --- 修改结束 --- */}
     </div>
   )
 }
