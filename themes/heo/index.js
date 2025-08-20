@@ -70,7 +70,8 @@ const LayoutBase = props => {
           <Hero {...props} />
         </>
       ) : null}
-      {/* 关键修复：只有在文章详情页时，才渲染 PostHeader 组件 */}
+      
+      {/* --- 关键修复：只有在文章详情页时，才渲染 PostHeader 组件 --- */}
       {isSlugPage && !fullWidth ? <PostHeader {...props} isDarkMode={isDarkMode} /> : null}
     </header>
   )
@@ -208,4 +209,4 @@ export {
   LayoutSlug,
   LayoutTagIndex,
   CONFIG as THEME_CONFIG
-  }
+}
