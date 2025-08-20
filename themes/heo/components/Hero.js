@@ -1,5 +1,5 @@
 // themes/heo/components/Hero.js
-// 这个版本将英雄区右侧的置顶文章组替换为一个大的直播窗口。
+// 这个版本将英雄区右侧的置顶文章组替换为一个竖屏的直播窗口。
 
 import { ArrowSmallRight, PlusSmall } from '@/components/HeroIcons'
 import LazyImage from '@/components/LazyImage'
@@ -44,18 +44,18 @@ const Hero = props => {
 }
 
 /**
- * 新增的直播窗口组件
+ * 新增的直播窗口组件 (已修改为竖屏比例)
  * @returns {JSX.Element}
  */
 const LiveStream = () => {
   return (
     <div id="live-stream-wrapper" className="flex flex-col flex-1">
       <div className="w-full h-full rounded-xl shadow-lg overflow-hidden">
-        {/* 响应式直播窗口容器 (16:9 宽高比) */}
-        <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden' }}>
+        {/* 响应式直播窗口容器 (9:16 竖屏比例) */}
+        <div style={{ position: 'relative', paddingBottom: '177.78%', height: 0, overflow: 'hidden' }}>
           <iframe 
             style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
-            src="https://www.youtube.com/embed/YOUR_YOUTUBE_LIVE_VIDEO_ID" // <-- 替换成您的 YouTube 直播视频 ID
+            src="https://www.youtube.com/embed/h6ybmZY53zk" // <-- 您提供的直播地址 ID 已填入
             title="YouTube video player" 
             frameBorder="0" 
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
