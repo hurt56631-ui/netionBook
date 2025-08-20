@@ -6,7 +6,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import DarkModeButton from './DarkModeButton'
 import Logo from './Logo'
 import { MenuListTop } from './MenuListTop'
-import RandomPostButton from './RandomPostButton'
+// import RandomPostButton from './RandomPostButton' // 移除了 RandomPostButton 的导入
 import ReadingProgress from './ReadingProgress'
 import SearchButton from './SearchButton'
 import SlideOver from './SlideOver'
@@ -98,6 +98,16 @@ const Header = props => {
     }
   }, [])
 
+  // --- 在这里定义您的社交媒体按钮信息 ---
+  const socialButtons = [
+    { title: 'Facebook', url: 'https://www.facebook.com/share/16fpFsbhh2/', icon: 'fa-brands fa-facebook' },
+    { title: 'TikTok', url: 'https://vt.tiktok.com/ZSHGDjda1hkwq-Pz4h9/', icon: 'fa-brands fa-tiktok' },
+    // { title: 'WeChat', url: '/wechat-qr-code-page', icon: 'fa-brands fa-weixin' }, // 微信通常链接到一个二维码页面
+    { title: 'YouTube', url: 'https://www.youtube.com/YOUR_CHANNEL', icon: 'fa-brands fa-youtube' } // <-- 替换成您的 YouTube 频道链接
+  ];
+  // --- 定义结束 ---
+
+
   return (
     <>
       <style jsx>{`
@@ -165,15 +175,25 @@ const Header = props => {
             </div>
           </div>
 
-          {/* 右侧固定 */}
-          <div className='flex flex-shrink-0 justify-end items-center w-48'>
-            <RandomPostButton {...props} />
+          {/* --- 右侧固定 (已修改) --- */}
+          <div className='flex flex-shrink-0 justify-end items-center space-x-2'> {/* 使用 space-x-2 添加间距 */}
+            {/* 循环渲染社交按钮 */}
+            {socialButtons.map(button => (
+              <a
+                key={button.title}
+                href={button.url}
+                target='_blank'
+                rel='noopener noreferrer'
+                aria-label={button.title}
+                className='p-2 cursor-pointer text-gray-500 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full w-9 h-9 flex items-center justify-center'
+                title={button.title}
+              >
+                <i className={button.icon} />
+              </a>
+            ))}
+
             <SearchButton {...props} />
-            {!JSON.parse(siteConfig('THEME_SWITCH')) && (
-              <div className='hidden md:block'>
-                <DarkModeButton {...props} />
-              </div>
-            )}
+
             <ReadingProgress />
 
             {/* 移动端菜单按钮 */}
@@ -183,6 +203,7 @@ const Header = props => {
               <i className='fas fa-bars' />
             </div>
           </div>
+          {/* --- 修改结束 --- */}
 
           {/* 右边侧拉抽屉 */}
           <SlideOver cRef={slideOverRef} {...props} />
