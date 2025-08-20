@@ -54,9 +54,11 @@ const LayoutBase = props => {
   
   // 判断是否是首页
   const isIndex = router.pathname === '/'
-  // 判断是否是文章详情页
+  
+  // --- 关键修复：更安全的判断 ---
+  // 只有当 post 存在并且有 slug 属性时，才认为是文章详情页
   const isSlugPage = post && post.slug 
-
+  
   const headerSlot = (
     <header>
       {/* 顶部导航 */}
@@ -71,7 +73,7 @@ const LayoutBase = props => {
         </>
       ) : null}
       
-      {/* --- 关键修复：只有在文章详情页时，才渲染 PostHeader 组件 --- */}
+      {/* 只有在文章详情页，并且不是全宽模式时，才渲染 PostHeader 组件 */}
       {isSlugPage && !fullWidth ? <PostHeader {...props} isDarkMode={isDarkMode} /> : null}
     </header>
   )
