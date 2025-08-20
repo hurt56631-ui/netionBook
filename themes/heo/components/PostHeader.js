@@ -1,5 +1,5 @@
 // themes/heo/components/PostHeader.js
-// 最终版本：固定背景图 + 优化后的硬编码价格表
+// 最终版本：固定背景图 + 最终优化版硬编码价格表
 
 import LazyImage from '@/components/LazyImage'
 import WavesArea from './WavesArea'
@@ -10,7 +10,7 @@ export default function PostHeader({ isDarkMode }) {
   return (
     <div
       id='post-bg'
-      className='md:mb-0 -mb-5 w-full h-[30rem] relative md:flex-shrink-0 overflow-hidden bg-cover bg-center bg-no-repeat z-10'>
+      className='md:mb-0 -mb-5 w-full h-auto py-12 relative md:flex-shrink-0 overflow-hidden bg-cover bg-center bg-no-repeat z-10'>
       <style jsx>{`
         .coverdiv:after {
           position: absolute;
@@ -36,56 +36,64 @@ export default function PostHeader({ isDarkMode }) {
           />
         </div>
 
-        {/* --- 价格表 (已优化布局和颜色) --- */}
+        {/* --- 价格表 (最终优化版) --- */}
         <div
           id='post-info'
           className='z-10 w-full max-w-3xl px-5 text-white bg-black/20 backdrop-blur-sm p-6 rounded-xl shadow-lg'>
             {/* 网课部分 */}
-            <div className='text-center text-2xl font-bold mb-4'>网课</div>
+            <div className='flex justify-center items-center text-2xl font-bold mb-4'>
+              <span>网课</span>
+              <span className='text-sm font-normal opacity-70 ml-2'>(每周1-5)</span>
+            </div>
             <div className='flex flex-col space-y-3 text-lg'>
-                {/* 口语 - 网课 */}
                 <div className='flex justify-between items-center'>
                     <div className='w-1/3 text-left pl-4'>口语</div>
                     <div className='w-1/3 text-center text-xl font-bold'>
                         <span className='text-yellow-400'>100</span>
                         <span>元/月</span>
                     </div>
-                    <div className='w-1/3 text-right pr-4 text-sm opacity-80'>1小时/天 (每周1-5)</div>
+                    <div className='w-1/3 text-right pr-4 text-sm opacity-80'>1小时/天</div>
                 </div>
-                {/* HSK - 网课 */}
                 <div className='flex justify-between items-center'>
                     <div className='w-1/3 text-left pl-4'>HSK</div>
                     <div className='w-1/3 text-center text-xl font-bold'>
                         <span className='text-yellow-400'>150</span>
                         <span>元/月</span>
                     </div>
-                    <div className='w-1/3 text-right pr-4 text-sm opacity-80'>3小时/天 (周1-6)</div>
+                    <div className='w-1/3 text-right pr-4 text-sm opacity-80'>3小时/天</div>
                 </div>
             </div>
 
             <hr className='my-6 border-white/20' />
 
             {/* 线下部分 */}
-            <div className='text-center text-2xl font-bold mb-4'>线下</div>
+            <div className='flex justify-center items-center text-2xl font-bold mb-4'>
+                <span>线下</span>
+                <span className='text-sm font-normal opacity-70 ml-2'>(每周1-6)</span>
+            </div>
             <div className='flex flex-col space-y-3 text-lg'>
-                {/* 口语 - 线下 */}
                 <div className='flex justify-between items-center'>
                     <div className='w-1/3 text-left pl-4'>口语</div>
                     <div className='w-1/3 text-center text-xl font-bold'>
                         <span className='text-green-400'>200</span>
                         <span>元/月</span>
                     </div>
-                    <div className='w-1/3 text-right pr-4 text-sm opacity-80'>2小时/天 (周1-6)</div>
+                    <div className='w-1/3 text-right pr-4 text-sm opacity-80'>2小时/天</div>
                 </div>
-                {/* HSK - 线下 */}
                 <div className='flex justify-between items-center'>
                     <div className='w-1/3 text-left pl-4'>HSK</div>
                     <div className='w-1/3 text-center text-xl font-bold'>
                         <span className='text-green-400'>200</span>
                         <span>元/月</span>
                     </div>
-                    <div className='w-1/3 text-right pr-4 text-sm opacity-80'>3小时/天 (周1-6)</div>
+                    <div className='w-1/3 text-right pr-4 text-sm opacity-80'>3小时/天</div>
                 </div>
+            </div>
+
+            {/* 地址部分 */}
+            <div className='mt-6 text-center text-sm opacity-80'>
+                <p>仰光市某某区</p>
+                <p>瑞丽市某某区</p>
             </div>
         </div>
 
