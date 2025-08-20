@@ -5,6 +5,7 @@ import LazyImage from '@/components/LazyImage'
 import WavesArea from './WavesArea'
 
 export default function PostHeader({ isDarkMode }) {
+  // --- 1. 使用固定的背景图片 ---
   const headerImage = '/images/your-course-background.jpg'; // <-- 替换为您自己的图片路径
 
   return (
@@ -36,7 +37,7 @@ export default function PostHeader({ isDarkMode }) {
           />
         </div>
 
-        {/* --- 价格表 (最终优化版) --- */}
+        {/* --- 2. 价格表 (居中显示，样式已优化) --- */}
         <div
           id='post-info'
           className='z-10 w-full max-w-3xl px-5 text-white bg-black/20 backdrop-blur-sm p-6 rounded-xl shadow-lg'>
