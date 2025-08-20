@@ -54,7 +54,7 @@ const LayoutBase = props => {
   
   // 判断是否是首页
   const isIndex = router.pathname === '/'
-  // 判断是否是文章详情页
+  // 关键修复：只有当 post 存在并且有 slug 属性时，才认为是文章详情页
   const isSlugPage = post && post.slug 
 
   const headerSlot = (
@@ -195,7 +195,6 @@ const LayoutIndex = props => {
   )
 }
 
-// --- 以下是被我错误删除的组件定义，现在恢复 ---
 /**
  * 博客列表
  * @param {*} props
@@ -204,7 +203,6 @@ const LayoutIndex = props => {
 const LayoutPostList = props => {
   return (
     <div id='post-outer-wrapper' className='px-5  md:px-0'>
-      {/* 文章分类条 */}
       <CategoryBar {...props} />
       {siteConfig('POST_LIST_STYLE') === 'page' ? (
         <BlogPostListPage {...props} />
@@ -226,7 +224,6 @@ const LayoutSearch = props => {
   const currentSearch = keyword || router?.query?.s
 
   useEffect(() => {
-    // 高亮搜索结果
     if (currentSearch) {
       setTimeout(() => {
         replaceSearchResult({
@@ -270,7 +267,6 @@ const LayoutArchive = props => {
   return (
     <div className='p-5 rounded-xl border dark:border-gray-600 max-w-6xl w-full bg-white dark:bg-[#1e1e1e]'>
       <CategoryBar {...props} border={false} />
-
       <div className='px-3'>
         {Object.keys(archivePosts).map(archiveTitle => (
           <BlogPostArchive
@@ -313,7 +309,6 @@ const LayoutSlug = props => {
   const router = useRouter()
   const waiting404 = siteConfig('POST_WAITING_TIME_FOR_404') * 1000
   useEffect(() => {
-    // 404
     if (!post) {
       setTimeout(
         () => {
@@ -516,4 +511,23 @@ const LayoutTagIndex = props => {
                   {tag.count}
                 </div>
               </div>
-           
+            </SmartLink>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+export {
+  Layout404,
+  LayoutArchive,
+  LayoutBase,
+  LayoutCategoryIndex,
+  LayoutIndex,
+  LayoutPostList,
+  LayoutSearch,
+  LayoutSlug,
+  LayoutTagIndex,
+  CONFIG as THEME_CONFIG
+          }
