@@ -3,16 +3,15 @@ import { isBrowser } from '@/lib/utils'
 import throttle from 'lodash.throttle'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import DarkModeButton from './DarkModeButton'
+import DarkModeButton from './DarkModeButton' // 确保导入，以防万一
 import Logo from './Logo'
 import { MenuListTop } from './MenuListTop'
-// import RandomPostButton from './RandomPostButton' // 移除了 RandomPostButton 的导入
-import ReadingProgress from './ReadingProgress'
-import SearchButton from './SearchButton'
+// import ReadingProgress from './ReadingProgress' // 移除导入
+// import SearchButton from './SearchButton' // 移除导入
 import SlideOver from './SlideOver'
 
 /**
- * 页头：顶部导航
+ * 页头：顶部导航 (已精简)
  * @param {*} param0
  * @returns
  */
@@ -176,7 +175,7 @@ const Header = props => {
           </div>
 
           {/* --- 右侧固定 (已修改) --- */}
-          <div className='flex flex-shrink-0 justify-end items-center space-x-2'> {/* 使用 space-x-2 添加间距 */}
+          <div className='flex flex-shrink-0 justify-end items-center space-x-2'>
             {/* 循环渲染社交按钮 */}
             {socialButtons.map(button => (
               <a
@@ -192,9 +191,9 @@ const Header = props => {
               </a>
             ))}
 
-            <SearchButton {...props} />
-
-            <ReadingProgress />
+            {/* --- SearchButton 和 ReadingProgress 已被移除 --- */}
+            {/* <SearchButton {...props} /> */}
+            {/* <ReadingProgress /> */}
 
             {/* 移动端菜单按钮 */}
             <div
