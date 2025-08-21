@@ -1,29 +1,50 @@
 // themes/heo/components/HomepagePriceInfo.js
-// 首页特有的价格信息组件
 
+import SmartLink from '@/components/SmartLink'
+import { siteConfig } from '@/lib/config'
+
+/**
+ * 网站底部的联系信息和价格卡片
+ * @returns {JSX.Element}
+ */
 export default function HomepagePriceInfo() {
   return (
-    <div className="py-8 bg-white dark:bg-[#1e1e1e] rounded-xl shadow-md px-5 md:px-0 mx-auto max-w-7xl">
-      <div className="text-2xl font-bold mb-4 text-center dark:text-white">课程价格</div>
-      <div className="flex flex-col space-y-3 text-lg text-gray-700 dark:text-gray-200">
-        {/* 网课部分 */}
-        <div className="flex justify-between items-center px-4">
-          <span className="font-bold">网课 (每周1-5)</span>
-          <span>口语 <span className="text-yellow-500 font-bold">100元/月</span> (1小时/天)</span>
-          <span>HSK <span className="text-yellow-500 font-bold">150元/月</span> (3小时/天)</span>
-        </div>
-        <hr className="my-2 border-dashed dark:border-gray-700" />
-        {/* 线下部分 */}
-        <div className="flex justify-between items-center px-4">
-          <span className="font-bold">线下 (每周1-6)</span>
-          <span>口语 <span className="text-green-500 font-bold">200元/月</span> (2小时/天)</span>
-          <span>HSK <span className="text-green-500 font-bold">200元/月</span> (3小时/天)</span>
-        </div>
-      </div>
-      <div className="mt-6 text-center text-sm opacity-80 text-gray-600 dark:text-gray-400">
-          <p>仰光市某某区</p>
-          <p>瑞丽市某某区</p>
-      </div>
-    </div>
+    <section className='dark:text-gray-300 mt-12 mx-auto max-w-7xl px-5'>
+      <div className='text-2xl font-bold mb-4 text-center dark:text-white'>课程价格与联系方式</div>
+      <ul className='text-sm dark:bg-[#1e1e1e] bg-gray-100 p-5 leading-8 border-l-4 border-indigo-500 rounded-xl shadow-md'>
+        {/* --- 在这里修改您的信息 --- */}
+        
+        <li className='font-bold text-lg'>【线上课程】</li>
+        <li>
+          <strong className='mr-2'>口语:</strong>
+          <span className='text-yellow-500 font-bold'>100元/月</span> (1小时/天, 每周1-5)
+        </li>
+        <li>
+          <strong className='mr-2'>HSK:</strong>
+          <span className='text-yellow-500 font-bold'>150元/月</span> (3小时/天, 每周1-6)
+        </li>
+
+        <li className='font-bold text-lg mt-4'>【线下课程】</li>
+        <li>
+          <strong className='mr-2'>口语:</strong>
+          <span className='text-green-500 font-bold'>200元/月</span> (2小时/天, 每周1-6)
+        </li>
+        <li>
+          <strong className='mr-2'>HSK:</strong>
+          <span className='text-green-500 font-bold'>200元/月</span> (3小时/天, 每周1-6)
+        </li>
+
+        <li className='mt-4'>
+          <strong className='mr-2'>联系我们:</strong>
+          请通过页面顶部的社交媒体图标联系我们进行咨询。
+        </li>
+        <li>
+          <strong className='mr-2'>线下地址:</strong>
+          仰光市某某区 / 瑞丽市某某区
+        </li>
+        
+        {/* --- 修改结束 --- */}
+      </ul>
+    </section>
   )
 }
