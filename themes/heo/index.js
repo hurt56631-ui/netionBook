@@ -129,7 +129,7 @@ const FunctionButton = ({ title, icon, url }) => {
  */
 const StudyToolsGrid = () => { // 更名为 StudyToolsGrid
     const functions = [
-        { title: '字典', icon: 'fa-solid fa-book', url: 'https://chinese-ekjdgi3fx-843075195qqcoms-projects.vercel.app/article/256c928a-2fa6-80d2-bd93-d1be847c3c73' },
+        { title: '字典', icon: 'fa-solid fa-book', url: '/words' },
         { title: '语法', icon: 'fa-solid fa-pen-ruler', url: '/grammar-page' },
         { title: '练习题', icon: 'fa-solid fa-file-pen', url: '/exercise-page' },
         { title: '书籍', icon: 'fa-solid fa-file-pen', url: '/exercise-page' },
