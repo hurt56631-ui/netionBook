@@ -1,4 +1,4 @@
-// themes/heo/index.js (最终修复版，所有功能按钮都在，所有组件都已恢复)
+// themes/heo/index.js (最终修复版)
 
 import Comment from '@/components/Comment'
 import { AdSlot } from '@/components/GoogleAdsense'
@@ -12,7 +12,7 @@ import WWAds from '@/components/WWAds'
 import { siteConfig } from '@/lib/config'
 import { useGlobal } from '@/lib/global'
 import { loadWowJS } from '@/lib/plugins/wow'
-import { isBrowser } from '@/lib/utils' // 修复了导入语法
+import { isBrowser } from '@/lib/utils'
 import { Transition } from '@headlessui/react'
 import SmartLink from '@/components/SmartLink'
 import { useRouter } from 'next/router'
@@ -122,26 +122,6 @@ const FunctionButton = ({ title, icon, url }) => {
 }
 
 /**
- * 学习工具功能区
- */
-const StudyToolsGrid = () => {
-    const functions = [
-        { title: '字典', icon: 'fa-solid fa-book', url: '/words' },
-        { title: '语法', icon: 'fa-solid fa-pen-ruler', url: '/grammar-page' },
-        { title: '练习题', icon: 'fa-solid fa-file-pen', url: '/exercise-page' },
-    ]
-
-    return (
-        <div className='py-8'>
-            <div className='text-2xl font-bold mb-4 text-center dark:text-white'>学习工具</div>
-            <div className='grid grid-cols-2 md:grid-cols-3 gap-4'>
-                {functions.map(func => <FunctionButton key={func.title} {...func} />)}
-            </div>
-        </div>
-    )
-}
-
-/**
  * 快捷入口功能区
  */
 const QuickAccessGrid = () => {
@@ -153,8 +133,27 @@ const QuickAccessGrid = () => {
 
     return (
         <div className='py-8'>
-            <div className='text-2xl font-bold mb-4 text-center dark:text-white'>快捷入口</div>
-            <div className='grid grid-cols-3 gap-4'>
+            <div className='grid grid-cols-3 gap-4'> {/* 强制三列 */}
+                {functions.map(func => <FunctionButton key={func.title} {...func} />)}
+            </div>
+        </div>
+    )
+}
+
+/**
+ * 学习工具功能区
+ */
+const StudyToolsGrid = () => {
+    const functions = [
+        { title: '字典', icon: 'fa-solid fa-book', url: '/words' }, // 链接到字典页面
+        { title: '语法', icon: 'fa-solid fa-pen-ruler', url: '/grammar-page' },
+        { title: '练习题', icon: 'fa-solid fa-file-pen', url: '/exercise-page' },
+    ]
+
+    return (
+        <div className='py-8'>
+            <div className='text-2xl font-bold mb-4 text-center dark:text-white'>学习工具</div>
+            <div className='grid grid-cols-3 gap-4'> {/* 强制三列 */}
                 {functions.map(func => <FunctionButton key={func.title} {...func} />)}
             </div>
         </div>
@@ -168,13 +167,17 @@ const LayoutIndex = props => {
   return (
     <div id='post-outer-wrapper' className='px-5 md:px-0'>
       <CategoryBar {...props} />
+      
+      {/* --- 关键修改：功能区顺序调整 --- */}
+      <QuickAccessGrid />
       <StudyToolsGrid />
+      {/* --- 顺序调整结束 --- */}
+
       {siteConfig('POST_LIST_STYLE') === 'page' ? (
         <BlogPostListPage {...props} />
       ) : (
         <BlogPostListScroll {...props} />
       )}
-      <QuickAccessGrid />
     </div>
   )
 }
@@ -321,6 +324,11 @@ const LayoutSlug = props => {
                 <ArticleExpirationNotice post={post} />
                 <AISummary aiSummary={post.aiSummary} />
                 <WWAds orientation='horizontal' className='w-full' />
+                
+                {/* --- 关键修改：将 PostCopyright 移动到 NotionPage 上方 --- */}
+                {post?.type === 'Post' && <PostCopyright {...props} />}
+                {/* --- 修改结束 --- */}
+
                 {post && <NotionPage post={post} />}
                 <WWAds orientation='horizontal' className='w-full' />
               </section>
@@ -330,7 +338,7 @@ const LayoutSlug = props => {
               <ShareBar post={post} />
               {post?.type === 'Post' && (
                 <div className='px-5'>
-                  <PostCopyright {...props} />
+                  {/* --- PostCopyright 已从此位置移除 --- */}
                   <PostRecommend {...props} />
                 </div>
               )}
@@ -500,4 +508,4 @@ export {
   LayoutSlug,
   LayoutTagIndex,
   CONFIG as THEME_CONFIG
-              }
+          }
