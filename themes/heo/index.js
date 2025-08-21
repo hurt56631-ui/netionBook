@@ -20,7 +20,7 @@ import { useEffect, useState } from 'react'
 import BlogPostArchive from './components/BlogPostArchive'
 import BlogPostListPage from './components/BlogPostListPage'
 import BlogPostListScroll from './components/BlogPostListScroll'
-import CategoryBar from './components/CategoryBar' // 导入 CategoryBar
+import CategoryBar from './components/CategoryBar'
 import FloatTocButton from './components/FloatTocButton'
 import Footer from './components/Footer'
 import Header from './components/Header'
@@ -30,7 +30,7 @@ import { NoticeBar } from './components/NoticeBar'
 import PostAdjacent from './components/PostAdjacent'
 import PostCopyright from './components/PostCopyright'
 import PostHeader from './components/PostHeader'
-import { PostLock } = './components/PostLock'
+import { PostLock } from './components/PostLock' // <--- 这里已修复
 import PostRecommend from './components/PostRecommend'
 import SearchNav from './components/SearchNav'
 import SideRight from './components/SideRight'
@@ -50,9 +50,9 @@ const LayoutBase = props => {
 
   const { fullWidth, isDarkMode } = useGlobal()
   const router = useRouter()
-  
+
   const isIndex = router.pathname === '/'
-  const isSlugPage = post && post.slug 
+  const isSlugPage = post && post.slug
 
   const headerSlot = (
     <header>
@@ -117,14 +117,14 @@ const LayoutBase = props => {
  * @returns {JSX.Element}
  */
 const FunctionButton = ({ title, icon, url }) => {
-    return (
+  return (
         <SmartLink href={url} className='group flex flex-col justify-center items-center w-full h-24 bg-white dark:bg-[#1e1e1e] border dark:border-gray-700 rounded-xl shadow-md transform hover:scale-105 transition-transform duration-200'>
             <div className='text-3xl text-gray-500 dark:text-gray-300 group-hover:text-indigo-500 dark:group-hover:text-yellow-500 transition-colors duration-200'>
                 <i className={icon} />
             </div>
             <div className='mt-2 text-sm text-gray-700 dark:text-gray-200'>{title}</div>
         </SmartLink>
-    )
+  )
 }
 
 /**
@@ -132,23 +132,23 @@ const FunctionButton = ({ title, icon, url }) => {
  * @returns {JSX.Element}
  */
 const FunctionGrid = () => {
-    const functions = [
-        { title: '字典', icon: 'fa-solid fa-book', url: 'https://www.843075.xyz/article/256c928a-2fa6-80d2-bd93-d1be847c3c73?theme=heo' },
-        { title: '语法', icon: 'fa-solid fa-pen-ruler', url: '/grammar-page' },
-        { title: '练习题', icon: 'fa-solid fa-file-pen', url: '/exercise-page' },
-        { title: '书籍', icon: 'fa-solid fa-book', url: '/dictionary-p8age' },
-        { title: '语法2', icon: 'fa-solid fa-pen-ruler', url: '/grammar-pag8e' },
-        { title: '练习2题', icon: 'fa-solid fa-file-pen', url: '/exercise-pa6ge' },
-    ]
+  const functions = [
+    { title: '字典', icon: 'fa-solid fa-book', url: 'https://www.843075.xyz/article/256c928a-2fa6-80d2-bd93-d1be847c3c73?theme=heo' },
+    { title: '语法', icon: 'fa-solid fa-pen-ruler', url: '/grammar-page' },
+    { title: '练习题', icon: 'fa-solid fa-file-pen', url: '/exercise-page' },
+    { title: '书籍', icon: 'fa-solid fa-book', url: '/dictionary-page' },
+    { title: '语法', icon: 'fa-solid fa-pen-ruler', url: '/grammar-page' },
+    { title: '练习题', icon: 'fa-solid fa-file-pen', url: '/exercise-page' }
+  ]
 
-    return (
+  return (
         <div className='py-8'>
             <div className='text-2xl font-bold mb-4 text-center dark:text-white'>学习工具</div>
             <div className='grid grid-cols-2 md:grid-cols-3 gap-4'>
-                {functions.map(func => <FunctionButton key={func.title} {...func} />)}
+                {functions.map((func, index) => <FunctionButton key={index} {...func} />)}
             </div>
         </div>
-    )
+  )
 }
 
 /**
@@ -159,38 +159,48 @@ const FunctionGrid = () => {
 const LayoutIndex = props => {
   return (
     <div id='post-outer-wrapper' className='px-5 md:px-0'>
-      {/* --- 关键修改 2：只保留“加入频道”按钮 --- */}
-      {/* 确保 CategoryBar 导入了 */}
       <SmartLink href={'/category'} className='w-full py-4 px-6 text-center text-xl font-bold text-gray-700 dark:text-gray-200 bg-white dark:bg-[#1e1e1e] rounded-xl shadow-md transform hover:scale-105 transition-transform duration-200 mb-4 block'>
-        加入频道 {/* 或 locale.COMMON.JOIN_CHANNEL 如果在 lang 里定义了 */}
+        加入频道
       </SmartLink>
-      {/* --- 修改结束 --- */}
-      
-      {siteConfig('POST_LIST_STYLE') === 'page' ? (
+
+      {siteConfig('POST_LIST_STYLE') === 'page'
+        ? (
         <BlogPostListPage {...props} />
-      ) : (
+          )
+        : (
         <BlogPostListScroll {...props} />
-      )}
+          )}
 
       <FunctionGrid />
     </div>
   )
 }
 
-// ... (LayoutPostList, LayoutSearch, ... LayoutTagIndex 等组件保持不变，代码已为您恢复完整) ...
-// ... (所有布局组件的代码) ...
+/**
+ * 文章列表
+ * @param {*} props
+ * @returns
+ */
 const LayoutPostList = props => {
   return (
     <div id='post-outer-wrapper' className='px-5  md:px-0'>
       <CategoryBar {...props} />
-      {siteConfig('POST_LIST_STYLE') === 'page' ? (
+      {siteConfig('POST_LIST_STYLE') === 'page'
+        ? (
         <BlogPostListPage {...props} />
-      ) : (
+          )
+        : (
         <BlogPostListScroll {...props} />
-      )}
+          )}
     </div>
   )
 }
+
+/**
+ * 搜索
+ * @param {*} props
+ * @returns
+ */
 const LayoutSearch = props => {
   const { keyword } = props
   const router = useRouter()
@@ -209,26 +219,36 @@ const LayoutSearch = props => {
         })
       }, 100)
     }
-  }, [])
+  }, [currentSearch])
+
   return (
-    <div currentSearch={currentSearch}>
+    <div>
       <div id='post-outer-wrapper' className='px-5  md:px-0'>
-        {!currentSearch ? (
+        {!currentSearch
+          ? (
           <SearchNav {...props} />
-        ) : (
+            )
+          : (
           <div id='posts-wrapper'>
-            {siteConfig('POST_LIST_STYLE') === 'page' ? (
+            {siteConfig('POST_LIST_STYLE') === 'page'
+              ? (
               <BlogPostListPage {...props} />
-            ) : (
+                )
+              : (
               <BlogPostListScroll {...props} />
-            )}
+                )}
           </div>
-        )}
+            )}
       </div>
     </div>
   )
 }
 
+/**
+ * 归档
+ * @param {*} props
+ * @returns
+ */
 const LayoutArchive = props => {
   const { archivePosts } = props
 
@@ -248,6 +268,11 @@ const LayoutArchive = props => {
   )
 }
 
+/**
+ * 文章详情
+ * @param {*} props
+ * @returns
+ */
 const LayoutSlug = props => {
   const { post, lock, validPassword } = props
   const { locale, fullWidth } = useGlobal()
@@ -289,7 +314,8 @@ const LayoutSlug = props => {
         waiting404
       )
     }
-  }, [post])
+  }, [post, router])
+
   return (
     <>
       <div
@@ -493,4 +519,4 @@ export {
   LayoutSlug,
   LayoutTagIndex,
   CONFIG as THEME_CONFIG
-              }
+  }
