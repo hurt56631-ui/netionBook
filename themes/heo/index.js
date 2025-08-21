@@ -12,7 +12,7 @@ import WWAds from '@/components/WWAds'
 import { siteConfig } from '@/lib/config'
 import { useGlobal } from '@/lib/global'
 import { loadWowJS } from '@/lib/plugins/wow'
-import { isBrowser } = '@/lib/utils'
+import { isBrowser } from '@/lib/utils'
 import { Transition } from '@headlessui/react'
 import SmartLink from '@/components/SmartLink'
 import { useRouter } from 'next/router'
@@ -136,9 +136,9 @@ const FunctionGrid = () => {
         { title: '字典', icon: 'fa-solid fa-book', url: 'https://www.843075.xyz/article/256c928a-2fa6-80d2-bd93-d1be847c3c73?theme=heo' },
         { title: '语法', icon: 'fa-solid fa-pen-ruler', url: '/grammar-page' },
         { title: '练习题', icon: 'fa-solid fa-file-pen', url: '/exercise-page' },
-        { title: '书籍', icon: 'fa-solid fa-book', url: '/dictionary-page' },
-        { title: '语法', icon: 'fa-solid fa-pen-ruler', url: '/grammar-page' },
-        { title: '练习题', icon: 'fa-solid fa-file-pen', url: '/exercise-page' },
+        { title: '书籍', icon: 'fa-solid fa-book', url: '/dictionary-p8age' },
+        { title: '语法2', icon: 'fa-solid fa-pen-ruler', url: '/grammar-pag8e' },
+        { title: '练习2题', icon: 'fa-solid fa-file-pen', url: '/exercise-pa6ge' },
     ]
 
     return (
