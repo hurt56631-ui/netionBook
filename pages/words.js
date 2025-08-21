@@ -2,25 +2,15 @@
 
 import { getGlobalData } from '@/lib/db/getSiteData';
 import { useGlobal } from '@/lib/global';
-import { DynamicLayout } from '@/themes/theme'; // 使用 DynamicLayout 来保持主题一致性
-import WordListPage from '@/themes/heo/components/WordListPage'; // 导入我们创建的字典组件
+import { DynamicLayout } from '@/themes/theme'; // 使用 DynamicLayout
+import WordListPage from '@/themes/heo/components/WordListPage'; // 导入字典组件
 
 const Words = (props) => {
   const { locale } = useGlobal();
-  const { siteInfo, allPages, NOTION_CONFIG } = props;
-
-  // 从 allPages 中筛选出字典数据
-  // 确保您的字典词条在 Notion 中有一个 'type' 属性，并且值为 'Word'
-  const words = allPages
-    ? allPages
-        .filter(page => page.type === 'Word' && page.status === 'Published')
-        .map(page => ({
-          title: page.title, // 'title' 对应 Notion 的主属性 "名称"
-          pinyin: page.pageProperties?.拼音 || '', // 读取 "拼音" 属性
-          myanmar: page.pageProperties?.缅文 || '', // 读取 "缅文" 属性
-          // 添加其他您需要的属性
-        }))
-    : [];
+  const { siteInfo, words } = props; // 直接从 props 中获取 words
+  
+  // 在浏览器控制台打印筛选后的单词数量
+  console.log('Rendered words on client:', words);
 
   const { title, description } = siteInfo;
   const meta = {
@@ -30,7 +20,6 @@ const Words = (props) => {
   };
 
   return (
-    // 使用 DynamicLayout 来加载您的主题布局 (例如 Heo 主题的 LayoutBase)
     <DynamicLayout {...props} meta={meta}>
       <WordListPage words={words} />
     </DynamicLayout>
@@ -39,10 +28,33 @@ const Words = (props) => {
 
 export async function getStaticProps() {
   const props = await getGlobalData({ from: 'words-page' });
-  delete props.posts; // 这个页面不需要文章列表
+  delete props.posts;
+
+  // --- 关键调试：在构建时打印获取到的数据 ---
+  console.log(`Total pages fetched from Notion: ${props.allPages?.length || 0}`);
+  
+  const filteredWords = props.allPages
+    ? props.allPages.filter(page => page.type === 'Word' && page.status === 'Published')
+    : [];
+  
+  console.log(`Filtered words with type 'Word': ${filteredWords.length}`);
+  
+  // --- 调试结束 ---
+
+  // 将筛选并格式化后的单词数据传递给页面组件
+  props.words = filteredWords.map(page => ({
+    title: page.title,
+    pinyin: page.pageProperties?.拼音 || '',
+    myanmar: page.pageProperties?.缅文 || '',
+    // 添加其他您需要的属性
+  }));
+  
+  // 删除 allPages，因为它很大，不需要传递给前端
+  delete props.allPages;
+
   return {
     props,
-    revalidate: 1 // 每秒重新生成一次页面
+    revalidate: 1
   };
 }
 
