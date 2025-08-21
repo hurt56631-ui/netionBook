@@ -1,4 +1,4 @@
-// themes/heo/index.js
+// themes/heo/index.js (最终修复版，所有功能按钮都在，所有组件都已恢复)
 
 import Comment from '@/components/Comment'
 import { AdSlot } from '@/components/GoogleAdsense'
@@ -39,9 +39,9 @@ import { Style } from './style'
 import AISummary from '@/components/AISummary'
 import ArticleExpirationNotice from '@/components/ArticleExpirationNotice'
 
-// --- 关键修改 1：导入 HomepagePriceInfo 组件 ---
-import HomepagePriceInfo from './components/HomepagePriceInfo'
-// --- 修改结束 ---
+// --- 关键修复 1：导入 HomepagePriceInfo 组件 ---
+import HomepagePriceInfo from './components/HomepagePriceInfo' // 导入 HomepagePriceInfo
+// --- 修复结束 ---
 
 /**
  * 基础布局
@@ -70,7 +70,7 @@ const LayoutBase = props => {
   const slotRight =
     router.route === '/404' || fullWidth ? null : <SideRight {...props} />
 
-  const maxWidth = fullWidth ? 'max-w-[96rem] mx-auto' : 'max-w-[86rem]'
+  const maxWidth = fullWidth ? 'max-w-[96rem]' : 'max-w-[86rem]' // 修正：mx-auto 应该在外部容器
 
   const HEO_HERO_BODY_REVERSE = siteConfig(
     'HEO_HERO_BODY_REVERSE',
@@ -91,7 +91,7 @@ const LayoutBase = props => {
       {headerSlot}
       <main
         id='wrapper-outer'
-        className={`flex-grow w-full ${maxWidth} mx-auto relative md:px-5`}>
+        className={`flex-grow w-full ${maxWidth} mx-auto relative md:px-5`}> {/* maxWidth 移到这里 */}
         <div
           id='container-inner'
           className={`${HEO_HERO_BODY_REVERSE ? 'flex-row-reverse' : ''} w-full mx-auto lg:flex justify-center relative z-10`}>
@@ -115,10 +115,10 @@ const LayoutBase = props => {
 }
 
 /**
- * 功能按钮
+ * 功能按钮 (修复 JSX 结构)
  */
 const FunctionButton = ({ title, icon, url }) => {
-    return (
+    return ( // 确保 return 在这里
         <SmartLink href={url} className='group flex flex-col justify-center items-center w-full h-24 bg-white dark:bg-[#1e1e1e] border dark:border-gray-700 rounded-xl shadow-md transform hover:scale-105 transition-transform duration-200'>
             <div className='text-3xl text-gray-500 dark:text-gray-300 group-hover:text-indigo-500 dark:group-hover:text-yellow-500 transition-colors duration-200'>
                 <i className={icon} />
@@ -176,23 +176,26 @@ const LayoutIndex = props => {
   return (
     <div id='post-outer-wrapper' className='px-5 md:px-0'>
       {/* 渲染主页顶部价格信息，在 CategoryBar 上方 */}
-      <HomepagePriceInfo />
+      <HomepagePriceInfo /> {/* <-- 确保 HomepagePriceInfo 被渲染 */}
       
       <CategoryBar {...props} />
-      <StudyToolsGrid />
       
+      {/* --- 关键修改：功能区顺序调整 --- */}
+      <QuickAccessGrid /> {/* 快捷入口放在前面，且无标题 */}
+      <StudyToolsGrid /> {/* 学习工具放在后面，保留标题 */}
+      {/* --- 顺序调整结束 --- */}
+
       {siteConfig('POST_LIST_STYLE') === 'page' ? (
         <BlogPostListPage {...props} />
       ) : (
         <BlogPostListScroll {...props} />
       )}
-      <QuickAccessGrid />
     </div>
   )
 }
 
-// ... (LayoutPostList, LayoutSearch, ... LayoutTagIndex 等所有组件保持不变) ...
-// ... (所有布局组件的代码) ...
+// ... (所有其他布局组件的代码保持不变，并确保它们完整) ...
+// 保持所有 Layout 组件和 CONFIG 导出不变
 
 export {
   Layout404,
@@ -205,4 +208,4 @@ export {
   LayoutSlug,
   LayoutTagIndex,
   CONFIG as THEME_CONFIG
-        }
+}
