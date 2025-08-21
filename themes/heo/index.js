@@ -132,7 +132,7 @@ const QuickAccessGrid = () => {
     ]
 
     return (
-        <div className='py-8'>
+        <div className='py-4'>
             <div className='grid grid-cols-3 gap-4'>
                 {functions.map(func => <FunctionButton key={func.title} {...func} />)}
             </div>
@@ -151,7 +151,7 @@ const StudyToolsGrid = () => {
     ]
 
     return (
-        <div className='py-8'>
+        <div className='py-4'>
             <div className='text-2xl font-bold mb-4 text-center dark:text-white'>学习工具</div>
             <div className='grid grid-cols-3 gap-4'>
                 {functions.map(func => <FunctionButton key={func.title} {...func} />)}
