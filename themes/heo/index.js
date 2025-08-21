@@ -133,7 +133,10 @@ const FunctionButton = ({ title, icon, url }) => {
  */
 const FunctionGrid = () => {
     const functions = [
-        { title: '字典', icon: 'fa-solid fa-book', url: '/dictionary-page' },
+        { title: '字典', icon: 'fa-solid fa-book', url: 'https://www.843075.xyz/article/256c928a-2fa6-80d2-bd93-d1be847c3c73?theme=heo' },
+        { title: '语法', icon: 'fa-solid fa-pen-ruler', url: '/grammar-page' },
+        { title: '练习题', icon: 'fa-solid fa-file-pen', url: '/exercise-page' },
+        { title: '书籍', icon: 'fa-solid fa-book', url: '/dictionary-page' },
         { title: '语法', icon: 'fa-solid fa-pen-ruler', url: '/grammar-page' },
         { title: '练习题', icon: 'fa-solid fa-file-pen', url: '/exercise-page' },
     ]
