@@ -39,6 +39,10 @@ import { Style } from './style'
 import AISummary from '@/components/AISummary'
 import ArticleExpirationNotice from '@/components/ArticleExpirationNotice'
 
+// --- 关键修复 1：导入 HomepagePriceInfo 组件 ---
+import HomepagePriceInfo from './components/HomepagePriceInfo'
+// --- 修复结束 ---
+
 /**
  * 基础布局
  */
@@ -66,7 +70,7 @@ const LayoutBase = props => {
   const slotRight =
     router.route === '/404' || fullWidth ? null : <SideRight {...props} />
 
-  const maxWidth = fullWidth ? 'max-w-[96rem] mx-auto' : 'max-w-[86rem]'
+  const maxWidth = fullWidth ? 'max-w-[96rem]' : 'max-w-[86rem]'
 
   const HEO_HERO_BODY_REVERSE = siteConfig(
     'HEO_HERO_BODY_REVERSE',
@@ -82,45 +86,39 @@ const LayoutBase = props => {
   return (
     <div
       id='theme-heo'
-      className={`${siteConfig('FONT_STYLE')} h-full min-h-screen flex flex-col scroll-smooth`}
-      style={{ backgroundImage: `url('/images/your-background.jpg')`, backgroundSize: 'cover', backgroundAttachment: 'fixed' }} // <-- 添加背景图
-    >
-      <div className='bg-[#f7f9fe]/80 dark:bg-[#18171d]/80 backdrop-blur-sm'> {/* 添加一个半透明的覆盖层 */}
-        <Style />
-        {headerSlot}
-        <main
-          id='wrapper-outer'
-          className={`flex-grow w-full ${maxWidth} mx-auto relative md:px-5`}>
-          <div
-            id='container-inner'
-            className={`${HEO_HERO_BODY_REVERSE ? 'flex-row-reverse' : ''} w-full mx-auto lg:flex justify-center relative z-10`}>
-            <div className={`w-full h-auto ${className || ''}`}>
-              {slotTop}
-              {children}
-            </div>
-            <div className='lg:px-2'></div>
-            <div className='hidden xl:block'>
-              {slotRight}
-            </div>
+      className={`${siteConfig('FONT_STYLE')} bg-[#f7f9fe] dark:bg-[#18171d] h-full min-h-screen flex flex-col scroll-smooth`}>
+      <Style />
+      {headerSlot}
+      <main
+        id='wrapper-outer'
+        className={`flex-grow w-full ${maxWidth} mx-auto relative md:px-5`}>
+        <div
+          id='container-inner'
+          className={`${HEO_HERO_BODY_REVERSE ? 'flex-row-reverse' : ''} w-full mx-auto lg:flex justify-center relative z-10`}>
+          <div className={`w-full h-auto ${className || ''}`}>
+            {slotTop}
+            {children}
           </div>
-        </main>
-        
-        {/* --- 在 main 之后、Footer 之前添加学习工具区 (仅在首页显示) --- */}
-        {isIndex && <StudyToolsGrid />}
-        {/* --- 修改结束 --- */}
 
-        <Footer />
-        {HEO_LOADING_COVER && <LoadingCover />}
-      </div>
+          <div className='lg:px-2'></div>
+
+          <div className='hidden xl:block'>
+            {slotRight}
+          </div>
+        </div>
+      </main>
+      
+      <Footer />
+      {HEO_LOADING_COVER && <LoadingCover />}
     </div>
   )
 }
 
 /**
- * 功能按钮 (单个按钮样式)
+ * 功能按钮 (修复 JSX 结构)
  */
 const FunctionButton = ({ title, icon, url }) => {
-    return (
+    return ( // 确保 return 在这里
         <SmartLink href={url} className='group flex flex-col justify-center items-center w-full h-24 bg-white dark:bg-[#1e1e1e] border dark:border-gray-700 rounded-xl shadow-md transform hover:scale-105 transition-transform duration-200'>
             <div className='text-3xl text-gray-500 dark:text-gray-300 group-hover:text-indigo-500 dark:group-hover:text-yellow-500 transition-colors duration-200'>
                 <i className={icon} />
@@ -131,34 +129,7 @@ const FunctionButton = ({ title, icon, url }) => {
 }
 
 /**
- * 快捷入口功能区 (小图标，用于顶部)
- */
-const QuickAccessGrid = () => {
-    const functions = [
-        { title: '加入VIP', icon: 'fa-solid fa-crown', url: '/vip-page' },
-        { title: '找工作', icon: 'fa-solid fa-briefcase', url: '/jobs-page' },
-        { title: '加入频道', icon: 'fa-solid fa-users', url: 'https://www.facebook.com/share/16fpFsbhh2/' },
-        { title: '口语', icon: 'fa-solid fa-microphone', url: '/category/口语' }, // 新增第四个按钮
-    ]
-
-    return (
-        <div className='w-full px-5 py-2'>
-            <div className='grid grid-cols-4 gap-2'> {/* 强制四列 */}
-                {functions.map(func => (
-                    <SmartLink key={func.title} href={func.url} className='group flex flex-col justify-center items-center w-full h-16 bg-white dark:bg-[#1e1e1e] border dark:border-gray-700 rounded-xl shadow-md transform hover:scale-105 transition-transform duration-200'>
-                        <div className='text-2xl text-gray-500 dark:text-gray-300 group-hover:text-indigo-500 dark:group-hover:text-yellow-500 transition-colors duration-200'>
-                            <i className={func.icon} />
-                        </div>
-                        <div className='mt-1 text-xs text-gray-700 dark:text-gray-200'>{func.title}</div>
-                    </SmartLink>
-                ))}
-            </div>
-        </div>
-    )
-}
-
-/**
- * 学习工具功能区 (大图标，用于底部)
+ * 学习工具功能区
  */
 const StudyToolsGrid = () => {
     const functions = [
@@ -168,17 +139,31 @@ const StudyToolsGrid = () => {
     ]
 
     return (
-        <div className='py-8 px-5'>
+        <div className='py-8'>
             <div className='text-2xl font-bold mb-4 text-center dark:text-white'>学习工具</div>
+            <div className='grid grid-cols-2 md:grid-cols-3 gap-4'>
+                {functions.map(func => <FunctionButton key={func.title} {...func} />)}
+            </div>
+        </div>
+    )
+}
+
+/**
+ * 快捷入口功能区
+ */
+const QuickAccessGrid = () => {
+    const functions = [
+        { title: '加入VIP', icon: 'fa-solid fa-crown', url: '/vip-page' },
+        { title: '找工作', icon: 'fa-solid fa-briefcase', url: '/jobs-page' },
+        { title: '加入频道', icon: 'fa-solid fa-users', url: 'https://www.facebook.com/share/16fpFsbhh2/' },
+    ]
+
+    return (
+        <div className='py-8'>
+            {/* 移除 '快捷入口' 标题 */}
+            {/* <div className='text-2xl font-bold mb-4 text-center dark:text-white'>快捷入口</div> */}
             <div className='grid grid-cols-3 gap-4'>
-                {functions.map(func => (
-                    <SmartLink key={func.title} href={func.url} className='group flex flex-col justify-center items-center w-full h-24 bg-white/50 dark:bg-[#1e1e1e]/50 border dark:border-gray-700 rounded-xl shadow-md transform hover:scale-105 transition-transform duration-200 backdrop-blur-sm'>
-                        <div className='text-3xl text-gray-600 dark:text-gray-300 group-hover:text-indigo-500 dark:group-hover:text-yellow-500 transition-colors duration-200'>
-                            <i className={func.icon} />
-                        </div>
-                        <div className='mt-2 text-sm text-gray-700 dark:text-gray-200'>{title}</div>
-                    </SmartLink>
-                ))}
+                {functions.map(func => <FunctionButton key={func.title} {...func} />)}
             </div>
         </div>
     )
@@ -190,7 +175,16 @@ const StudyToolsGrid = () => {
 const LayoutIndex = props => {
   return (
     <div id='post-outer-wrapper' className='px-5 md:px-0'>
-      {/* CategoryBar 已移除 */}
+      {/* 渲染主页顶部价格信息，在 CategoryBar 上方 */}
+      <HomepagePriceInfo /> {/* <-- 确保 HomepagePriceInfo 被渲染 */}
+      
+      <CategoryBar {...props} />
+      
+      {/* --- 关键修改：功能区顺序调整 --- */}
+      <QuickAccessGrid /> {/* 快捷入口放在前面，且无标题 */}
+      <StudyToolsGrid /> {/* 学习工具放在后面，保留标题 */}
+      {/* --- 顺序调整结束 --- */}
+
       {siteConfig('POST_LIST_STYLE') === 'page' ? (
         <BlogPostListPage {...props} />
       ) : (
@@ -214,4 +208,4 @@ export {
   LayoutSlug,
   LayoutTagIndex,
   CONFIG as THEME_CONFIG
-}
+    }
