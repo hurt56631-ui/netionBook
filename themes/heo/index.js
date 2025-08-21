@@ -12,7 +12,7 @@ import WWAds from '@/components/WWAds'
 import { siteConfig } from '@/lib/config'
 import { useGlobal } from '@/lib/global'
 import { loadWowJS } from '@/lib/plugins/wow'
-import { isBrowser } from '@/lib/utils'
+import { isBrowser } = '@/lib/utils'
 import { Transition } from '@headlessui/react'
 import SmartLink from '@/components/SmartLink'
 import { useRouter } from 'next/router'
@@ -20,7 +20,7 @@ import { useEffect, useState } from 'react'
 import BlogPostArchive from './components/BlogPostArchive'
 import BlogPostListPage from './components/BlogPostListPage'
 import BlogPostListScroll from './components/BlogPostListScroll'
-import CategoryBar from './components/CategoryBar'
+import CategoryBar from './components/CategoryBar' // 导入 CategoryBar
 import FloatTocButton from './components/FloatTocButton'
 import Footer from './components/Footer'
 import Header from './components/Header'
@@ -30,7 +30,7 @@ import { NoticeBar } from './components/NoticeBar'
 import PostAdjacent from './components/PostAdjacent'
 import PostCopyright from './components/PostCopyright'
 import PostHeader from './components/PostHeader'
-import { PostLock } from './components/PostLock'
+import { PostLock } = './components/PostLock'
 import PostRecommend from './components/PostRecommend'
 import SearchNav from './components/SearchNav'
 import SideRight from './components/SideRight'
@@ -46,37 +46,27 @@ import ArticleExpirationNotice from '@/components/ArticleExpirationNotice'
  * @constructor
  */
 const LayoutBase = props => {
-  const { children, slotTop, className, post } = props // <-- 确保接收 post
+  const { children, slotTop, className, post } = props
 
-  // 全屏模式下的最大宽度
   const { fullWidth, isDarkMode } = useGlobal()
   const router = useRouter()
   
-  // 判断是否是首页
   const isIndex = router.pathname === '/'
-  // 关键修复：只有当 post 存在并且有 slug 属性时，才认为是文章详情页
   const isSlugPage = post && post.slug 
 
   const headerSlot = (
     <header>
-      {/* 顶部导航 */}
       <Header {...props} />
-
-      {/* 通知横幅 */}
-      {/* 只有在首页时，才渲染 Hero 组件 */}
       {isIndex ? (
         <>
-          <NoticeBar />
+          {/* NoticeBar 已移除 */}
           <Hero {...props} />
         </>
       ) : null}
-      
-      {/* 关键修复：只有在文章详情页时，才渲染 PostHeader 组件 */}
       {isSlugPage && !fullWidth ? <PostHeader {...props} isDarkMode={isDarkMode} /> : null}
     </header>
   )
 
-  // 右侧栏 用户信息+标签列表
   const slotRight =
     router.route === '/404' || fullWidth ? null : <SideRight {...props} />
 
@@ -89,7 +79,6 @@ const LayoutBase = props => {
   )
   const HEO_LOADING_COVER = siteConfig('HEO_LOADING_COVER', true, CONFIG)
 
-  // 加载wow动画
   useEffect(() => {
     loadWowJS()
   }, [])
@@ -99,11 +88,7 @@ const LayoutBase = props => {
       id='theme-heo'
       className={`${siteConfig('FONT_STYLE')} bg-[#f7f9fe] dark:bg-[#18171d] h-full min-h-screen flex flex-col scroll-smooth`}>
       <Style />
-
-      {/* 顶部嵌入 导航栏，首页放hero，文章页放文章详情 */}
       {headerSlot}
-
-      {/* 主区块 */}
       <main
         id='wrapper-outer'
         className={`flex-grow w-full ${maxWidth} mx-auto relative md:px-5`}>
@@ -111,23 +96,16 @@ const LayoutBase = props => {
           id='container-inner'
           className={`${HEO_HERO_BODY_REVERSE ? 'flex-row-reverse' : ''} w-full mx-auto lg:flex justify-center relative z-10`}>
           <div className={`w-full h-auto ${className || ''}`}>
-            {/* 主区上部嵌入 */}
             {slotTop}
             {children}
           </div>
-
           <div className='lg:px-2'></div>
-
           <div className='hidden xl:block'>
-            {/* 主区快右侧 */}
             {slotRight}
           </div>
         </div>
       </main>
-      
-      {/* 页脚 */}
       <Footer />
-
       {HEO_LOADING_COVER && <LoadingCover />}
     </div>
   )
@@ -158,7 +136,6 @@ const FunctionGrid = () => {
         { title: '字典', icon: 'fa-solid fa-book', url: '/dictionary-page' },
         { title: '语法', icon: 'fa-solid fa-pen-ruler', url: '/grammar-page' },
         { title: '练习题', icon: 'fa-solid fa-file-pen', url: '/exercise-page' },
-        // 您可以继续在这里添加更多功能按钮
     ]
 
     return (
@@ -179,8 +156,12 @@ const FunctionGrid = () => {
 const LayoutIndex = props => {
   return (
     <div id='post-outer-wrapper' className='px-5 md:px-0'>
-      {/* 文章分类条 */}
-      <CategoryBar {...props} />
+      {/* --- 关键修改 2：只保留“加入频道”按钮 --- */}
+      {/* 确保 CategoryBar 导入了 */}
+      <SmartLink href={'/category'} className='w-full py-4 px-6 text-center text-xl font-bold text-gray-700 dark:text-gray-200 bg-white dark:bg-[#1e1e1e] rounded-xl shadow-md transform hover:scale-105 transition-transform duration-200 mb-4 block'>
+        加入频道 {/* 或 locale.COMMON.JOIN_CHANNEL 如果在 lang 里定义了 */}
+      </SmartLink>
+      {/* --- 修改结束 --- */}
       
       {siteConfig('POST_LIST_STYLE') === 'page' ? (
         <BlogPostListPage {...props} />
@@ -188,18 +169,13 @@ const LayoutIndex = props => {
         <BlogPostListScroll {...props} />
       )}
 
-      {/* --- 在文章列表下方添加功能区 --- */}
       <FunctionGrid />
-      {/* --- 功能区结束 --- */}
     </div>
   )
 }
 
-/**
- * 博客列表
- * @param {*} props
- * @returns
- */
+// ... (LayoutPostList, LayoutSearch, ... LayoutTagIndex 等组件保持不变，代码已为您恢复完整) ...
+// ... (所有布局组件的代码) ...
 const LayoutPostList = props => {
   return (
     <div id='post-outer-wrapper' className='px-5  md:px-0'>
@@ -212,12 +188,6 @@ const LayoutPostList = props => {
     </div>
   )
 }
-
-/**
- * 搜索
- * @param {*} props
- * @returns
- */
 const LayoutSearch = props => {
   const { keyword } = props
   const router = useRouter()
@@ -256,11 +226,6 @@ const LayoutSearch = props => {
   )
 }
 
-/**
- * 归档
- * @param {*} props
- * @returns
- */
 const LayoutArchive = props => {
   const { archivePosts } = props
 
@@ -280,11 +245,6 @@ const LayoutArchive = props => {
   )
 }
 
-/**
- * 文章详情
- * @param {*} props
- * @returns
- */
 const LayoutSlug = props => {
   const { post, lock, validPassword } = props
   const { locale, fullWidth } = useGlobal()
@@ -530,4 +490,4 @@ export {
   LayoutSlug,
   LayoutTagIndex,
   CONFIG as THEME_CONFIG
-          }
+              }
