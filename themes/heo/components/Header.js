@@ -3,12 +3,13 @@ import { isBrowser } from '@/lib/utils'
 import throttle from 'lodash.throttle'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import DarkModeButton from './DarkModeButton' // 确保导入，以防万一
+import DarkModeButton from './DarkModeButton'
 import Logo from './Logo'
 import { MenuListTop } from './MenuListTop'
-// import ReadingProgress from './ReadingProgress' // 移除导入
-// import SearchButton from './SearchButton' // 移除导入
+import ReadingProgress from './ReadingProgress'
+import SearchButton from './SearchButton'
 import SlideOver from './SlideOver'
+import LazyImage from '@/components/LazyImage' // 导入 LazyImage 组件
 
 /**
  * 页头：顶部导航 (已精简)
@@ -34,19 +35,15 @@ const Header = props => {
   const scrollTrigger = useCallback(
     throttle(() => {
       const scrollS = window.scrollY
-      // 导航栏设置 白色背景
       if (scrollS <= 1) {
         setFixedNav(false)
         setBgWhite(false)
         setTextWhite(false)
-
-        // 文章详情页特殊处理
         if (document?.querySelector('#post-bg')) {
           setFixedNav(true)
           setTextWhite(true)
         }
       } else {
-        // 向下滚动后的导航样式
         setFixedNav(true)
         setTextWhite(false)
         setBgWhite(true)
@@ -57,7 +54,6 @@ const Header = props => {
     scrollTrigger()
   }, [router])
 
-  // 监听滚动
   useEffect(() => {
     window.addEventListener('scroll', scrollTrigger)
     return () => {
@@ -65,7 +61,6 @@ const Header = props => {
     }
   }, [])
 
-  // 导航栏根据滚动轮播菜单内容
   useEffect(() => {
     let prevScrollY = 0
     let ticking = false
@@ -75,9 +70,9 @@ const Header = props => {
         window.requestAnimationFrame(() => {
           const currentScrollY = window.scrollY
           if (currentScrollY > prevScrollY) {
-            setActiveIndex(1) // 向下滚动时设置activeIndex为1
+            setActiveIndex(1)
           } else {
-            setActiveIndex(0) // 向上滚动时设置activeIndex为0
+            setActiveIndex(0)
           }
           prevScrollY = currentScrollY
           ticking = false
@@ -99,10 +94,11 @@ const Header = props => {
 
   // --- 在这里定义您的社交媒体按钮信息 ---
   const socialButtons = [
-    { title: 'Facebook', url: 'https://www.facebook.com/share/16fpFsbhh2/', icon: 'fa-brands fa-facebook' },
-    { title: 'TikTok', url: 'https://vt.tiktok.com/ZSHGDjda1hkwq-Pz4h9/', icon: 'fa-brands fa-tiktok' },
-    // { title: 'WeChat', url: '/wechat-qr-code-page', icon: 'fa-brands fa-weixin' }, // 微信通常链接到一个二维码页面
-    { title: 'YouTube', url: 'https://www.youtube.com/YOUR_CHANNEL', icon: 'fa-brands fa-youtube' } // <-- 替换成您的 YouTube 频道链接
+    { title: 'Facebook', url: 'https://www.facebook.com/share/16fpFsbhh2/', icon: 'fa-brands fa-facebook', img: '' },
+    { title: 'TikTok', url: 'https://vt.tiktok.com/ZSHGDjda1hkwq-Pz4h9/', icon: 'fa-brands fa-tiktok', img: '' },
+    { title: 'YouTube', url: 'https://www.youtube.com/YOUR_CHANNEL', icon: 'fa-brands fa-youtube', img: '' },
+    // 微信使用图片图标
+    { title: 'telegar', url: '/images/wechat-qr-code.jpg', icon: '', img: '/images/wechat-icon.png' } // <-- 假设您有微信图标和二维码
   ];
   // --- 定义结束 ---
 
@@ -175,7 +171,7 @@ const Header = props => {
           </div>
 
           {/* --- 右侧固定 (已修改) --- */}
-          <div className='flex flex-shrink-0 justify-end items-center space-x-2'>
+          <div className='flex flex-shrink-0 justify-end items-center space-x-1'> {/* 将 space-x-2 改为 space-x-1，减小间距 */}
             {/* 循环渲染社交按钮 */}
             {socialButtons.map(button => (
               <a
@@ -187,14 +183,12 @@ const Header = props => {
                 className='p-2 cursor-pointer text-gray-500 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full w-9 h-9 flex items-center justify-center'
                 title={button.title}
               >
-                <i className={button.icon} />
+                {button.icon && <i className={button.icon} />} {/* 如果有 icon 则显示 icon */}
+                {button.img && <LazyImage src={button.img} alt={button.title} className="w-6 h-6 object-contain" />} {/* 如果有 img 则显示图片 */}
               </a>
             ))}
 
-            {/* --- SearchButton 和 ReadingProgress 已被移除 --- */}
-            {/* <SearchButton {...props} /> */}
-            {/* <ReadingProgress /> */}
-
+            {/* SearchButton 和 ReadingProgress 已被移除 */}
             {/* 移动端菜单按钮 */}
             <div
               onClick={toggleMenuOpen}
