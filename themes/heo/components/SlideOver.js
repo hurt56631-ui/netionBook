@@ -1,5 +1,5 @@
 // themes/heo/components/SlideOver.js
-// 最终版本：包含多个分组、带图标的按钮、调整了宽度。
+// 最终版本：恢复了自定义菜单，并添加了多个新的分组和按钮。
 
 import DarkModeButton from '@/components/DarkModeButton'
 import { useGlobal } from '@/lib/global'
@@ -59,7 +59,7 @@ export default function SlideOver(props) {
                 leave='transform transition ease-in-out duration-500 sm:duration-700'
                 leaveFrom='translate-x-0'
                 leaveTo='translate-x-full'>
-                <Dialog.Panel className='pointer-events-auto relative w-60 max-w-md'> {/* 调整宽度 */}
+                <Dialog.Panel className='pointer-events-auto relative w-68 max-w-md'> {/* 调整宽度 */}
                   <Transition.Child
                     as={Fragment}
                     enter='ease-in-out duration-500'
@@ -85,28 +85,63 @@ export default function SlideOver(props) {
                         <DarkModeBlockButton />
                       </section>
 
-                      {/* --- 分组 1: 博客 --- */}
+                      {/* --- 分组 1: 联系方式 --- */}
                       <section className='space-y-2 flex flex-col'>
-                        <div className='text-gray-500 dark:text-gray-400 font-semibold'>博客</div>
+                        <div className='text-gray-500 dark:text-gray-400 font-semibold'>联系方式</div>
                         <div className='gap-2 grid grid-cols-2'>
-                          <Button title={'主页'} url={'/'} icon={<i className='fa-solid fa-home'/>} />
-                          <Button title={'关于'} url={'/about'} icon={<i className='fa-solid fa-user'/>} />
+                          <Button title={'facbook'} url={'/'} icon={<i className='fa-solid fa-home'/>} />
+                          <Button title={'tiktok'} url={'/about'} icon={<i className='fa-solid fa-user'/>} />
                         </div>
                       </section>
                       
-                      {/* --- 分组 2: 课程 --- */}
+                      {/* --- 关键恢复：您的 Notion 自定义菜单 --- */}
+                      {/* 这个组件会渲染您在 Notion 中设置的 "建站教程"、"往期整理"、"关于我" 等 */}
+                      <MenuListSide {...props} /> 
+                      {/* --- 恢复结束 --- */}
+                      
+                      {/* --- 分组 2: 资料 --- */}
                       <section className='space-y-2 flex flex-col'>
-                        <div className='text-gray-500 dark:text-gray-400 font-semibold'>课程</div>
-                        <div className='flex flex-col space-y-2'>
-                          {/* 这里是带图标的单列按钮 */}
-                          <Button title={'HSK 1 级'} url={'/category/hsk1'} icon={<i className='fa-solid fa-book'/>} />
-                          <Button title={'HSK 2 级'} url={'/category/hsk2'} icon={<i className='fa-solid fa-book'/>} />
-                          <Button title={'口语练习'} url={'/category/oral'} icon={<i className='fa-solid fa-microphone'/>} />
-                          {/* 您可以继续在这里添加更多课程按钮 */}
+                        <div className='text-gray-500 dark:text-gray-400 font-semibold'>资料</div>
+                        <div className='gap-2 grid grid-cols-2'>
+                          <Button title={'书籍'} url={'/books'} icon={<i className='fa-solid fa-book-open'/>} />
+                          <Button title={'工具'} url={'/tools'} icon={<i className='fa-solid fa-toolbox'/>} />
+                          <Button title={'软件'} url={'/software'} icon={<i className='fa-solid fa-computer'/>} />
+                          {/* 占空 */}
+                        </div>
+                      </section>
+                      
+                      {/* --- 分组 3: 学习群 --- */}
+                      <section className='space-y-2 flex flex-col'>
+                        <div className='text-gray-500 dark:text-gray-400 font-semibold'>学习群</div>
+                        <div className='gap-2 grid grid-cols-2'>
+                          <Button title={'订阅频道'} url={'/subscribe'} icon={<i className='fa-solid fa-rss'/>} />
+                          <Button title={'学习交流群'} url={'/community'} icon={<i className='fa-solid fa-users'/>} />
                         </div>
                       </section>
 
-                      {/* --- 分组 3: 标签 --- */}
+                      {/* --- 分组 4: 交友娱乐群 --- */}
+                      <section className='space-y-2 flex flex-col'>
+                        <div className='text-gray-500 dark:text-gray-400 font-semibold'>交友娱乐群</div>
+                        <div className='gap-2 grid grid-cols-2'>
+                          <Button title={'仰光'} url={'/group/yangon'} icon={<i className='fa-solid fa-location-dot'/>} />
+                          <Button title={'泰国'} url={'/group/thailand'} icon={<i className='fa-solid fa-location-dot'/>} />
+                          <Button title={'中国'} url={'/group/china'} icon={<i className='fa-solid fa-location-dot'/>} />
+                          <Button title={'新加坡'} url={'/group/singapore'} icon={<i className='fa-solid fa-location-dot'/>} />
+                        </div>
+                      </section>
+                      
+                      {/* --- 分组 5: 单菜单 --- */}
+                      <section className='space-y-2 flex flex-col'>
+                        <div className='flex flex-col space-y-2'>
+                          <Button title={'找工作频道'} url={'/jobs'} icon={<i className='fa-solid fa-briefcase'/>} />
+                          <Button title={'关于我们'} url={'/about-us'} icon={<i className='fa-solid fa-info-circle'/>} />
+                          <Button title={'App 下载'} url={'/app-download'} icon={<i className='fa-solid fa-download'/>} />
+                          <Button title={'学习资源下载'} url={'/resources'} icon={<i className='fa-solid fa-file-arrow-down'/>} />
+                          <Button title={'帮助'} url={'/help'} icon={<i className='fa-solid fa-question-circle'/>} />
+                        </div>
+                      </section>
+
+                      {/* --- 分组 6: 标签 --- */}
                       <section className='space-y-2 flex flex-col'>
                         <div className='text-gray-500 dark:text-gray-400 font-semibold'>{locale.COMMON.TAGS}</div>
                         <TagGroups tags={tagOptions} />
@@ -159,4 +194,4 @@ function Button({ title, url, icon }) {
       <span>{title}</span>
     </SmartLink>
   )
-                        }
+}
