@@ -98,7 +98,7 @@ const Header = props => {
     { title: 'TikTok', url: 'https://vt.tiktok.com/ZSHGDjda1hkwq-Pz4h9/', icon: 'fa-brands fa-tiktok', img: '' },
     { title: 'YouTube', url: 'https://www.youtube.com/YOUR_CHANNEL', icon: 'fa-brands fa-youtube', img: '' },
     // 微信使用图片图标
-    { title: 'telegar', url: '/images/wechat-qr-code.jpg', icon: '', img: '/images/wechat-icon.png' } // <-- 假设您有微信图标和二维码
+    { title: 'telegar', url: 'https://t.me/+PVH4J-Mz5i81YzFl', icon: 'fa-brands fa-telegram', img: '' } // <-- 假设您有微信图标和二维码
   ];
   // --- 定义结束 ---
 
