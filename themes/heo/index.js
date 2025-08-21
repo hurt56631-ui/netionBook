@@ -1,4 +1,4 @@
-// themes/heo/index.js (最终修复版，所有功能按钮都在，所有组件都已恢复)
+// themes/heo/index.js (最终修复版，背景图只在主页，按钮样式分离)
 
 import Comment from '@/components/Comment'
 import { AdSlot } from '@/components/GoogleAdsense'
@@ -39,10 +39,6 @@ import { Style } from './style'
 import AISummary from '@/components/AISummary'
 import ArticleExpirationNotice from '@/components/ArticleExpirationNotice'
 
-// --- 关键修复 1：导入 HomepagePriceInfo 组件 ---
-import HomepagePriceInfo from './components/HomepagePriceInfo'
-// --- 修复结束 ---
-
 /**
  * 基础布局
  */
@@ -70,7 +66,7 @@ const LayoutBase = props => {
   const slotRight =
     router.route === '/404' || fullWidth ? null : <SideRight {...props} />
 
-  const maxWidth = fullWidth ? 'max-w-[96rem]' : 'max-w-[86rem]'
+  const maxWidth = fullWidth ? 'max-w-[96rem] mx-auto' : 'max-w-[86rem]'
 
   const HEO_HERO_BODY_REVERSE = siteConfig(
     'HEO_HERO_BODY_REVERSE',
@@ -99,15 +95,12 @@ const LayoutBase = props => {
             {slotTop}
             {children}
           </div>
-
           <div className='lg:px-2'></div>
-
           <div className='hidden xl:block'>
             {slotRight}
           </div>
         </div>
       </main>
-      
       <Footer />
       {HEO_LOADING_COVER && <LoadingCover />}
     </div>
@@ -115,11 +108,12 @@ const LayoutBase = props => {
 }
 
 /**
- * 功能按钮 (修复 JSX 结构)
+ * 功能按钮 (单个按钮样式)
  */
-const FunctionButton = ({ title, icon, url }) => {
-    return ( // 确保 return 在这里
-        <SmartLink href={url} className='group flex flex-col justify-center items-center w-full h-24 bg-white dark:bg-[#1e1e1e] border dark:border-gray-700 rounded-xl shadow-md transform hover:scale-105 transition-transform duration-200'>
+const FunctionButton = ({ title, icon, url, glass = false }) => { // 新增 glass prop
+    return (
+        <SmartLink href={url} className={`group flex flex-col justify-center items-center w-full h-24 border dark:border-gray-700 rounded-xl shadow-md transform hover:scale-105 transition-transform duration-200
+            ${glass ? 'bg-white/50 dark:bg-[#1e1e1e]/50 backdrop-blur-sm' : 'bg-white dark:bg-[#1e1e1e]'}`}>
             <div className='text-3xl text-gray-500 dark:text-gray-300 group-hover:text-indigo-500 dark:group-hover:text-yellow-500 transition-colors duration-200'>
                 <i className={icon} />
             </div>
@@ -140,9 +134,9 @@ const StudyToolsGrid = () => {
 
     return (
         <div className='py-8'>
-            <div className='text-2xl font-bold mb-4 text-center dark:text-white'>学习工具</div>
-            <div className='grid grid-cols-2 md:grid-cols-3 gap-4'>
-                {functions.map(func => <FunctionButton key={func.title} {...func} />)}
+            <div className='text-2xl font-bold mb-4 text-center text-white'>学习工具</div>
+            <div className='grid grid-cols-3 gap-4'>
+                {functions.map(func => <FunctionButton key={func.title} {...func} glass={true} />)}
             </div>
         </div>
     )
@@ -160,10 +154,9 @@ const QuickAccessGrid = () => {
 
     return (
         <div className='py-8'>
-            {/* 移除 '快捷入口' 标题 */}
-            {/* <div className='text-2xl font-bold mb-4 text-center dark:text-white'>快捷入口</div> */}
+            <div className='text-2xl font-bold mb-4 text-center text-white'>快捷入口</div>
             <div className='grid grid-cols-3 gap-4'>
-                {functions.map(func => <FunctionButton key={func.title} {...func} />)}
+                {functions.map(func => <FunctionButton key={func.title} {...func} glass={true} />)}
             </div>
         </div>
     )
@@ -174,28 +167,29 @@ const QuickAccessGrid = () => {
  */
 const LayoutIndex = props => {
   return (
-    <div id='post-outer-wrapper' className='px-5 md:px-0'>
-      {/* 渲染主页顶部价格信息，在 CategoryBar 上方 */}
-      <HomepagePriceInfo /> {/* <-- 确保 HomepagePriceInfo 被渲染 */}
-      
-      <CategoryBar {...props} />
-      
-      {/* --- 关键修改：功能区顺序调整 --- */}
-      <QuickAccessGrid /> {/* 快捷入口放在前面，且无标题 */}
-      <StudyToolsGrid /> {/* 学习工具放在后面，保留标题 */}
-      {/* --- 顺序调整结束 --- */}
+    <div
+      id='layout-index-wrapper'
+      style={{ backgroundImage: `url('/images/your-background.jpg')`, backgroundSize: 'cover', backgroundAttachment: 'fixed' }} // <-- 背景图只在这里
+    >
+      <div className='bg-white/80 dark:bg-black/80 backdrop-blur-sm'> {/* 半透明覆盖层 */}
+        <div id='post-outer-wrapper' className='px-5 md:px-0'>
+          <CategoryBar {...props} />
+          <QuickAccessGrid />
+          
+          {siteConfig('POST_LIST_STYLE') === 'page' ? (
+            <BlogPostListPage {...props} />
+          ) : (
+            <BlogPostListScroll {...props} />
+          )}
 
-      {siteConfig('POST_LIST_STYLE') === 'page' ? (
-        <BlogPostListPage {...props} />
-      ) : (
-        <BlogPostListScroll {...props} />
-      )}
+          <StudyToolsGrid />
+        </div>
+      </div>
     </div>
   )
 }
 
 // ... (所有其他布局组件的代码保持不变，并确保它们完整) ...
-// 保持所有 Layout 组件和 CONFIG 导出不变
 
 export {
   Layout404,
@@ -208,4 +202,4 @@ export {
   LayoutSlug,
   LayoutTagIndex,
   CONFIG as THEME_CONFIG
-    }
+}
