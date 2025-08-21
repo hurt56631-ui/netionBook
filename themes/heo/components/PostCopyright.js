@@ -11,7 +11,7 @@ export default function PostCopyright() {
   return (
     <section className='mt-6 mx-1'>
       <SmartLink href="/contact-page"> {/* (可选) 为图片添加链接 */}
-        <LazyImage src="/images/copyright-info.png" alt="课程咨询与版权信息" className="w-full h-auto rounded-xl" />
+        <LazyImage src="/images/wenzhangtp.jpg" alt="课程咨询与版权信息" className="w-full h-auto rounded-xl" />
       </SmartLink>
     </section>
   )
