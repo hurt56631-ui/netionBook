@@ -1,4 +1,4 @@
-// themes/heo/index.js (最终修复版)
+// themes/heo/index.js (最终修复版，所有功能按钮都在，所有组件都已恢复)
 
 import Comment from '@/components/Comment'
 import { AdSlot } from '@/components/GoogleAdsense'
@@ -108,17 +108,93 @@ const LayoutBase = props => {
 }
 
 /**
+ * 功能按钮 (单个按钮样式)
+ */
+const FunctionButton = ({ title, icon, url }) => {
+    return (
+        <SmartLink href={url} className='group flex flex-col justify-center items-center w-full h-24 bg-white dark:bg-[#1e1e1e] border dark:border-gray-700 rounded-xl shadow-md transform hover:scale-105 transition-transform duration-200'>
+            <div className='text-3xl text-gray-500 dark:text-gray-300 group-hover:text-indigo-500 dark:group-hover:text-yellow-500 transition-colors duration-200'>
+                <i className={icon} />
+            </div>
+            <div className='mt-2 text-sm text-gray-700 dark:text-gray-200'>{title}</div>
+        </SmartLink>
+    )
+}
+
+/**
+ * 快捷入口功能区
+ */
+const QuickAccessGrid = () => {
+    const functions = [
+        { title: '加入VIP', icon: 'fa-solid fa-crown', url: '/vip-page' },
+        { title: '找工作', icon: 'fa-solid fa-briefcase', url: '/jobs-page' },
+        { title: '加入频道', icon: 'fa-solid fa-users', url: 'https://www.facebook.com/share/16fpFsbhh2/' },
+    ]
+
+    return (
+        <div className='py-8'>
+            <div className='grid grid-cols-3 gap-4'>
+                {functions.map(func => <FunctionButton key={func.title} {...func} />)}
+            </div>
+        </div>
+    )
+}
+
+/**
+ * 学习工具功能区
+ */
+const StudyToolsGrid = () => {
+    const functions = [
+        { title: '字典', icon: 'fa-solid fa-book', url: '/words' },
+        { title: '语法', icon: 'fa-solid fa-pen-ruler', url: '/grammar-page' },
+        { title: '练习题', icon: 'fa-solid fa-file-pen', url: '/exercise-page' },
+    ]
+
+    return (
+        <div className='py-8'>
+            <div className='text-2xl font-bold mb-4 text-center dark:text-white'>学习工具</div>
+            <div className='grid grid-cols-3 gap-4'>
+                {functions.map(func => <FunctionButton key={func.title} {...func} />)}
+            </div>
+        </div>
+    )
+}
+
+/**
+ * 新增的主页图片价格卡组件
+ */
+const HomepagePriceCard = () => {
+    const imageUrl = '/images/zhuyetp.jpg'; // <-- 您提供的图片路径
+    const linkUrl = '/price-info-page'; // <-- 设置整张图片点击后跳转的链接
+  
+    return (
+      <section className='mt-12 mx-auto max-w-7xl px-5'>
+        <SmartLink href={linkUrl}>
+          <div className='rounded-xl shadow-md overflow-hidden transform hover:scale-105 transition-transform duration-300'>
+            <LazyImage src={imageUrl} alt="课程价格与联系信息" className="w-full h-auto" />
+          </div>
+        </SmartLink>
+      </section>
+    )
+  }
+
+/**
  * 首页
  */
 const LayoutIndex = props => {
   return (
     <div id='post-outer-wrapper' className='px-5 md:px-0'>
       <CategoryBar {...props} />
+      <QuickAccessGrid />
+      
       {siteConfig('POST_LIST_STYLE') === 'page' ? (
         <BlogPostListPage {...props} />
       ) : (
         <BlogPostListScroll {...props} />
       )}
+
+      <StudyToolsGrid />
+      <HomepagePriceCard />
     </div>
   )
 }
@@ -203,6 +279,23 @@ const LayoutArchive = props => {
 }
 
 /**
+ * 新增的招聘图片组件
+ */
+const RecruitmentCard = () => {
+    const linkUrl = '/jobs'; // 点击招聘图片后跳转的链接
+    const imageUrl = '/images/recruitment-banner.png'; // 您的招聘图片
+
+    return (
+        <div className='my-4'>
+            <SmartLink href={linkUrl}>
+                <LazyImage src={imageUrl} alt="招聘信息" className="w-full h-auto rounded-xl shadow-md transform hover:scale-105 transition-transform duration-200" />
+            </SmartLink>
+        </div>
+    )
+}
+
+
+/**
  * 文章详情
  */
 const LayoutSlug = props => {
@@ -265,17 +358,21 @@ const LayoutSlug = props => {
                 <ArticleExpirationNotice post={post} />
                 <AISummary aiSummary={post.aiSummary} />
                 <WWAds orientation='horizontal' className='w-full' />
+                
+                {post?.type === 'Post' && <PostCopyright {...props} />}
+
                 {post && <NotionPage post={post} />}
                 <WWAds orientation='horizontal' className='w-full' />
               </section>
 
-              <PostAdjacent {...props} />
-
               <ShareBar post={post} />
               {post?.type === 'Post' && (
                 <div className='px-5'>
-                  <PostCopyright {...props} />
-                  <PostRecommend {...props} />
+                  {/* --- 移除 PostAdjacent (上一篇/下一篇) --- */}
+                  {/* <PostAdjacent {...props} /> */}
+                  
+                  {/* --- 移除 PostRecommend (相关文章)，替换为招聘图片 --- */}
+                  <RecruitmentCard />
                 </div>
               )}
             </article>
@@ -444,4 +541,4 @@ export {
   LayoutSlug,
   LayoutTagIndex,
   CONFIG as THEME_CONFIG
-            }
+          }
