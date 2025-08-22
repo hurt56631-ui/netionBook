@@ -40,65 +40,6 @@ import AISummary from '@/components/AISummary'
 import ArticleExpirationNotice from '@/components/ArticleExpirationNotice'
 
 /**
- * 快捷入口功能区 (小图标，用于顶部)
- */
-const QuickAccessGrid = () => {
-    const functions = [
-        { title: '加入VIP', subtitle: '专属权益', url: '/vip-page', img: '/images/vip.jpg' },
-        { title: '找工作', subtitle: '最新机会', url: '/jobs-page', img: '/images/access-jobs.jpg' },
-        { title: '加入频道', subtitle: '社区交流', url: 'https://www.facebook.com/share/16fpFsbhh2/', img: '/images/access-community.jpg' },
-        // { title: '口语', subtitle: '快速提升', url: '/category/口语', img: '/images/access-oral.jpg' }, // 第四个按钮已移除
-    ]
-
-    return (
-        <div className='w-full px-5 py-2'>
-            <div className='grid grid-cols-3 gap-2'> {/* 改回三列 */}
-                {functions.map(func => <FeatureCard key={func.title} {...func} />)}
-            </div>
-        </div>
-    )
-}
-
-/**
- * 学习工具功能区 (大图标，用于底部)
- */
-const StudyToolsGrid = () => {
-    const functions = [
-        { title: '字典', subtitle: '在线查询', url: '/words', img: '/images/zidian.jpg' },
-        { title: '语法', subtitle: '核心知识点', url: '/grammar-page', img: '/images/tool-grammar.jpg' },
-        { title: '练习题', subtitle: '巩固提升', url: '/exercise-page', img: '/images/tool-exercise.jpg' },
-    ]
-
-    return (
-        <div className='py-8 px-5'>
-            <div className='text-2xl font-bold mb-4 text-center dark:text-white'>学习工具</div>
-            <div className='grid grid-cols-3 gap-4'>
-                {functions.map(func => <FeatureCard key={func.title} {...func} />)}
-            </div>
-        </div>
-    )
-}
-
-/**
- * 新增的主页图片价格卡组件
- */
-const HomepagePriceCard = () => {
-    const imageUrl = '/images/zhuyetp.jpg'; // <-- 您提供的图片路径
-    const linkUrl = '/price-info-page'; // <-- 设置整张图片点击后跳转的链接
-  
-    return (
-      <section className='mt-12 mx-auto max-w-7xl px-5'>
-        <SmartLink href={linkUrl}>
-          <div className='rounded-xl shadow-md overflow-hidden transform hover:scale-105 transition-transform duration-300'>
-            <LazyImage src={imageUrl} alt="课程价格与联系信息" className="w-full h-auto" />
-          </div>
-        </SmartLink>
-      </section>
-    )
-}
-
-
-/**
  * 基础布局
  */
 const LayoutBase = props => {
@@ -115,7 +56,6 @@ const LayoutBase = props => {
       {isIndex ? (
         <>
           <NoticeBar />
-          <QuickAccessGrid />
           <Hero {...props} />
         </>
       ) : null}
@@ -140,53 +80,30 @@ const LayoutBase = props => {
   }, [])
 
   return (
-    // --- 关键修改 1：移除全局背景图 ---
     <div
       id='theme-heo'
       className={`${siteConfig('FONT_STYLE')} bg-[#f7f9fe] dark:bg-[#18171d] h-full min-h-screen flex flex-col scroll-smooth`}>
-      <div className=''> {/* 移除半透明覆盖层 */}
-        <Style />
-        {headerSlot}
-        <main
-          id='wrapper-outer'
-          className={`flex-grow w-full ${maxWidth} mx-auto relative md:px-5`}>
-          <div
-            id='container-inner'
-            className={`${HEO_HERO_BODY_REVERSE ? 'flex-row-reverse' : ''} w-full mx-auto lg:flex justify-center relative z-10`}>
-            <div className={`w-full h-auto ${className || ''}`}>
-              {slotTop}
-              {children}
-            </div>
-            <div className='lg:px-2'></div>
-            <div className='hidden xl:block'>
-              {slotRight}
-            </div>
+      <Style />
+      {headerSlot}
+      <main
+        id='wrapper-outer'
+        className={`flex-grow w-full ${maxWidth} mx-auto relative md:px-5`}>
+        <div
+          id='container-inner'
+          className={`${HEO_HERO_BODY_REVERSE ? 'flex-row-reverse' : ''} w-full mx-auto lg:flex justify-center relative z-10`}>
+          <div className={`w-full h-auto ${className || ''}`}>
+            {slotTop}
+            {children}
           </div>
-        </main>
-        
-        {/* --- 关键修改 2：将学习工具和价格卡移动到 LayoutIndex 中 --- */}
-        {/* {isIndex && <StudyToolsGrid />} */}
-        {/* {isIndex && <HomepagePriceCard />} */}
-        <Footer />
-        {HEO_LOADING_COVER && <LoadingCover />}
-      </div>
+          <div className='lg:px-2'></div>
+          <div className='hidden xl:block'>
+            {slotRight}
+          </div>
+        </div>
+      </main>
+      <Footer />
+      {HEO_LOADING_COVER && <LoadingCover />}
     </div>
-  )
-}
-
-/**
- * 新增的功能卡片组件 (带图片背景)
- */
-const FeatureCard = ({ title, subtitle, url, img }) => {
-  return (
-    <SmartLink href={url} className='group relative block w-full h-24 rounded-xl overflow-hidden shadow-md transform hover:scale-105 transition-transform duration-300'>
-      <LazyImage src={img} alt={title} className='absolute inset-0 w-full h-full object-cover'/>
-      <div className='absolute inset-0 bg-gradient-to-t from-black/60 to-transparent'></div>
-      <div className='absolute bottom-0 left-0 p-4 text-white'>
-        <h3 className='font-bold text-lg'>{title}</h3>
-        {subtitle && <p className='text-sm opacity-80'>· {subtitle}</p>}
-      </div>
-    </SmartLink>
   )
 }
 
@@ -196,18 +113,12 @@ const FeatureCard = ({ title, subtitle, url, img }) => {
 const LayoutIndex = props => {
   return (
     <div id='post-outer-wrapper' className='px-5 md:px-0'>
-      {/* --- 关键修改 3：恢复 CategoryBar，并按顺序渲染所有模块 --- */}
       <CategoryBar {...props} />
-      
       {siteConfig('POST_LIST_STYLE') === 'page' ? (
         <BlogPostListPage {...props} />
       ) : (
         <BlogPostListScroll {...props} />
       )}
-
-      <StudyToolsGrid />
-      <HomepagePriceCard />
-      {/* --- 修改结束 --- */}
     </div>
   )
 }
@@ -292,22 +203,6 @@ const LayoutArchive = props => {
 }
 
 /**
- * 新增的招聘图片组件
- */
-const RecruitmentCard = () => {
-    const linkUrl = '/jobs'; // 点击招聘图片后跳转的链接
-    const imageUrl = '/images/zhaopin.jpg'; // 您的招聘图片
-
-    return (
-        <div className='my-4'>
-            <SmartLink href={linkUrl}>
-                <LazyImage src={imageUrl} alt="招聘信息" className="w-full h-auto rounded-xl shadow-md transform hover:scale-105 transition-transform duration-200" />
-            </SmartLink>
-        </div>
-    )
-}
-
-/**
  * 文章详情
  */
 const LayoutSlug = props => {
@@ -370,18 +265,17 @@ const LayoutSlug = props => {
                 <ArticleExpirationNotice post={post} />
                 <AISummary aiSummary={post.aiSummary} />
                 <WWAds orientation='horizontal' className='w-full' />
-                
-                {post?.type === 'Post' && <PostCopyright {...props} />}
-
                 {post && <NotionPage post={post} />}
                 <WWAds orientation='horizontal' className='w-full' />
               </section>
 
+              <PostAdjacent {...props} />
+
               <ShareBar post={post} />
               {post?.type === 'Post' && (
                 <div className='px-5'>
-                  {/* --- 移除 PostAdjacent 和 PostRecommend，替换为招聘图片 --- */}
-                  <RecruitmentCard />
+                  <PostCopyright {...props} />
+                  <PostRecommend {...props} />
                 </div>
               )}
             </article>
@@ -410,7 +304,134 @@ const LayoutSlug = props => {
   )
 }
 
-// ... (所有其他布局组件的代码保持不变，并确保它们完整) ...
+/**
+ * 404
+ */
+const Layout404 = props => {
+  const { onLoading, fullWidth } = useGlobal()
+  return (
+    <>
+      <main
+        id='wrapper-outer'
+        className={`flex-grow ${fullWidth ? '' : 'max-w-4xl'} w-screen mx-auto px-5`}>
+        <div id='error-wrapper' className={'w-full mx-auto justify-center'}>
+          <Transition
+            show={!onLoading}
+            appear={true}
+            enter='transition ease-in-out duration-700 transform order-first'
+            enterFrom='opacity-0 translate-y-16'
+            enterTo='opacity-100'
+            leave='transition ease-in-out duration-300 transform'
+            leaveFrom='opacity-100 translate-y-0'
+            leaveTo='opacity-0 -translate-y-16'
+            unmount={false}>
+            <div className='error-content flex flex-col md:flex-row w-full mt-12 h-[30rem] md:h-96 justify-center items-center bg-white dark:bg-[#1B1C20] border dark:border-gray-800 rounded-3xl'>
+              <LazyImage
+                className='error-img h-60 md:h-full p-4'
+                src={
+                  'https://bu.dusays.com/2023/03/03/6401a7906aa4a.gif'
+                }></LazyImage>
+              <div className='error-info flex-1 flex flex-col justify-center items-center space-y-4'>
+                <h1 className='error-title font-extrabold md:text-9xl text-7xl dark:text-white'>
+                  404
+                </h1>
+                <div className='dark:text-white'>请尝试站内搜索寻找文章</div>
+                <SmartLink href='/'>
+                  <button className='bg-blue-500 py-2 px-4 text-white shadow rounded-lg hover:bg-blue-600 hover:shadow-md duration-200 transition-all'>
+                    回到主页
+                  </button>
+                </SmartLink>
+              </div>
+            </div>
+            <div className='mt-12'>
+              <LatestPostsGroup {...props} />
+            </div>
+          </Transition>
+        </div>
+      </main>
+    </>
+  )
+}
+
+/**
+ * 分类列表
+ */
+const LayoutCategoryIndex = props => {
+  const { categoryOptions } = props
+  const { locale } = useGlobal()
+
+  return (
+    <div id='category-outer-wrapper' className='mt-8 px-5 md:px-0'>
+      <div className='text-4xl font-extrabold dark:text-gray-200 mb-5'>
+        {locale.COMMON.CATEGORY}
+      </div>
+      <div
+        id='category-list'
+        className='duration-200 flex flex-wrap m-10 justify-center'>
+        {categoryOptions?.map(category => {
+          return (
+            <SmartLink
+              key={category.name}
+              href={`/category/${category.name}`}
+              passHref
+              legacyBehavior>
+              <div
+                className={
+                  'group mr-5 mb-5 flex flex-nowrap items-center border bg-white text-2xl rounded-xl dark:hover:text-white px-4 cursor-pointer py-3 hover:text-white hover:bg-indigo-600 transition-all hover:scale-110 duration-150'
+                }>
+                <HashTag className={'w-5 h-5 stroke-gray-500 stroke-2'} />
+                {category.name}
+                <div className='bg-[#f1f3f8] ml-1 px-2 rounded-lg group-hover:text-indigo-600 '>
+                  {category.count}
+                </div>
+              </div>
+            </SmartLink>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+/**
+ * 标签列表
+ */
+const LayoutTagIndex = props => {
+  const { tagOptions } = props
+  const { locale } = useGlobal()
+
+  return (
+    <div id='tag-outer-wrapper' className='px-5 mt-8 md:px-0'>
+      <div className='text-4xl font-extrabold dark:text-gray-200 mb-5'>
+        {locale.COMMON.TAGS}
+      </div>
+      <div
+        id='tag-list'
+        className='duration-200 flex flex-wrap space-x-5 space-y-5 m-10 justify-center'>
+        {tagOptions.map(tag => {
+          return (
+            <SmartLink
+              key={tag.name}
+              href={`/tag/${tag.name}`}
+              passHref
+              legacyBehavior>
+              <div
+                className={
+                  'group flex flex-nowrap items-center border bg-white text-2xl rounded-xl dark:hover:text-white px-4 cursor-pointer py-3 hover:text-white hover:bg-indigo-600 transition-all hover:scale-110 duration-150'
+                }>
+                <HashTag className={'w-5 h-5 stroke-gray-500 stroke-2'} />
+                {tag.name}
+                <div className='bg-[#f1f3f8] ml-1 px-2 rounded-lg group-hover:text-indigo-600 '>
+                  {tag.count}
+                </div>
+              </div>
+            </SmartLink>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
 
 export {
   Layout404,
@@ -423,4 +444,4 @@ export {
   LayoutSlug,
   LayoutTagIndex,
   CONFIG as THEME_CONFIG
-        }
+            }
