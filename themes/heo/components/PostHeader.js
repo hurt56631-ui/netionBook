@@ -69,8 +69,8 @@ export default function PostHeader({ isDarkMode }) {
 
             {/* 线下部分 */}
             <div className='flex justify-center items-center text-2xl font-bold mb-4'>
-                <span>线下</span>
-                <span className='text-sm font-normal opacity-70 ml-2'>(每周1-6)</span>
+                <span></span>
+                <span className='text-sm font-normal opacity-70 ml-2'>()</span>
             </div>
             <div className='flex flex-col space-y-3 text-lg'>
                 <div className='flex justify-between items-center'>
