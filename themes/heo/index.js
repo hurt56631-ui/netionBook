@@ -132,7 +132,7 @@ const QuickAccessGrid = () => {
     ]
 
     return (
-        <div className='py-8'>
+        <div className='py-2'>
             <div className='grid grid-cols-3 gap-4'>
                 {functions.map(func => <FunctionButton key={func.title} {...func} />)}
             </div>
@@ -151,7 +151,7 @@ const StudyToolsGrid = () => {
     ]
 
     return (
-        <div className='py-8'>
+        <div className='py-2'>
             <div className='text-2xl font-bold mb-4 text-center dark:text-white'>学习工具</div>
             <div className='grid grid-cols-3 gap-4'>
                 {functions.map(func => <FunctionButton key={func.title} {...func} />)}
@@ -168,7 +168,7 @@ const HomepagePriceCard = () => {
     const linkUrl = '/price-info-page'; // <-- 设置整张图片点击后跳转的链接
   
     return (
-      <section className='mt-12 mx-auto max-w-7xl px-5'>
+      <section className='mt-4 mx-auto max-w-7xl px-5'>
         <SmartLink href={linkUrl}>
           <div className='rounded-xl shadow-md overflow-hidden transform hover:scale-105 transition-transform duration-300'>
             <LazyImage src={imageUrl} alt="课程价格与联系信息" className="w-full h-auto" />
