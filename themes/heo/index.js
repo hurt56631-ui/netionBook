@@ -126,7 +126,7 @@ const FunctionButton = ({ title, icon, url }) => {
  */
 const QuickAccessGrid = () => {
     const functions = [
-        { title: '加入VIP', icon: 'fa-solid fa-crown', url: '/vip-page' , img: '/images/access-vip.jpg' },
+        { title: '加入VIP', icon: 'fa-solid fa-crown', url: '/vip-page' , img: '/images/vip.jpg' },
         { title: '找工作', icon: 'fa-solid fa-briefcase', url: '/jobs-page' },
         { title: '加入频道', icon: 'fa-solid fa-users', url: 'https://www.facebook.com/share/16fpFsbhh2/' },
     ]
