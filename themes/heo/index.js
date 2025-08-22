@@ -135,7 +135,7 @@ const FeatureCard = ({ title, subtitle, url, img }) => {
  */
 const QuickAccessGrid = () => {
     const functions = [
-        { title: '加入VIP', subtitle: '专属权益', url: '/vip-page', img: '/images/access-vip.jpg' },
+        { title: '加入VIP', subtitle: '专属权益', url: '/vip-page', img: '/images/vip.jpg' },
         { title: '找工作', subtitle: '最新机会', url: '/jobs-page', img: '/images/access-jobs.jpg' },
         { title: '加入频道', subtitle: '社区交流', url: 'https://www.facebook.com/share/16fpFsbhh2/', img: '/images/access-community.jpg' },
         { title: '口语', subtitle: '快速提升', url: '/category/口语', img: '/images/access-oral.jpg' },
