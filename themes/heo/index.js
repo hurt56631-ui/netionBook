@@ -283,7 +283,7 @@ const LayoutArchive = props => {
  */
 const RecruitmentCard = () => {
     const linkUrl = '/jobs'; // 点击招聘图片后跳转的链接
-    const headerImage = '/images/recruitment-banner.png'; // 您的招聘图片
+    const imageUrl = '/images/recruitment-banner.png'; // 您的招聘图片
 
     return (
         <div className='my-4'>
@@ -541,4 +541,4 @@ export {
   LayoutSlug,
   LayoutTagIndex,
   CONFIG as THEME_CONFIG
-          }
+    }
