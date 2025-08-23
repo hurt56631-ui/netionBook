@@ -223,9 +223,9 @@ const LayoutIndex = props => {
       <StudyToolsGrid />
       
       {/* --- 新增代码：在这里渲染 GlosbeSearchCard 组件 --- */}
-      <div className='my-4'>
-        <GlosbeSearchCard />
-      </div>
+     // <div className='my-4'>
+       // <GlosbeSearchCard />
+      // </div>
 
       <HomepagePriceCard />
     </div>
