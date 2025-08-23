@@ -5,22 +5,19 @@ import { useState } from 'react'
 /**
  * Glosbe 在线词典搜索卡片
  * - 支持缅中双向互译切换
- * - 在页面内直接显示结果，优化移动端体验
+ * - 在新标签页中打开搜索结果，以解决 iframe 加载被阻止的问题
  */
 const GlosbeSearchCard = () => {
   // state for the word to search
   const [word, setWord] = useState('')
   // state for the search direction: 'my2zh' or 'zh2my'
   const [searchDirection, setSearchDirection] = useState('my2zh')
-  // state for the URL to show in the iframe
-  const [resultUrl, setResultUrl] = useState('')
 
   // Toggle search direction
   const toggleDirection = () => {
     setSearchDirection(prev => (prev === 'my2zh' ? 'zh2my' : 'my2zh'))
-    // Clear previous search word and result when direction changes
+    // Clear previous search word when direction changes
     setWord('')
-    setResultUrl('')
   }
 
   // Handle the search action
@@ -34,7 +31,8 @@ const GlosbeSearchCard = () => {
         // Chinese to Burmese
         glosbeUrl = `https://glosbe.com/zh/my/${encodeURIComponent(word)}`
       }
-      setResultUrl(glosbeUrl)
+      // Open the URL in a new browser tab. This is the fix.
+      window.open(glosbeUrl, '_blank')
     }
   }
 
@@ -87,17 +85,6 @@ const GlosbeSearchCard = () => {
           查询
         </button>
       </div>
-
-      {/* Result Display Area (Iframe) */}
-      {resultUrl && (
-        <div className="mt-6">
-          <iframe
-            src={resultUrl}
-            className="w-full h-96 border rounded-lg border-gray-300 dark:border-gray-600"
-            title="Glosbe Search Result"
-          ></iframe>
-        </div>
-      )}
     </div>
   )
 }
