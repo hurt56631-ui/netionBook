@@ -218,9 +218,9 @@ const LayoutIndex = props => {
     <div id='post-outer-wrapper' className='px-5 md:px-0'>
       <CategoryBar {...props} />
 
-      {/* --- 这是我们的测试占位符 --- */}
-      <div className="my-4 p-4 bg-green-100 border border-green-400 rounded-md">
-        这里是词典的测试位置
+      {/* --- 换上真正的组件 --- */}
+      <div className='my-4'>
+       <GlosbeSearchCard />
       </div>
   
       <QuickAccessGrid />
