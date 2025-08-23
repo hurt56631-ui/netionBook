@@ -1,4 +1,4 @@
-// themes/heo/index.js (最终修复版，已添加 GlosbeSearchCard)
+// themes/heo/index.js (最终修复版，所有功能按钮都在，所有组件都已恢复)
 
 import Comment from '@/components/Comment'
 import { AdSlot } from '@/components/GoogleAdsense'
@@ -38,9 +38,6 @@ import CONFIG from './config'
 import { Style } from './style'
 import AISummary from '@/components/AISummary'
 import ArticleExpirationNotice from '@/components/ArticleExpirationNotice'
-
-// --- 新增代码：导入 GlosbeSearchCard 组件 ---
- import GlosbeSearchCard from '@/components/GlosbeSearchCard'
 
 /**
  * 基础布局
@@ -110,8 +107,9 @@ const LayoutBase = props => {
   )
 }
 
+// --- MODIFIED START ---
 /**
- * 功能按钮 (单个按钮样式)
+ * 功能按钮 (单个按钮样式) - 已修复
  */
 const FunctionButton = ({ title, icon, url, img }) => {
     // 定义内联样式，用于设置背景图片
@@ -134,8 +132,8 @@ const FunctionButton = ({ title, icon, url, img }) => {
             {/* 如果有图片，则添加一个半透明的遮罩层，以确保文字可读性 */}
             {img && <div className="absolute inset-0 bg-black bg-opacity-40 rounded-xl"></div>}
 
-            {/* 内容需要相对定位，使其在遮罩层之上 */}
-            <div className='relative z-10 text-center'>
+            {/* 内容需要相对定位， чтобы оно было выше遮罩层 */}
+            <div className='relative z-10'>
                 <div className={`text-3xl ${iconColorClass} transition-colors duration-200`}>
                     <i className={icon} />
                 </div>
@@ -146,6 +144,7 @@ const FunctionButton = ({ title, icon, url, img }) => {
         </SmartLink>
     )
 }
+// --- MODIFIED END ---
 
 
 /**
@@ -153,6 +152,7 @@ const FunctionButton = ({ title, icon, url, img }) => {
  */
 const QuickAccessGrid = () => {
     const functions = [
+        // 这里已经有 img 属性，现在它会生效了
         { title: '加入VIP', icon: 'fa-solid fa-crown', url: '/vip-page' , img: '/images/vip.jpg' },
         { title: '找工作', icon: 'fa-solid fa-briefcase', url: '/jobs-page' },
         { title: '加入频道', icon: 'fa-solid fa-users', url: 'https://www.facebook.com/share/16fpFsbhh2/' },
@@ -171,11 +171,15 @@ const QuickAccessGrid = () => {
  * 学习工具功能区
  */
 const StudyToolsGrid = () => {
+    // --- MODIFIED START ---
+    // 为学习工具也添加 img 属性，让它们也能显示背景图
+    // 请将下面的图片路径替换为您自己的图片
     const functions = [
         { title: '字典', icon: 'fa-solid fa-book', url: '/words', img: '/images/bg-study-01.jpg' },
         { title: '语法', icon: 'fa-solid fa-pen-ruler', url: '/grammar-page', img: '/images/bg-study-02.jpg' },
         { title: '练习题', icon: 'fa-solid fa-file-pen', url: '/exercise-page', img: '/images/bg-study-03.jpg' },
     ]
+    // --- MODIFIED END ---
 
     return (
         <div className='py-2'>
@@ -191,8 +195,8 @@ const StudyToolsGrid = () => {
  * 新增的主页图片价格卡组件
  */
 const HomepagePriceCard = () => {
-    const imageUrl = '/images/zhuyetp.jpg'; 
-    const linkUrl = '/price-info-page';
+    const imageUrl = '/images/zhuyetp.jpg'; // <-- 您提供的图片路径
+    const linkUrl = '/price-info-page'; // <-- 设置整张图片点击后跳转的链接
   
     return (
       <section className='mt-4 mx-auto max-w-7xl px-5'>
@@ -203,25 +207,17 @@ const HomepagePriceCard = () => {
         </SmartLink>
       </section>
     )
-}
+  }
 
 /**
  * 首页
  */
-// themes/heo/index.js
-
 const LayoutIndex = props => {
   return (
     <div id='post-outer-wrapper' className='px-5 md:px-0'>
       <CategoryBar {...props} />
-          
-      {/* --- 暂时注释掉在线词典 --- */}
-      {/* <div className='my-4'>
-        <GlosbeSearchCard />
-      </div> */}
-
       <QuickAccessGrid />
-          
+      
       {siteConfig('POST_LIST_STYLE') === 'page' ? (
         <BlogPostListPage {...props} />
       ) : (
@@ -239,16 +235,14 @@ const LayoutIndex = props => {
  */
 const LayoutPostList = props => {
   return (
-    <LayoutBase {...props}>
-        <div id='post-outer-wrapper' className='px-5  md:px-0'>
-        <CategoryBar {...props} />
-        {siteConfig('POST_LIST_STYLE') === 'page' ? (
-            <BlogPostListPage {...props} />
-        ) : (
-            <BlogPostListScroll {...props} />
-        )}
-        </div>
-    </LayoutBase>
+    <div id='post-outer-wrapper' className='px-5  md:px-0'>
+      <CategoryBar {...props} />
+      {siteConfig('POST_LIST_STYLE') === 'page' ? (
+        <BlogPostListPage {...props} />
+      ) : (
+        <BlogPostListScroll {...props} />
+      )}
+    </div>
   )
 }
 
@@ -273,9 +267,9 @@ const LayoutSearch = props => {
         })
       }, 100)
     }
-  }, [currentSearch]) // 依赖项改为 currentSearch
+  }, [])
   return (
-    <LayoutBase {...props}>
+    <div currentSearch={currentSearch}>
       <div id='post-outer-wrapper' className='px-5  md:px-0'>
         {!currentSearch ? (
           <SearchNav {...props} />
@@ -289,7 +283,7 @@ const LayoutSearch = props => {
           </div>
         )}
       </div>
-    </LayoutBase>
+    </div>
   )
 }
 
@@ -300,20 +294,18 @@ const LayoutArchive = props => {
   const { archivePosts } = props
 
   return (
-    <LayoutBase {...props}>
-        <div className='p-5 rounded-xl border dark:border-gray-600 max-w-6xl w-full bg-white dark:bg-[#1e1e1e]'>
-        <CategoryBar {...props} border={false} />
-        <div className='px-3'>
-            {Object.keys(archivePosts).map(archiveTitle => (
-            <BlogPostArchive
-                key={archiveTitle}
-                posts={archivePosts[archiveTitle]}
-                archiveTitle={archiveTitle}
-            />
-            ))}
-        </div>
-        </div>
-    </LayoutBase>
+    <div className='p-5 rounded-xl border dark:border-gray-600 max-w-6xl w-full bg-white dark:bg-[#1e1e1e]'>
+      <CategoryBar {...props} border={false} />
+      <div className='px-3'>
+        {Object.keys(archivePosts).map(archiveTitle => (
+          <BlogPostArchive
+            key={archiveTitle}
+            posts={archivePosts[archiveTitle]}
+            archiveTitle={archiveTitle}
+          />
+        ))}
+      </div>
+    </div>
   )
 }
 
@@ -321,8 +313,8 @@ const LayoutArchive = props => {
  * 新增的招聘图片组件
  */
 const RecruitmentCard = () => {
-    const linkUrl = '/jobs'; 
-    const imageUrl = '/images/recruitment-banner.png';
+    const linkUrl = '/jobs'; // 点击招聘图片后跳转的链接
+    const imageUrl = '/images/recruitment-banner.png'; // 您的招聘图片
 
     return (
         <div className='my-4'>
@@ -333,12 +325,20 @@ const RecruitmentCard = () => {
     )
 }
 
+
 /**
  * 文章详情
  */
 const LayoutSlug = props => {
   const { post, lock, validPassword } = props
   const { locale, fullWidth } = useGlobal()
+
+  const [hasCode, setHasCode] = useState(false)
+
+  useEffect(() => {
+    const hasCode = document.querySelectorAll('[class^="language-"]').length > 0
+    setHasCode(hasCode)
+  }, [])
 
   const commentEnable =
     siteConfig('COMMENT_TWIKOO_ENV_ID') ||
@@ -351,49 +351,84 @@ const LayoutSlug = props => {
     siteConfig('COMMENT_WEBMENTION_ENABLE')
 
   const router = useRouter()
+  const waiting404 = siteConfig('POST_WAITING_TIME_FOR_404') * 1000
   useEffect(() => {
     if (!post) {
-      setTimeout(() => {
-        if (isBrowser) {
-          const article = document.querySelector('#notion-article')
-          if (!article) {
-            router.push('/404').then(() => {
-              console.warn('找不到页面', router.asPath)
-            })
+      setTimeout(
+        () => {
+          if (isBrowser) {
+            const article = document.querySelector(
+              '#article-wrapper #notion-article'
+            )
+            if (!article) {
+              router.push('/404').then(() => {
+                console.warn('找不到页面', router.asPath)
+              })
+            }
           }
-        }
-      }, 500)
+        },
+        waiting404
+      )
     }
   }, [post])
   return (
-    <LayoutBase {...props} >
-      <div id="article-wrapper" className="px-2 lg:p-8">
+    <>
+      <div
+        className={`article h-full w-full ${fullWidth ? '' : 'xl:max-w-5xl'} ${hasCode ? 'xl:w-[73.15vw]' : ''}  bg-white dark:bg-[#18171d] dark:border-gray-600 lg:hover:shadow lg:border rounded-2xl lg:px-2 lg:py-4 `}>
         {lock && <PostLock validPassword={validPassword} />}
 
         {!lock && post && (
-          <>
-            <ArticleExpirationNotice post={post} />
-            <NotionPage post={post} />
-            {post?.type === 'Post' && <PostCopyright {...props} />}
-            {post?.type === 'Post' && <RecruitmentCard />} {/* 招聘卡片替代相关文章 */}
-            <PostAdjacent {...props} />
-            <AdSlot type='in-article' />
-            <WWAds orientation='horizontal' />
+          <div className='mx-auto md:w-full md:px-5'>
+            <article
+              id='article-wrapper'
+              itemScope
+              itemType='https://schema.org/Movie'>
+              <section
+                className='wow fadeInUp p-5 justify-center mx-auto'
+                data-wow-delay='.2s'>
+                <ArticleExpirationNotice post={post} />
+                <AISummary aiSummary={post.aiSummary} />
+                <WWAds orientation='horizontal' className='w-full' />
+                
+                {post?.type === 'Post' && <PostCopyright {...props} />}
 
-            <div className='pt-8'>
-              <Comment frontMatter={post} />
-              <AdSlot type='comment' />
-            </div>
-          </>
+                {post && <NotionPage post={post} />}
+                <WWAds orientation='horizontal' className='w-full' />
+              </section>
+
+              <ShareBar post={post} />
+              {post?.type === 'Post' && (
+                <div className='px-5'>
+                  {/* --- 移除 PostAdjacent (上一篇/下一篇) --- */}
+                  {/* <PostAdjacent {...props} /> */}
+                  
+                  {/* --- 移除 PostRecommend (相关文章)，替换为招聘图片 --- */}
+                  <RecruitmentCard />
+                </div>
+              )}
+            </article>
+
+            {fullWidth ? null : (
+              <div className={`${commentEnable && post ? '' : 'hidden'}`}>
+                <hr className='my-4 border-dashed' />
+                <div className='py-2'>
+                  <AdSlot />
+                </div>
+                <div className='duration-200 overflow-x-auto px-5'>
+                  <div className='text-2xl dark:text-white'>
+                    <i className='fas fa-comment mr-1' />
+                    {locale.COMMON.COMMENTS}
+                  </div>
+                  <Comment frontMatter={post} className='' />
+                </div>
+              </div>
+            )}
+          </div>
         )}
       </div>
 
-      <div className='block lg:hidden'>
-        <ShareBar post={post} />
-      </div>
-
       <FloatTocButton {...props} />
-    </LayoutBase>
+    </>
   )
 }
 
@@ -401,16 +436,48 @@ const LayoutSlug = props => {
  * 404
  */
 const Layout404 = props => {
+  const { onLoading, fullWidth } = useGlobal()
   return (
-    <LayoutBase {...props}>
-      <div className="text-black w-full h-screen text-center justify-center items-center flex flex-col">
-        <div className="text-6xl">404</div>
-        <div className="text-2xl">页面无法找到</div>
-        <div onClick={() => router.push('/')} className="mt-8 text-gray-500 cursor-pointer">
-          回到主页
+    <>
+      <main
+        id='wrapper-outer'
+        className={`flex-grow ${fullWidth ? '' : 'max-w-4xl'} w-screen mx-auto px-5`}>
+        <div id='error-wrapper' className={'w-full mx-auto justify-center'}>
+          <Transition
+            show={!onLoading}
+            appear={true}
+            enter='transition ease-in-out duration-700 transform order-first'
+            enterFrom='opacity-0 translate-y-16'
+            enterTo='opacity-100'
+            leave='transition ease-in-out duration-300 transform'
+            leaveFrom='opacity-100 translate-y-0'
+            leaveTo='opacity-0 -translate-y-16'
+            unmount={false}>
+            <div className='error-content flex flex-col md:flex-row w-full mt-12 h-[30rem] md:h-96 justify-center items-center bg-white dark:bg-[#1B1C20] border dark:border-gray-800 rounded-3xl'>
+              <LazyImage
+                className='error-img h-60 md:h-full p-4'
+                src={
+                  'https://bu.dusays.com/2023/03/03/6401a7906aa4a.gif'
+                }></LazyImage>
+              <div className='error-info flex-1 flex flex-col justify-center items-center space-y-4'>
+                <h1 className='error-title font-extrabold md:text-9xl text-7xl dark:text-white'>
+                  404
+                </h1>
+                <div className='dark:text-white'>请尝试站内搜索寻找文章</div>
+                <SmartLink href='/'>
+                  <button className='bg-blue-500 py-2 px-4 text-white shadow rounded-lg hover:bg-blue-600 hover:shadow-md duration-200 transition-all'>
+                    回到主页
+                  </button>
+                </SmartLink>
+              </div>
+            </div>
+            <div className='mt-12'>
+              <LatestPostsGroup {...props} />
+            </div>
+          </Transition>
         </div>
-      </div>
-    </LayoutBase>
+      </main>
+    </>
   )
 }
 
@@ -419,66 +486,78 @@ const Layout404 = props => {
  */
 const LayoutCategoryIndex = props => {
   const { categoryOptions } = props
+  const { locale } = useGlobal()
+
   return (
-    <LayoutBase {...props}>
-      <div className='bg-white dark:bg-gray-700 px-10 py-10 shadow'>
-        <div className='dark:text-gray-200 mb-5'>
-          <i className='mr-4 fas fa-th' />
-          所有分类
-        </div>
-        <div id='category-list' className='duration-200 flex flex-wrap'>
-          {categoryOptions?.map(category => {
-            return (
-              <SmartLink
-                key={category.name}
-                href={`/category/${category.name}`}
-                passHref
-                className='text-gray-500 dark:text-gray-300 dark:hover:text-white hover:text-black items-center justify-center flex
-                             whitespace-nowrap h-10 px-10 cursor-pointer text-lg'>
-                <i className={`${category.icon || 'fas fa-folder'} mr-4`} /> {category.name}({category.count})
-              </SmartLink>
-            )
-          })}
-        </div>
+    <div id='category-outer-wrapper' className='mt-8 px-5 md:px-0'>
+      <div className='text-4xl font-extrabold dark:text-gray-200 mb-5'>
+        {locale.COMMON.CATEGORY}
       </div>
-    </LayoutBase>
+      <div
+        id='category-list'
+        className='duration-200 flex flex-wrap m-10 justify-center'>
+        {categoryOptions?.map(category => {
+          return (
+            <SmartLink
+              key={category.name}
+              href={`/category/${category.name}`}
+              passHref
+              legacyBehavior>
+              <div
+                className={
+                  'group mr-5 mb-5 flex flex-nowrap items-center border bg-white text-2xl rounded-xl dark:hover:text-white px-4 cursor-pointer py-3 hover:text-white hover:bg-indigo-600 transition-all hover:scale-110 duration-150'
+                }>
+                <HashTag className={'w-5 h-5 stroke-gray-500 stroke-2'} />
+                {category.name}
+                <div className='bg-[#f1f3f8] ml-1 px-2 rounded-lg group-hover:text-indigo-600 '>
+                  {category.count}
+                </div>
+              </div>
+            </SmartLink>
+          )
+        })}
+      </div>
+    </div>
   )
 }
-
 
 /**
  * 标签列表
  */
 const LayoutTagIndex = props => {
   const { tagOptions } = props
+  const { locale } = useGlobal()
+
   return (
-    <LayoutBase {...props}>
-      <div className='bg-white dark:bg-gray-700 px-10 py-10 shadow'>
-        <div className='dark:text-gray-200 mb-5'>
-          <i className='mr-4 fas fa-tag' />
-          所有标签
-        </div>
-        <div id='tags-list' className='duration-200 flex flex-wrap'>
-          {tagOptions.map(tag => {
-            return (
-              <div key={tag.name} className='p-2'>
-                <SmartLink
-                  href={`/tag/${encodeURIComponent(tag.name)}`}
-                  passHref
-                  className={'cursor-pointer inline-block rounded-full hover:bg-gray-500 hover:text-white duration-200 mr-2 py-2 px-4 text-xs whitespace-nowrap text-gray-600 dark:text-gray-300 dark:hover:text-white'}
-                >
-                  <div className='font-light'>
-                    {tag.color && <i className='fas fa-tag mr-1' style={{ color: tag.color }} />}
-                    {tag.name}
-                    {tag.count && <sup className='ml-1'>{tag.count}</sup>}
-                  </div>
-                </SmartLink>
-              </div>
-            )
-          })}
-        </div>
+    <div id='tag-outer-wrapper' className='px-5 mt-8 md:px-0'>
+      <div className='text-4xl font-extrabold dark:text-gray-200 mb-5'>
+        {locale.COMMON.TAGS}
       </div>
-    </LayoutBase>
+      <div
+        id='tag-list'
+        className='duration-200 flex flex-wrap space-x-5 space-y-5 m-10 justify-center'>
+        {tagOptions.map(tag => {
+          return (
+            <SmartLink
+              key={tag.name}
+              href={`/tag/${tag.name}`}
+              passHref
+              legacyBehavior>
+              <div
+                className={
+                  'group flex flex-nowrap items-center border bg-white text-2xl rounded-xl dark:hover:text-white px-4 cursor-pointer py-3 hover:text-white hover:bg-indigo-600 transition-all hover:scale-110 duration-150'
+                }>
+                <HashTag className={'w-5 h-5 stroke-gray-500 stroke-2'} />
+                {tag.name}
+                <div className='bg-[#f1f3f8] ml-1 px-2 rounded-lg group-hover:text-indigo-600 '>
+                  {tag.count}
+                </div>
+              </div>
+            </SmartLink>
+          )
+        })}
+      </div>
+    </div>
   )
 }
 
@@ -493,4 +572,4 @@ export {
   LayoutSlug,
   LayoutTagIndex,
   CONFIG as THEME_CONFIG
-}
+    }
