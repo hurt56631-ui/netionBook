@@ -40,7 +40,7 @@ import AISummary from '@/components/AISummary'
 import ArticleExpirationNotice from '@/components/ArticleExpirationNotice'
 
 // --- 新增代码：导入 GlosbeSearchCard 组件 ---
-import GlosbeSearchCard from '@/components/GlosbeSearchCard'
+// import GlosbeSearchCard from '@/components/GlosbeSearchCard'
 
 /**
  * 基础布局
