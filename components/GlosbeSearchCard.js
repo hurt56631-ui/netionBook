@@ -1,55 +1,92 @@
-// components/GlosbeSearchCard.js
+// /components/GlosbeSearchCard.js
 
-import { useState } from 'react';
+import { useState } from 'react'
 
+/**
+ * Glosbe 在线词典搜索卡片
+ * - 支持缅中双向互译切换
+ * - 在新标签页中打开搜索结果，以解决 iframe 加载被阻止的问题
+ */
 const GlosbeSearchCard = () => {
-  // 使用 useState 来存储用户输入的内容
-  const [searchTerm, setSearchTerm] = useState('');
+  // state for the word to search
+  const [word, setWord] = useState('')
+  // state for the search direction: 'my2zh' or 'zh2my'
+  const [searchDirection, setSearchDirection] = useState('my2zh')
 
-  // 处理表单提交的函数
-  const handleSearch = (e) => {
-    // 阻止表单默认的刷新页面的行为
-    e.preventDefault();
-    if (!searchTerm.trim()) {
-      // 如果输入为空，则不执行任何操作
-      return;
+  // Toggle search direction
+  const toggleDirection = () => {
+    setSearchDirection(prev => (prev === 'my2zh' ? 'zh2my' : 'my2zh'))
+    // Clear previous search word when direction changes
+    setWord('')
+  }
+
+  // Handle the search action
+  const handleSearch = () => {
+    if (word.trim()) {
+      let glosbeUrl = ''
+      if (searchDirection === 'my2zh') {
+        // Burmese to Chinese
+        glosbeUrl = `https://glosbe.com/my/zh/${encodeURIComponent(word)}`
+      } else {
+        // Chinese to Burmese
+        glosbeUrl = `https://glosbe.com/zh/my/${encodeURIComponent(word)}`
+      }
+      // Open the URL in a new browser tab. This is the fix.
+      window.open(glosbeUrl, '_blank')
     }
-    
-    // 构建 Glosbe 的搜索 URL
-    // 缅甸语代码是 my, 中文代码是 zh
-    // 使用 encodeURIComponent 来确保特殊字符（如空格）能被正确处理
-    const glosbeUrl = `https://zh.glosbe.com/my/zh/${encodeURIComponent(searchTerm)}`;
-    
-    // 在新标签页中打开该 URL
-    window.open(glosbeUrl, '_blank');
-  };
+  }
+
+  // Handle input changes
+  const handleInputChange = (e) => {
+    setWord(e.target.value)
+  }
+  
+  // Allow searching by pressing Enter key
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch()
+    }
+  }
+  
+  // Dynamic placeholder text based on search direction
+  const placeholderText = searchDirection === 'my2zh' ? 'မြန်မာလို ရိုက်ပါ။ ...' : '输入中文...'
 
   return (
-    <div className='my-4 p-5 rounded-xl border dark:border-gray-600 bg-white dark:bg-[#1e1e1e] shadow-md'>
-      <div className='flex items-center mb-4'>
-        <i className='fa-solid fa-language text-2xl text-indigo-500 dark:text-yellow-500 mr-3'></i>
-        <h2 className='text-2xl font-bold dark:text-white'>Glosbe 缅中词典</h2>
-      </div>
-      <p className='text-gray-600 dark:text-gray-300 mb-4'>
-        请输入您要查询的缅甸语或中文字词。
-      </p>
-      <form onSubmit={handleSearch} className='flex gap-2'>
+    <div className="relative w-full rounded-xl shadow-md bg-white dark:bg-[#1e1e1e] p-6 border dark:border-gray-700">
+      <h2 className="text-2xl font-bold mb-4 text-center text-gray-800 dark:text-white">汉缅词典</h2>
+      
+      {/* Search Input and Buttons */}
+      <div className="flex flex-col sm:flex-row gap-2 justify-center items-center">
+        {/* Input Field */}
         <input
-          type='text'
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder='例如：မင်္ဂလာပါ 或 你好'
-          className='flex-grow px-4 py-2 border dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white'
+          type="text"
+          value={word}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
+          placeholder={placeholderText}
+          className="w-full sm:flex-grow px-4 py-2 text-gray-700 bg-gray-100 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
+
+        {/* Direction Toggle Button */}
         <button
-          type='submit'
-          className='bg-indigo-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-600 transition-colors duration-200'
+          onClick={toggleDirection}
+          title="切换翻译方向"
+          className="p-2 w-full sm:w-auto bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors duration-200"
+        >
+          {searchDirection === 'my2zh' ? 'မြန်မာစာ → 中' : '中 → မြန်မာစာ'}
+          <i className="fas fa-exchange-alt ml-2"></i>
+        </button>
+
+        {/* Search Button */}
+        <button
+          onClick={handleSearch}
+          className="w-full sm:w-auto px-6 py-2 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75 transition-colors duration-200"
         >
           查询
         </button>
-      </form>
+      </div>
     </div>
-  );
-};
+  )
+}
 
-export default GlosbeSearchCard;
+export default GlosbeSearchCard
