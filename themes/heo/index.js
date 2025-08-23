@@ -40,7 +40,7 @@ import AISummary from '@/components/AISummary'
 import ArticleExpirationNotice from '@/components/ArticleExpirationNotice'
 
 // --- 新增代码：导入 GlosbeSearchCard 组件 ---
-// import GlosbeSearchCard from '@/components/GlosbeSearchCard'
+ import GlosbeSearchCard from '@/components/GlosbeSearchCard'
 
 /**
  * 基础布局
@@ -212,6 +212,11 @@ const LayoutIndex = props => {
   return (
     <div id='post-outer-wrapper' className='px-5 md:px-0'>
       <CategoryBar {...props} />
+    {/* --- 新增代码：在这里渲染 GlosbeSearchCard 组件 --- */}
+      <div className='my-4'>
+        <GlosbeSearchCard />
+       </div>
+
       <QuickAccessGrid />
       
       {siteConfig('POST_LIST_STYLE') === 'page' ? (
@@ -221,11 +226,6 @@ const LayoutIndex = props => {
       )}
 
       <StudyToolsGrid />
-      
-      {/* --- 新增代码：在这里渲染 GlosbeSearchCard 组件 --- */}
-     // <div className='my-4'>
-       // <GlosbeSearchCard />
-      // </div>
 
       <HomepagePriceCard />
     </div>
