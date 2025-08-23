@@ -52,4 +52,4 @@ const GlosbeSearchCard = () => {
   );
 };
 
-export default GlosbeSearchCard;```
+export default GlosbeSearchCard;
