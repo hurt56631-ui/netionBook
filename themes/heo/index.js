@@ -208,17 +208,20 @@ const HomepagePriceCard = () => {
 /**
  * 首页
  */
+// themes/heo/index.js
+
 const LayoutIndex = props => {
   return (
     <div id='post-outer-wrapper' className='px-5 md:px-0'>
       <CategoryBar {...props} />
-    {/* --- 新增代码：在这里渲染 GlosbeSearchCard 组件 --- */}
-      <div className='my-4'>
+          
+      {/* --- 暂时注释掉在线词典 --- */}
+      {/* <div className='my-4'>
         <GlosbeSearchCard />
-       </div>
+      </div> */}
 
       <QuickAccessGrid />
-      
+          
       {siteConfig('POST_LIST_STYLE') === 'page' ? (
         <BlogPostListPage {...props} />
       ) : (
@@ -226,7 +229,6 @@ const LayoutIndex = props => {
       )}
 
       <StudyToolsGrid />
-
       <HomepagePriceCard />
     </div>
   )
