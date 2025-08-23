@@ -38,6 +38,7 @@ import CONFIG from './config'
 import { Style } from './style'
 import AISummary from '@/components/AISummary'
 import ArticleExpirationNotice from '@/components/ArticleExpirationNotice'
+import GlosbeSearchCard from '@/components/GlosbeSearchCard'
 
 /**
  * 基础布局
