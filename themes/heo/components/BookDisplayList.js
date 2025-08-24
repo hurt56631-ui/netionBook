@@ -1,43 +1,47 @@
 // themes/heo/components/BookDisplayList.js
-// 最终版本：不再需要手动填写 Notion ID，直接从 props 接收数据。
+// 最终版本：修复了观看链接的获取逻辑，以匹配新的 Notion 属性名 'ContentType'。
 
 import { useState, useEffect } from 'react';
 import BookDisplayCard from './BookDisplayCard'; // 导入单个书籍卡片组件
+import { getGlobalData } from '@/lib/db/getSiteData'; // 导入获取数据的函数
 
-const BookDisplayList = ({ allPages }) => { // <-- 从 props 接收 allPages
+const BookDisplayList = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    setLoading(true);
-    setError(null);
-    try {
-      if (allPages) {
+    async function fetchData() {
+      setLoading(true);
+      setError(null);
+      try {
+        const props = await getGlobalData({ from: 'book-page' });
+        const allPages = props.allPages || [];
+        
         const filteredBooks = allPages.filter(page => {
-          const pageType = page?.properties?.type?.select?.name || page?.type;
+          // --- 关键修改：读取名为 'ContentType' 的属性 ---
+          const pageType = page?.properties?.ContentType?.select?.name || page?.type;
           const isPublished = page.status === 'Published';
-          return pageType === 'Book' && isPublished; // 筛选 type 为 'Book' 且已发布的页面
+          return pageType === 'Book' && isPublished; // 筛选 'ContentType' 值为 'Book' 且已发布的页面
         });
 
         const formattedBooks = filteredBooks.map(page => ({
           id: page.id,
           title: page.title,
-          coverImageUrl: page.pageCoverThumbnail, // 使用 Notion 的 pageCoverThumbnail 作为封面
-          viewUrl: page.pageProperties?.['观看链接']?.url || page.href, // 假设有“观看链接”属性
+          coverImageUrl: page.pageCoverThumbnail,
+          viewUrl: page.pageProperties?.['观看链接']?.url || page.href,
         }));
 
         setBooks(formattedBooks);
-      } else {
-        setBooks([]); // 如果 allPages 不存在，设置为空数组
+      } catch (err) {
+        console.error("Failed to fetch book data:", err);
+        setError("无法加载书籍数据，请检查网络或Notion配置。");
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      console.error("Failed to process book data:", err);
-      setError("无法处理书籍数据。");
-    } finally {
-      setLoading(false);
     }
-  }, [allPages]); // 当 allPages prop 变化时，重新运行
+    fetchData();
+  }, []);
 
   if (loading) return <div className="text-center py-8 text-gray-500 dark:text-gray-400">加载书籍中...</div>;
   if (error) return <div className="text-center py-8 text-red-500">错误: {error}</div>;
@@ -46,7 +50,7 @@ const BookDisplayList = ({ allPages }) => { // <-- 从 props 接收 allPages
   return (
     <div className='py-8 px-5'>
       <h2 className="text-3xl font-bold mb-6 text-center dark:text-white">我的书库</h2>
-      <div className='grid grid-cols-3 gap-4'> {/* 三列布局 */}
+      <div className='grid grid-cols-3 gap-4'>
         {books.map(book => <BookDisplayCard key={book.id} book={book} />)}
       </div>
     </div>
