@@ -1,4 +1,4 @@
-// pages/words.js (最终修复版：字典数据筛选，匹配新的 Notion 属性名 'ContentType')
+// pages/words.js (最终修复版：字典数据筛选，匹配 Notion 实际列名 'type')
 
 import { getGlobalData } from '@/lib/db/getSiteData';
 import { useGlobal } from '@/lib/global';
@@ -33,17 +33,17 @@ export async function getStaticProps() {
   
   const filteredWords = props.allPages
     ? props.allPages.filter(page => {
-        // --- 关键修改：读取名为 'ContentType' 的属性 ---
-        const pageTypeProperty = page.properties?.ContentType; // 获取名为 'ContentType' 的属性对象
+        // --- 关键修改：读取名为 'type' 的属性 ---
+        const pageTypeProperty = page.properties?.type; // 获取名为 'type' 的属性对象
         const pageTypeName = pageTypeProperty?.select?.name; // 获取其 Select 类型的值 (例如 'Word')
         
         const isPublished = page.status === 'Published'; // 确保状态为 Published
 
-        return pageTypeName === 'Word' && isPublished; // 筛选 'ContentType' 值为 'Word' 且已发布的页面
+        return pageTypeName === 'Word' && isPublished; // 筛选 type 为 'Word' 且已发布的页面
       })
     : [];
   
-  console.log(`[Build Log] Filtered words with type 'Word' and status 'Published': ${filteredWords.length}`);
+  console.log(`[Build Log] Filtered words with type 'Word': ${filteredWords.length}`);
   
   // 将筛选并格式化后的单词数据传递给页面组件
   props.words = filteredWords.map(page => ({
