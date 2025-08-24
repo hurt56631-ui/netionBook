@@ -19,7 +19,8 @@ export const GameListRecent = ({ maxCount = 14 }) => {
   while (gamesClone?.length > 0 && index < maxCount) {
     const item = gamesClone?.shift()
     if (item) {
-      components.push(<GameItem key={index} item={item} isLargeCard={true} />)
+      // isLargeCard 属性现在不再需要，可以移除
+      components.push(<GameItem key={index} item={item} />)
       index++
     }
     continue
@@ -31,8 +32,14 @@ export const GameListRecent = ({ maxCount = 14 }) => {
 
   return (
     <>
-      <div className='game-list-recent-wrapper w-full max-w-full overflow-x-auto pt-4 px-2 md:px-0'>
-        <div className='game-grid md:flex grid grid-flow-col gap-2'>
+      {/* 移除了 overflow-x-auto，因为不再需要横向滚动 */}
+      <div className='game-list-recent-wrapper w-full pt-4 px-2 md:px-0'>
+        {/* 关键修改：
+            1. 移除了 md:flex 和 grid-flow-col
+            2. 使用 grid grid-cols-3 创建一个3列的网格布局
+            3. 使用 gap-3 设置卡片之间的间距
+        */}
+        <div className='game-grid grid grid-cols-3 gap-3'>
           {components?.map((ItemComponent, index) => {
             return ItemComponent
           })}
@@ -88,7 +95,11 @@ const GameItem = ({ item }) => {
         setShowType('img')
       }}
       title={title}
-      className={`cursor-pointer card-single h-28 w-28 relative shadow rounded-md overflow-hidden flex justify-center items-center 
+      /* 关键修改：
+         1. 移除了固定的 h-28 w-28
+         2. 添加了 aspect-[3/4] 来创建竖屏效果 (宽3高4的比例)，卡片会自动适应网格列宽
+      */
+      className={`cursor-pointer card-single aspect-[3/4] relative shadow rounded-md overflow-hidden flex justify-center items-center 
                 group hover:border-purple-400`}>
       <button
         className='absolute right-0.5 top-1 z-20'
@@ -105,7 +116,8 @@ const GameItem = ({ item }) => {
         )}
       </button>
 
-      <div className='absolute text-sm bottom-2 transition-all duration-200 text-white z-30'>
+      {/* 将标题移到底部，并添加左右内边距，使其在窄卡片上显示更好 */}
+      <div className='absolute text-sm bottom-2 left-0 right-0 px-1 text-center transition-all duration-200 text-white z-30 truncate'>
         {title}
       </div>
       <div className='h-1/2 w-full absolute left-0 bottom-0 z-20 opacity-75 transition-all duration-200'>
@@ -114,18 +126,22 @@ const GameItem = ({ item }) => {
 
       {showType === 'video' && (
         <video
-          className='z-10 object-cover w-auto h-28 absolute overflow-hidden'
-          loop='true'
+          /* 关键修改：确保视频能填满新的卡片尺寸 */
+          className='z-10 object-cover w-full h-full absolute'
+          loop={true}
           autoPlay
+          muted // 建议自动播放视频静音
+          playsInline // 提高在移动设备上的兼容性
           preload='none'>
           <source src={video} type='video/mp4' />
         </video>
       )}
       <img
+        /* 无需修改，w-full h-full object-cover 已经能很好地适应容器 */
         className='w-full h-full absolute object-cover group-hover:scale-105 duration-100 transition-all'
         src={img}
         alt={title}
       />
     </div>
   )
-}
+    }
