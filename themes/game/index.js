@@ -122,19 +122,23 @@ const LayoutBase = props => {
               <AdSlot type='in-article' />
             </div>
 
+            {/* --- 以下是被注释掉的区域 --- */}
             {/* 主区域下方 导览 */}
+            {/*
             <div className='w-full bg-white dark:bg-hexo-black-gray rounded-lg p-2'>
-              {/* 标签汇总             */}
               <GroupCategory
                 categoryOptions={categoryOptions}
                 currentCategory={currentCategory}
               />
               <hr />
               <GroupTag tagOptions={tagOptions} currentTag={currentTag} />
-              {/* 站点公告信息 */}
               <Announcement {...props} className='p-2' />
             </div>
-            <Footer />
+            */}
+            {/* 页脚 */}
+            {/* <Footer /> */}
+            {/* --- 注释结束 --- */}
+            
           </main>
         </div>
 
@@ -460,4 +464,4 @@ export {
   LayoutSlug,
   LayoutTagIndex,
   CONFIG as THEME_CONFIG
-}
+                  }
