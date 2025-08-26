@@ -176,7 +176,7 @@ const StudyToolsGrid = () => {
     // 为学习工具也添加 img 属性，让它们也能显示背景图
     // 请将下面的图片路径替换为您自己的图片
     const functions = [
-        { title: '书籍', icon: 'fa-solid fa-book', url: 'https://notion-next-b.vercel.app/?theme=gamehttps://notion-next-b.vercel.app/?theme=game', img: '/images/bg-study-01.jpg' },
+        { title: '书籍', icon: 'fa-solid fa-book', url: 'https://notion-next-b.vercel.app/?theme=game', img: '/images/bg-study-01.jpg' },
         { title: '语法', icon: 'fa-solid fa-pen-ruler', url: '/grammar-page', img: '/images/bg-study-02.jpg' },
         { title: '练习题', icon: 'fa-solid fa-file-pen', url: '/exercise-page', img: '/images/bg-study-03.jpg' },
     ]
