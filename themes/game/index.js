@@ -32,6 +32,8 @@ import SideBarContent from './components/SideBarContent'
 import SideBarDrawer from './components/SideBarDrawer'
 import CONFIG from './config'
 import { Style } from './style'
+import Link from 'next/link'
+import Image from 'next/image'
 
 // const AlgoliaSearchModal = dynamic(() => import('@/components/AlgoliaSearchModal'), { ssr: false })
 
@@ -121,24 +123,6 @@ const LayoutBase = props => {
             <div className='w-full py-4'>
               <AdSlot type='in-article' />
             </div>
-
-            {/* --- 以下是被注释掉的区域 --- */}
-            {/* 主区域下方 导览 */}
-            {/*
-            <div className='w-full bg-white dark:bg-hexo-black-gray rounded-lg p-2'>
-              <GroupCategory
-                categoryOptions={categoryOptions}
-                currentCategory={currentCategory}
-              />
-              <hr />
-              <GroupTag tagOptions={tagOptions} currentTag={currentTag} />
-              <Announcement {...props} className='p-2' />
-            </div>
-            */}
-            {/* 页脚 */}
-            {/* <Footer /> */}
-            {/* --- 注释结束 --- */}
-            
           </main>
         </div>
 
@@ -155,29 +139,65 @@ const LayoutBase = props => {
 }
 
 /**
- * 首页
- * 首页是个博客列表，加上顶部嵌入一个公告
+ * 新增的书籍卡片组件
+ * @param {*} param0
+ * @returns
+ */
+const BookCard = ({ post }) => {
+  const bookUrl = post.slug
+  const isExternal = bookUrl && (bookUrl.startsWith('http') || bookUrl.startsWith('//'))
+  const linkProps = isExternal
+    ? { href: bookUrl, target: '_blank', rel: 'noopener noreferrer' }
+    : { href: `/${post.slug}` }
+
+  return (
+    <div className="book-card">
+      <Link {...linkProps}>
+        <div className="book-cover-wrapper">
+          {post?.pageCover && (
+            <Image
+              src={post.pageCover}
+              alt={post.title}
+              layout="fill"
+              objectFit="cover"
+              className="book-cover-image"
+              unoptimized={true} // 如果封面图是外部链接(非Vercel托管)，建议开启此项
+            />
+          )}
+        </div>
+        <h2 className="book-title">{post.title}</h2>
+      </Link>
+    </div>
+  )
+}
+
+/**
+ * 首页 (修改为书架布局)
  * @param {*} props
  * @returns
  */
 const LayoutIndex = props => {
-  const { siteInfo } = props
+  const { posts, siteInfo } = props
+
   return (
     <>
       {/* 首页移动端顶部导航 */}
       <div className='p-2 xl:hidden'>
         <Header siteInfo={siteInfo} />
       </div>
-      {/* 最近游戏 */}
-      <GameListRecent />
-      {/* 游戏列表 */}
-      <LayoutPostList {...props} />
+
+      {/* 书架容器 */}
+      <div id="bookshelf-container">
+        {posts && posts.map(post => (
+          <BookCard key={post.id} post={post} />
+        ))}
+      </div>
     </>
   )
 }
 
 /**
- * 博客列表
+ * 博客列表 (保持原样)
  * @param {*} props
  * @returns
  */
@@ -208,7 +228,7 @@ const LayoutPostList = props => {
 }
 
 /**
- * 搜索
+ * 搜索 (保持原样)
  * 页面是博客列表，上方嵌入一个搜索引导条
  * @param {*} props
  * @returns
@@ -253,7 +273,7 @@ const LayoutSearch = props => {
 }
 
 /**
- * 归档
+ * 归档 (保持原样)
  * @param {*} props
  * @returns
  */
@@ -275,7 +295,7 @@ const LayoutArchive = props => {
 }
 
 /**
- * 文章详情
+ * 文章详情 (保持原样)
  * @param {*} props
  * @returns
  */
@@ -353,7 +373,7 @@ const LayoutSlug = props => {
 }
 
 /**
- * 404 页面
+ * 404 页面 (保持原样)
  * @param {*} props
  * @returns
  */
@@ -390,7 +410,7 @@ const Layout404 = props => {
 }
 
 /**
- * 文章分类列表
+ * 文章分类列表 (保持原样)
  * @param {*} props
  * @returns
  */
@@ -425,7 +445,7 @@ const LayoutCategoryIndex = props => {
 }
 
 /**
- * 文章标签列表
+ * 文章标签列表 (保持原样)
  * @param {*} props
  * @returns
  */
@@ -464,4 +484,4 @@ export {
   LayoutSlug,
   LayoutTagIndex,
   CONFIG as THEME_CONFIG
-                  }
+  }
