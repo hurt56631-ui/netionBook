@@ -1,76 +1,48 @@
 /* eslint-disable @next/next/no-img-element */
-import Comment from '@/components/Comment'
+// 核心依赖
 import { AdSlot } from '@/components/GoogleAdsense'
-import replaceSearchResult from '@/components/Mark'
 import NotionPage from '@/components/NotionPage'
-import { PWA as initialPWA } from '@/components/PWA'
-import ShareBar from '@/components/ShareBar'
 import { siteConfig } from '@/lib/config'
-import { useGlobal } from '@/lib/global'
-import { loadWowJS } from '@/lib/plugins/wow'
 import { deepClone, isBrowser, shuffleArray } from '@/lib/utils'
-import SmartLink from '@/components/SmartLink'
-import { useRouter } from 'next/router'
-import { createContext, useContext, useEffect, useRef, useState } from 'react'
-import Announcement from './components/Announcement'
-import { ArticleLock } from './components/ArticleLock'
-import BlogArchiveItem from './components/BlogArchiveItem'
-import { BlogListPage } from './components/BlogListPage'
-import { BlogListScroll } from './components/BlogListScroll'
-import BlogPostBar from './components/BlogPostBar'
-import { Footer } from './components/Footer'
-import GameEmbed from './components/GameEmbed'
-import { GameListIndexCombine } from './components/GameListIndexCombine'
-import { GameListRelate } from './components/GameListRealate'
-import { GameListRecent } from './components/GameListRecent'
-import GroupCategory from './components/GroupCategory'
-import GroupTag from './components/GroupTag'
+import { createContext, useContext, useEffect, useState } from 'react'
 import Header from './components/Header'
 import { MenuList } from './components/MenuList'
-import PostInfo from './components/PostInfo'
-import SideBarContent from './components/SideBarContent'
 import SideBarDrawer from './components/SideBarDrawer'
+import SideBarContent from './components/SideBarContent'
 import CONFIG from './config'
-import { Style } from './style'
+import { Style } from './style' // 确保 Style 组件从 './style' 导入
 import Link from 'next/link'
 import Image from 'next/image'
 
-// const AlgoliaSearchModal = dynamic(() => import('@/components/AlgoliaSearchModal'), { ssr: false })
+// 其他布局组件导入 (修复了路径)
+import Comment from '@/components/Comment'
+import replaceSearchResult from '@/components/Mark'
+import { PWA as initialPWA } from '@/components/PWA'
+import ShareBar from '@/components/ShareBar'
+import { useGlobal } from '@/lib/global'
+import { loadWowJS } from '@/lib/plugins/wow'
+import { useRouter } from 'next/router'
+import { ArticleLock } from './components/ArticleLock'
+import BlogArchiveItem from '@/components/BlogArchiveItem' // 路径修正
+import { BlogListPage } from '@/components/BlogListPage' // 路径修正
+import { BlogListScroll } from '@/components/BlogListScroll' // 路径修正
+import BlogPostBar from './components/BlogPostBar'
+import GameEmbed from './components/GameEmbed'
+import { GameListIndexCombine } from './components/GameListIndexCombine'
+import { GameListRelate } from './components/GameListRealate'
+import PostInfo from './components/PostInfo'
+import SmartLink from '@/components/SmartLink'
 
 // 主题全局状态
 const ThemeGlobalGame = createContext()
 export const useGameGlobal = () => useContext(ThemeGlobalGame)
 
 /**
- * 基础布局 采用左右两侧布局，移动端使用顶部导航栏
-
- * @returns {JSX.Element}
- * @constructor
+ * 基础布局
  */
 const LayoutBase = props => {
-  const {
-    allNavPages,
-    children,
-    siteInfo,
-    tagOptions,
-    currentTag,
-    categoryOptions,
-    currentCategory
-  } = props
-  const searchModal = useRef(null)
-  // 在列表中进行实时过滤
+  const { children, siteInfo } = props
   const [filterKey, setFilterKey] = useState('')
-
-  const [filterGames, setFilterGames] = useState(
-    deepClone(
-      allNavPages?.filter(item =>
-        item.tags?.some(
-          t => t === siteConfig('GAME_RECOMMEND_TAG', 'Recommend', CONFIG)
-        )
-      )
-    )
-  )
-  const [recentGames, setRecentGames] = useState([])
   const [sideBarVisible, setSideBarVisible] = useState(false)
 
   useEffect(() => {
@@ -78,59 +50,36 @@ const LayoutBase = props => {
   }, [])
 
   return (
-    <ThemeGlobalGame.Provider
-      value={{
-        searchModal,
-        filterKey,
-        setFilterKey,
-        recentGames,
-        setRecentGames,
-        filterGames,
-        setFilterGames,
-        sideBarVisible,
-        setSideBarVisible
-      }}>
-      <div
-        id='theme-game'
-        className={`${siteConfig('FONT_STYLE')} w-full h-full min-h-screen justify-center dark:bg-black dark:bg-opacity-50 dark:text-gray-300 scroll-smooth`}>
-        <Style />
+    <ThemeGlobalGame.Provider value={{ filterKey, setFilterKey, sideBarVisible, setSideBarVisible }}>
+      <div id='theme-game' className={`${siteConfig('FONT_STYLE')} relative w-full h-full min-h-screen justify-center scroll-smooth`}>
+        {/* 全局背景图层 (此方案下仅作为背景，上方会有书架) */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center z-0" 
+          style={{ backgroundImage: `url(${siteConfig('GLOBAL_BACKGROUND_IMAGE', '/images/default_bg.jpg', CONFIG)})` }}
+        ></div>
+        {/* 磨砂玻璃效果层 (位于背景图上方，书架下方) */}
+        <div className="absolute inset-0 bg-black/30 backdrop-blur-md z-0"></div>
 
-        {/* 左右布局 */}
-        <div
-          id='wrapper'
-          className={'relative flex justify-between w-full h-full mx-auto'}>
+        <Style /> {/* 样式组件在这里被调用，确保全局样式生效 */}
+
+        <div id='wrapper' className='relative z-10 flex justify-between w-full h-full mx-auto'>
           {/* PC端左侧 */}
-          <div className='w-52 hidden xl:block relative z-10'>
+          <div className='w-52 hidden xl:block relative z-20'>
             <div className='py-4 px-2 sticky top-0 h-screen flex flex-col justify-between'>
               <div className='select-none'>
-                {/* 抬头logo等 */}
                 <Header siteInfo={siteInfo} />
-                {/* 菜单栏 */}
                 <MenuList {...props} />
               </div>
-
-              {/* 左侧广告栏目 */}
-              <div className='w-full'>
-                <AdSlot />
-              </div>
+              <div className='w-full'><AdSlot /></div>
             </div>
           </div>
 
-          {/* 右侧 */}
-          <main className='flex-grow w-full h-full flex flex-col min-h-screen overflow-x-auto md:p-2'>
-            <div className='flex-grow h-full'>{children}</div>
-            {/* 广告 */}
-            <div className='w-full py-4'>
-              <AdSlot type='in-article' />
-            </div>
+          {/* 右侧主内容区域 */}
+          <main className='flex-grow w-full h-full flex flex-col min-h-screen'>
+            {children}
           </main>
         </div>
-
-        <SideBarDrawer
-          isOpen={sideBarVisible}
-          onClose={() => {
-            setSideBarVisible(false)
-          }}>
+        <SideBarDrawer isOpen={sideBarVisible} onClose={() => setSideBarVisible(false)}>
           <SideBarContent siteInfo={siteInfo} {...props} />
         </SideBarDrawer>
       </div>
@@ -139,11 +88,13 @@ const LayoutBase = props => {
 }
 
 /**
- * 新增的书籍卡片组件
- * @param {*} param0
- * @returns
+ * 书籍卡片组件 (为3D书架样式优化)
  */
 const BookCard = ({ post }) => {
+  if (!post) {
+    return null
+  }
+
   const bookUrl = post.slug
   const isExternal = bookUrl && (bookUrl.startsWith('http') || bookUrl.startsWith('//'))
   const linkProps = isExternal
@@ -151,90 +102,102 @@ const BookCard = ({ post }) => {
     : { href: `/${post.slug}` }
 
   return (
-    <div className="book-card">
-      <Link {...linkProps}>
+    <div className="book-card-item"> {/* 使用为3D书架定制的类名 */}
+      <Link {...linkProps} className="w-full h-full">
         <div className="book-cover-wrapper">
-          {post?.pageCover && (
-            <Image
-              src={post.pageCover}
-              alt={post.title}
-              layout="fill"
-              objectFit="cover"
-              className="book-cover-image"
-              unoptimized={true} // 如果封面图是外部链接(非Vercel托管)，建议开启此项
-            />
-          )}
+          <Image
+            src={post?.pageCover || siteConfig('IMG_LAZY_LOAD_ERROR')}
+            alt={post.title}
+            layout="fill"
+            objectFit="cover"
+            unoptimized={true}
+          />
+          <div className="book-title-overlay" title={post.title}>
+            {post.title}
+          </div>
         </div>
-        <h2 className="book-title">{post.title}</h2>
       </Link>
     </div>
   )
 }
 
 /**
- * 首页 (修改为书架布局)
- * @param {*} props
- * @returns
+ * 首页 (分层3D真实书架布局 - 最终版)
  */
 const LayoutIndex = props => {
   const { posts, siteInfo } = props
+  // 此处配置每层书架放几本书, 可以在 config.js 中配置
+  const BOOKS_PER_SHELF = siteConfig('BOOKS_PER_SHELF', 6, CONFIG)
 
-  return (
-    <>
-      {/* 首页移动端顶部导航 */}
-      <div className='p-2 xl:hidden'>
-        <Header siteInfo={siteInfo} />
-      </div>
+  // 安全检查：确保 posts 是一个数组并且过滤掉所有无效的 post 对象
+  const validPosts = Array.isArray(posts) ? posts.filter(Boolean) : []
 
-      {/* 书架容器 */}
-      <div id="bookshelf-container">
-        {posts && posts.map(post => (
-          <BookCard key={post.id} post={post} />
-        ))}
-      </div>
-    </>
-  )
-}
-
-/**
- * 博客列表 (保持原样)
- * @param {*} props
- * @returns
- */
-const LayoutPostList = props => {
-  const { posts } = props
-  const { filterKey } = useGameGlobal()
-  let filteredBlogPosts = []
-  if (filterKey && posts) {
-    filteredBlogPosts = posts.filter(post => {
-      const tagContent = post?.tags ? post?.tags.join(' ') : ''
-      const searchContent = post.title + post.summary + tagContent
-      return searchContent.toLowerCase().includes(filterKey.toLowerCase())
-    })
-  } else {
-    filteredBlogPosts = deepClone(posts)
+  // 将所有有效的书籍分组，每组代表一层书架
+  const shelves = []
+  if (validPosts.length > 0) {
+    for (let i = 0; i < validPosts.length; i += BOOKS_PER_SHELF) {
+      shelves.push(validPosts.slice(i, i + BOOKS_PER_SHELF))
+    }
   }
 
   return (
     <>
-      <BlogPostBar {...props} />
-      {siteConfig('POST_LIST_STYLE') === 'page' ? (
-        <BlogListPage posts={filteredBlogPosts} {...props} />
-      ) : (
-        <BlogListScroll posts={filteredBlogPosts} {...props} />
-      )}
+      {/* 首页移动端顶部导航 (应用sticky效果) */}
+      <div id='header-above' className='xl:hidden'>
+        <div className='p-2'>
+          <Header siteInfo={siteInfo} />
+        </div>
+      </div>
+
+      <div className="bookshelf-main-container">
+        {shelves.map((shelfBooks, index) => (
+          // 每个 shelf-row 就是一层带木板的书架
+          <div key={index} className="shelf-row">
+            <div className="books-on-shelf">
+              {shelfBooks.map(post => (
+                <BookCard key={post.id} post={post} />
+              ))}
+            </div>
+            <div className="shelf-plank"></div>
+          </div>
+        ))}
+        {/* 如果没有任何书籍，显示友好提示 */}
+        {shelves.length === 0 && (
+            <div className='text-white/70 text-center text-lg p-10'>书架上暂时还没有书...</div>
+        )}
+      </div>
     </>
   )
 }
 
-/**
- * 搜索 (保持原样)
- * 页面是博客列表，上方嵌入一个搜索引导条
- * @param {*} props
- * @returns
- */
-const LayoutSearch = props => {
-  const { keyword, posts } = props
+// --- 以下是其他布局组件 ---
+
+const LayoutPostList = (props) => {
+  const { posts } = props;
+  const { filterKey } = useGameGlobal();
+  const validPosts = Array.isArray(posts) ? posts.filter(Boolean) : [];
+  let filteredBlogPosts = validPosts
+    ? filterKey
+      ? validPosts.filter(post => {
+        const tagContent = post?.tags ? post?.tags.join(' ') : '';
+        const searchContent = post.title + post.summary + tagContent;
+        return searchContent.toLowerCase().includes(filterKey.toLowerCase());
+      })
+      : [...validPosts]
+    : [];
+
+  return (
+    <div className='p-4 relative z-10'>
+      <BlogPostBar {...props} />
+      {siteConfig('POST_LIST_STYLE') === 'page'
+        ? <BlogListPage posts={filteredBlogPosts} {...props} />
+        : <BlogListScroll posts={filteredBlogPosts} {...props} />}
+    </div>
+  );
+};
+
+const LayoutSearch = (props) => {
+  const { keyword } = props;
   useEffect(() => {
     if (isBrowser) {
       replaceSearchResult({
@@ -244,45 +207,18 @@ const LayoutSearch = props => {
           element: 'span',
           className: 'text-red-500 border-b border-dashed'
         }
-      })
+      });
     }
-  }, [])
+  }, [keyword]);
+  return <LayoutPostList {...props} />;
+};
 
-  // 在列表中进行实时过滤
-  const { filterKey } = useGameGlobal()
-  let filteredBlogPosts = []
-  if (filterKey && posts) {
-    filteredBlogPosts = posts.filter(post => {
-      const tagContent = post?.tags ? post?.tags.join(' ') : ''
-      const searchContent = post.title + post.summary + tagContent
-      return searchContent.toLowerCase().includes(filterKey.toLowerCase())
-    })
-  } else {
-    filteredBlogPosts = deepClone(posts)
-  }
-
+const LayoutArchive = (props) => {
+  const { archivePosts } = props;
   return (
-    <>
-      {siteConfig('POST_LIST_STYLE') === 'page' ? (
-        <BlogListPage {...props} posts={filteredBlogPosts} />
-      ) : (
-        <BlogListScroll {...props} posts={filteredBlogPosts} />
-      )}
-    </>
-  )
-}
-
-/**
- * 归档 (保持原样)
- * @param {*} props
- * @returns
- */
-const LayoutArchive = props => {
-  const { archivePosts } = props
-  return (
-    <>
-      <div className='mb-10 pb-20 md:py-12 p-3  min-h-screen w-full'>
-        {Object.keys(archivePosts).map(archiveTitle => (
+    <div className='p-4 relative z-10'>
+      <div className='mb-10 pb-20 md:py-12 p-3 min-h-screen w-full text-white'>
+        {archivePosts && Object.keys(archivePosts).map(archiveTitle => (
           <BlogArchiveItem
             key={archiveTitle}
             archiveTitle={archiveTitle}
@@ -290,188 +226,118 @@ const LayoutArchive = props => {
           />
         ))}
       </div>
-    </>
-  )
-}
+    </div>
+  );
+};
 
-/**
- * 文章详情 (保持原样)
- * @param {*} props
- * @returns
- */
-const LayoutSlug = props => {
-  const { setRecentGames } = useGameGlobal()
-  const { post, siteInfo, allNavPages, recommendPosts, lock, validPassword } =
-    props
-
-  const relateGames = recommendPosts
-  const randomGames = shuffleArray(deepClone(allNavPages))
-
-  // 初始化可安装应用
-  initialPWA(post, siteInfo)
+const LayoutSlug = (props) => {
+  const { post, siteInfo, allNavPages, recommendPosts, lock, validPassword } = props;
+  const relateGames = recommendPosts;
+  const randomGames = shuffleArray(deepClone(allNavPages));
 
   useEffect(() => {
-    // 更新最新游戏
-    const recentGames = localStorage.getItem('recent_games')
-      ? JSON.parse(localStorage.getItem('recent_games'))
-      : []
-
-    const existedIndex = recentGames.findIndex(item => item?.id === post?.id)
-    if (existedIndex === -1) {
-      recentGames.unshift(post) // 将游戏插入到数组头部
-    } else {
-      // 如果游戏已存在于数组中，将其移至数组头部
-      const existingGame = recentGames.splice(existedIndex, 1)[0]
-      recentGames.unshift(existingGame)
+    if (post && siteInfo) {
+        initialPWA(post, siteInfo);
     }
-    localStorage.setItem('recent_games', JSON.stringify(recentGames))
+  }, [post, siteInfo]);
 
-    setRecentGames(recentGames)
-  }, [post])
+  useEffect(() => {
+    if (!post) return;
+    const recentGames = JSON.parse(localStorage.getItem('recent_games')) || [];
+    const existedIndex = recentGames.findIndex(item => item?.id === post?.id);
+    if (existedIndex !== -1) {
+      recentGames.splice(existedIndex, 1);
+    }
+    recentGames.unshift(post);
+    localStorage.setItem('recent_games', JSON.stringify(recentGames.slice(0, 10)));
+  }, [post]);
 
   return (
-    <>
+    <div className='p-4 text-white relative z-10'>
       {lock && <ArticleLock validPassword={validPassword} />}
-
       {!lock && post && (
         <div id='article-wrapper'>
           <div className='game-detail-wrapper w-full grow flex'>
-            <div className={`w-full md:py-2`}>
-              {/* 游戏窗口 */}
+            <div className='w-full md:py-2'>
               <GameEmbed post={post} siteInfo={siteInfo} />
-
-              {/* 资讯 */}
-              <div className='game-info  dark:text-white py-2 px-2 md:px-0 mt-14 md:mt-0'>
-                {/* 关联游戏 */}
-                <div className='w-full'>
-                  <GameListRelate posts={relateGames} />
+              <div className='game-info py-2 px-2 md:px-0 mt-14 md:mt-0'>
+                <div className='w-full'><GameListRelate posts={relateGames} /></div>
+                <div className='bg-white/10 backdrop-blur-md shadow-md my-2 p-4 rounded-md dark:bg-black/20'>
+                  <PostInfo post={post} />
+                  <NotionPage post={post} />
+                  <AdSlot />
+                  <ShareBar post={post} />
+                  <Comment frontMatter={post} />
                 </div>
-
-                {/* 详情描述 */}
-                {post && (
-                  <div className='bg-white shadow-md my-2 p-4 rounded-md dark:bg-black'>
-                    <PostInfo post={post} />
-                    <NotionPage post={post} />
-                    {/* 广告嵌入 */}
-                    <AdSlot />
-                    {/* 分享栏目 */}
-                    <ShareBar post={post} />
-                    {/* 评论区 */}
-                    <Comment frontMatter={post} />
-                  </div>
-                )}
               </div>
             </div>
           </div>
-
-          {/* 其它游戏列表 */}
           <GameListIndexCombine posts={randomGames} />
         </div>
       )}
-    </>
-  )
-}
+    </div>
+  );
+};
 
-/**
- * 404 页面 (保持原样)
- * @param {*} props
- * @returns
- */
-const Layout404 = props => {
-  const router = useRouter()
-  const { locale } = useGlobal()
+const Layout404 = (props) => {
+  const router = useRouter();
+  const { locale } = useGlobal();
   useEffect(() => {
-    // 延时3秒如果加载失败就返回首页
     setTimeout(() => {
-      const article = isBrowser && document.getElementById('article-wrapper')
-      if (!article) {
-        router.push('/').then(() => {
-          // console.log('找不到页面', router.asPath)
-        })
+      if (isBrowser && !document.getElementById('article-wrapper')) {
+        router.push('/').catch(console.error);
       }
-    }, 3000)
-  }, [])
+    }, 3000);
+  }, [router]);
 
   return (
-    <>
-      <div className='md:-mt-20 text-black w-full h-screen text-center justify-center content-center items-center flex flex-col'>
-        <div className='dark:text-gray-200'>
-          <h2 className='inline-block border-r-2 border-gray-600 mr-2 px-3 py-2 align-top'>
-            <i className='mr-2 fas fa-spinner animate-spin' />
-            404
-          </h2>
-          <div className='inline-block text-left h-32 leading-10 items-center'>
-            <h2 className='m-0 p-0'>{locale.NAV.PAGE_NOT_FOUND_REDIRECT}</h2>
-          </div>
-        </div>
-      </div>
-    </>
-  )
-}
-
-/**
- * 文章分类列表 (保持原样)
- * @param {*} props
- * @returns
- */
-const LayoutCategoryIndex = props => {
-  const { categoryOptions } = props
-
-  return (
-    <>
-      <div
-        id='category-list'
-        className='duration-200 flex flex-wrap my-4 gap-2'>
-        {categoryOptions?.map(category => {
-          return (
-            <SmartLink
-              key={category.name}
-              href={`/category/${category.name}`}
-              passHref
-              legacyBehavior>
-              <div
-                className={
-                  'bg-white rounded-lg hover:text-black dark:hover:text-white dark:text-gray-300 dark:hover:bg-gray-600 px-5 cursor-pointer py-2 hover:bg-gray-100'
-                }>
-                {/* <i className='mr-4 fas fa-folder' /> */}
-                {category.name}({category.count})
-              </div>
-            </SmartLink>
-          )
-        })}
-      </div>
-    </>
-  )
-}
-
-/**
- * 文章标签列表 (保持原样)
- * @param {*} props
- * @returns
- */
-const LayoutTagIndex = props => {
-  const { tagOptions } = props
-  return (
-    <>
+    <div className='text-white w-full h-screen text-center flex flex-col justify-center items-center relative z-10'>
       <div>
-        <div id='tags-list' className='duration-200 flex flex-wrap my-4 gap-2'>
-          {tagOptions.map(tag => {
-            return (
-              <SmartLink
-                key={tag.name}
-                href={`/tag/${encodeURIComponent(tag.name)}`}
-                passHref
-                className={` select-none cursor-pointer flex bg-white rounded-lg hover:bg-gray-500 hover:text-white duration-200 mr-2 py-1 px-2 text-xs whitespace-nowrap dark:hover:text-white  hover:shadow-xl  dark:bg-gray-800`}>
-                <i className='mr-1 fas fa-tag' />{' '}
-                {tag.name + (tag.count ? `(${tag.count})` : '')}{' '}
-              </SmartLink>
-            )
-          })}
+        <h2 className='inline-block border-r-2 border-gray-600 mr-2 px-3 py-2 align-top'>
+          <i className='mr-2 fas fa-spinner animate-spin' /> 404
+        </h2>
+        <div className='inline-block text-left h-32 leading-10'>
+          <h2 className='m-0 p-0'>{locale.NAV.PAGE_NOT_FOUND_REDIRECT}</h2>
         </div>
       </div>
-    </>
-  )
-}
+    </div>
+  );
+};
+
+const LayoutCategoryIndex = (props) => {
+  const { categoryOptions } = props;
+  return (
+    <div className='p-4 relative z-10'>
+      <div id='category-list' className='duration-200 flex flex-wrap my-4 gap-2'>
+        {categoryOptions?.map(category => (
+          <Link key={category.name} href={`/category/${category.name}`} passHref>
+            <div className='bg-white/20 backdrop-blur-md rounded-lg hover:bg-white/40 text-white cursor-pointer px-5 py-2'>
+              {category.name}({category.count})
+            </div>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const LayoutTagIndex = (props) => {
+  const { tagOptions } = props;
+  return (
+    <div className='p-4 relative z-10'>
+      <div id='tags-list' className='duration-200 flex flex-wrap my-4 gap-2'>
+        {tagOptions.map(tag => (
+          <Link key={tag.name} href={`/tag/${encodeURIComponent(tag.name)}`} passHref>
+            <a className='select-none cursor-pointer flex items-center bg-white/20 backdrop-blur-md rounded-lg hover:bg-white/40 text-white duration-200 mr-2 py-1 px-2 text-xs'>
+              <i className='mr-1 fas fa-tag' /> {tag.name + (tag.count ? `(${tag.count})` : '')}
+            </a>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 
 export {
   Layout404,
