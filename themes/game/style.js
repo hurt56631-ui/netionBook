@@ -57,7 +57,6 @@ export function Style () {
         left: 0;
         right: 0;
         z-index: 50; 
-        /* 背景替换为纯 CSS 渲染的木纹，与底板风格一致 */
         background: 
             linear-gradient(135deg, #503010 0%, #705020 20%, #503010 40%, #705020 60%, #503010 80%, #705020 100%), 
             repeating-linear-gradient(
@@ -226,7 +225,7 @@ export function Style () {
     /* 单个书架行 */
     .shelf-row {
         position: relative;
-        margin-bottom: 1.5rem; /* <<<<<<< 优化1: 减小上下两层间距 >>>>>>> */
+        margin-bottom: 1.5rem; /* 上下两层间距 */
         padding-top: 1rem; 
         display: flex; 
         flex-wrap: wrap; 
@@ -234,7 +233,7 @@ export function Style () {
         align-items: flex-end; 
         min-height: 15rem; 
         padding-bottom: 15px; 
-        gap: 0.4rem; /* <<<<<<< 优化2: 书本之间默认水平和垂直间距更小 >>>>>>> */
+        gap: 0.4rem; /* 书本之间默认水平和垂直间距 */
     }
 
     /* 放置书本的容器 */
@@ -244,13 +243,12 @@ export function Style () {
         justify-content: space-evenly; 
         align-items: flex-end; 
         width: 100%; 
-        gap: 0.4rem; /* <<<<<<< 优化3: 放置书本容器内部间距更小 >>>>>>> */
+        gap: 0.4rem; /* 放置书本容器内部间距 */
     }
     
     /* 书本卡片 */
     .book-card-item { 
         flex-shrink: 0; 
-        /* <<<<<<< 优化4: 调整书籍尺寸为16开比例，并增大尺寸 >>>>>>> */
         /* 16开比例约 1.303 (高/宽) */
         flex-basis: calc(33.33% - 0.6rem); /* 确保一行3本，减去更小的间距 */
         max-width: 150px; /* 增加手机端最大宽度 */
@@ -258,11 +256,11 @@ export function Style () {
         height: calc(150px * 1.303); /* 高度按比例计算 */
         margin-bottom: 0px; 
         cursor: pointer;
-        /* <<<<<<< 优化5: 移除 transform 动画，恢复垂直摆放 >>>>>>> */
-        transition: box-shadow 0.2s ease-in-out; /* 只保留阴影动画 */
+        /* <<<<<<< 优化1: 恢复 transform 动画，移除默认倾斜，由 JS 随机倾斜控制 >>>>>>> */
+        transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
         z-index: 20; 
         position: relative; 
-        /* transform: none !important; /* 强制移除 JS 带来的倾斜 - 暂时注释，如果JS没移除，CSS强制无效 */ */
+        /* transform 由 JS 控制，这里不设置默认值 */
     }
 
     /* 触摸反馈（替代hover）*/
@@ -275,11 +273,11 @@ export function Style () {
     .book-cover-wrapper {
         width: 100%;
         height: 100%;
-        border-radius: 4px; /* 封面带一小点圆角 */
+        /* <<<<<<< 优化2: 封面圆角，仅右侧边缘圆角 >>>>>>> */
+        border-radius: 0 4px 4px 0; /* 顶部右侧和底部右侧圆角 */
         overflow: hidden;
-        /* <<<<<<< 优化6: 封面阴影更深更大 >>>>>>> */
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.9), /* 极深的底部阴影 */
-                    0 4px 10px rgba(0, 0, 0, 0.5), /* 顶部和两侧更柔和的阴影 */
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.9), 
+                    0 4px 10px rgba(0, 0, 0, 0.5), 
                     inset 0 0 5px rgba(255, 255, 255, 0.1); 
         display: flex; 
         justify-content: center;
@@ -290,10 +288,11 @@ export function Style () {
         width: 100%;
         height: 100%;
         object-fit: cover; 
-        border-radius: 4px; 
+        /* <<<<<<< 优化3: 确保图片本身也有相同的圆角 >>>>>>> */
+        border-radius: 0 4px 4px 0; /* 与容器一致 */
     }
     
-    /* 书籍两边不再需要复杂的 3D 侧边 */
+    /* 书籍两边不再需要复杂的 3D 侧边 (保持移除) */
     .book-cover-wrapper::before,
     .book-cover-wrapper::after {
         content: none; 
@@ -304,7 +303,7 @@ export function Style () {
         display: none; 
     }
 
-    /* 移除观看记录图标 */
+    /* 移除观看记录图标 (保持移除) */
     .book-card-item .recent-icon, 
     .book-card-item .history-indicator, 
     .book-cover-wrapper > svg, 
@@ -340,7 +339,7 @@ export function Style () {
         background-size: 100% 100%, 20px 20px, 30px 30px; 
         background-position: 0 0;
         box-shadow: 0 15px 40px rgba(0, 0, 0, 0.98), 
-                    inset 0 5px 12px rgba(255,255,255,0.5), 
+                    inset /* <<<<<<< 优化4: 修正错误的 inset 语法 >>>>>>> */ 0 5px 12px rgba(255,255,255,0.5), 
                     inset 0 -5px 12px rgba(0,0,0,0.8); 
         border-radius: 4px; 
         z-index: 10;
@@ -365,16 +364,16 @@ export function Style () {
             padding-top: 0.8rem;
             min-height: 12rem;
             padding-bottom: 12px; 
-            gap: 0.3rem; 
+            gap: 0.2rem; 
         }
         .books-on-shelf {
-            gap: 0.3rem; 
+            gap: 0.2rem; 
         }
         .book-card-item {
-            flex-basis: calc(33.33% - 0.5rem); 
-            max-width: 100px; 
-            width: 100px;
-            height: calc(100px * 1.303); 
+            flex-basis: calc(33.33% - 0.4rem); 
+            max-width: 105px; 
+            width: 105px;
+            height: calc(105px * 1.303); 
             margin-bottom: 0; 
         }
         .book-card-item:active {
@@ -383,12 +382,14 @@ export function Style () {
                         0 2px 5px rgba(0, 0, 0, 0.4); 
         }
         .book-cover-wrapper {
-            border-radius: 4px;
+            /* <<<<<<< 修改点5: 手机端封面圆角 >>>>>>> */
+            border-radius: 0 4px 4px 0; 
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8), 
                         0 2px 5px rgba(0, 0, 0, 0.4); 
         }
         .book-cover-wrapper img {
-            border-radius: 4px;
+            /* <<<<<<< 修改点6: 手机端图片圆角 >>>>>>> */
+            border-radius: 0 4px 4px 0; 
         }
         .shelf-plank { 
             height: 15px; 
@@ -409,25 +410,27 @@ export function Style () {
             padding-top: 1.5rem;
             min-height: 18rem;
             padding-bottom: 18px; 
-            gap: 0.6rem; 
+            gap: 0.8rem; 
         }
         .books-on-shelf {
-            gap: 0.6rem; 
+            gap: 0.8rem; 
         }
         .book-card-item {
-            flex-basis: calc(33.33% - 0.9rem); 
-            max-width: 180px; 
-            width: 180px; 
-            height: calc(180px * 1.303); 
+            flex-basis: calc(33.33% - 1.2rem); 
+            max-width: 190px; 
+            width: 190px; 
+            height: calc(190px * 1.303); 
             margin-bottom: 0;
         }
         .book-cover-wrapper {
-            border-radius: 4px;
+            /* <<<<<<< 修改点7: 电脑端封面圆角 >>>>>>> */
+            border-radius: 0 4px 4px 0; 
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9), 
                         0 5px 12px rgba(0, 0, 0, 0.7); 
         }
         .book-cover-wrapper img {
-            border-radius: 4px;
+            /* <<<<<<< 修改点8: 电脑端图片圆角 >>>>>>> */
+            border-radius: 0 4px 4px 0; 
         }
         .shelf-plank {
             border-radius: 4px;
