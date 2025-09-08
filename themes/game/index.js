@@ -49,11 +49,11 @@ const LayoutBase = props => {
     tagOptions,
     currentTag,
     categoryOptions,
-    currentCategory
+    currentCategory,
+    posts // <<<<< IMPORTANT: LayoutBase 需要接收 posts 数据来进行搜索过滤
   } = props
   const searchModal = useRef(null)
   const [filterKey, setFilterKey] = useState('')
-  // >>>>>>> 修改点1: 添加搜索模态框状态 <<<<<<<
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const [filterGames, setFilterGames] = useState(
@@ -68,9 +68,27 @@ const LayoutBase = props => {
   const [recentGames, setRecentGames] = useState([])
   const [sideBarVisible, setSideBarVisible] = useState(false)
 
+  // 搜索结果列表，用于搜索模态框内部
+  const [searchResults, setSearchResults] = useState([]);
+
   useEffect(() => {
     loadWowJS()
   }, [])
+
+  // 实时过滤搜索结果，用于搜索模态框
+  useEffect(() => {
+    if (filterKey && posts) { // 确保 posts 是有效的数组
+      const filtered = posts.filter(post => {
+        const tagContent = post?.tags ? post.tags.join(' ') : ''
+        const searchContent = post.title + post.summary + tagContent
+        return searchContent.toLowerCase().includes(filterKey.toLowerCase())
+      });
+      setSearchResults(filtered);
+    } else {
+      setSearchResults([]); // 清空搜索关键词时清空结果
+    }
+  }, [filterKey, posts]);
+
 
   return (
     <ThemeGlobalGame.Provider
@@ -89,12 +107,10 @@ const LayoutBase = props => {
         id='theme-game'
         className={`${siteConfig('FONT_STYLE')} w-full h-full min-h-screen justify-center dark:bg-black dark:bg-opacity-50 dark:text-gray-300 scroll-smooth`}
         style={{
-          // 底层背景图
           backgroundImage: `url('/images/default_bg.jpg')`, 
           backgroundSize: 'cover',
           backgroundAttachment: 'fixed', 
           backgroundPosition: 'center',
-          // 磨砂玻璃效果层
           backdropFilter: 'blur(8px) brightness(1.2)', 
           WebkitBackdropFilter: 'blur(8px) brightness(1.2)', 
           backgroundColor: '#CCCCCC' 
@@ -102,7 +118,6 @@ const LayoutBase = props => {
       >
         <Style /> {/* 你的全局样式在这里加载 */}
 
-        {/* >>>>>>> 修改点2: 顶部导航栏 JSX (取代了 Header 组件在手机端的显示) <<<<<<< */}
         <div className="top-app-bar xl:hidden">
             <div className="title">书籍</div>
             <div className="subtitle">
@@ -113,14 +128,12 @@ const LayoutBase = props => {
             </button>
         </div>
 
-        {/* PC端的侧边栏和主内容区 */}
         <div
           id='wrapper'
           className={'relative flex justify-between w-full h-full mx-auto'}>
           <div className='w-52 hidden xl:block relative z-10'>
             <div className='py-4 px-2 sticky top-0 h-screen flex flex-col justify-between'>
               <div className='select-none'>
-                {/* PC端头部，需要保留 */}
                 <Header siteInfo={siteInfo} /> 
                 <MenuList {...props} />
               </div>
@@ -146,13 +159,12 @@ const LayoutBase = props => {
           <SideBarContent siteInfo={siteInfo} {...props} />
         </SideBarDrawer>
 
-        {/* >>>>>>> 修改点3: 搜索模态框 JSX <<<<<<< */}
         {isSearchOpen && (
             <div className="search-modal-overlay">
                 <div className="search-modal-content">
                     <div className="search-modal-header">
                         <div className="title">搜索书籍</div>
-                        <button className="close-button" onClick={() => setIsSearchOpen(false)}>
+                        <button className="close-button" onClick={() => { setIsSearchOpen(false); setFilterKey(''); }}>
                             <i className="fas fa-times text-lg"></i>
                         </button>
                     </div>
@@ -168,9 +180,10 @@ const LayoutBase = props => {
                         )}
                     </div>
                 </div>
-                {/* 搜索结果区域，可以复用 LayoutPostList 的书籍渲染逻辑 */}
+                {/* 搜索结果区域，传递 searchResults 给 LayoutPostList，并确保 posts 始终是数组 */}
                 <div className="search-input-results">
-                    <LayoutPostList posts={filterKey ? filteredBlogPosts : []} />
+                    {/* 只有当 filterKey 不为空时才显示搜索结果，否则显示空 */}
+                    <LayoutPostList posts={searchResults || []} isSearchResult={true} />
                 </div>
             </div>
         )}
@@ -188,10 +201,6 @@ const LayoutIndex = props => {
   const { siteInfo } = props
   return (
     <>
-      {/* 移除手机端 Header 的重复引用，因为顶栏现在在 LayoutBase 中统一处理 */}
-      {/* <div className='p-2 xl:hidden'>
-        <Header siteInfo={siteInfo} />
-      </div> */}
       {/* 移除 GameListRecent 组件 (观看记录) */}
       {/* <GameListRecent /> */} 
       <LayoutPostList {...props} />
@@ -219,15 +228,13 @@ function chunkArray(array, size) {
  * @returns
  */
 const LayoutPostList = props => {
-  const { posts } = props
-  // LayoutPostList 在搜索模态框内部时可能需要自己的 filterKey 逻辑，
-  // 或者直接使用 LayoutBase 传下来的 filteredBlogPosts
-  // 这里简化处理，直接使用传入的 posts
+  const { posts, isSearchResult } = props // 接收 isSearchResult 标记
   const { filterKey: globalFilterKey } = useGameGlobal();
   let currentPosts = posts;
 
-  // 如果是在搜索结果中，posts 已经是过滤后的。如果不是，则按全局 filterKey 过滤
-  if (!props.isSearchResult && globalFilterKey) { // 假设 isSearchResult 标记是否是搜索结果页
+  // 如果不是搜索结果页且有全局筛选关键词，则进行过滤
+  // 仅在主列表模式下使用全局filterKey，搜索模态框内会直接传递过滤后的posts
+  if (!isSearchResult && globalFilterKey) { 
      currentPosts = posts.filter(post => {
       const tagContent = post?.tags ? post.tags.join(' ') : ''
       const searchContent = post.title + post.summary + tagContent
@@ -236,16 +243,14 @@ const LayoutPostList = props => {
   }
 
 
-  // 每行显示的书本数量为 3
   const booksPerRow = 3 
   const bookRows = chunkArray(currentPosts, booksPerRow)
 
-  // >>>>>>> 修改点4: 生成随机倾斜角度的函数 <<<<<<<
-  const getRandomRotation = () => {
-    // 生成 -2 到 2 之间的随机角度，例如 -1.5deg, 0.8deg
-    const angle = Math.random() * 4 - 2; 
-    return `rotateZ(${angle}deg)`;
-  };
+  // 移除 getRandomRotation 函数，恢复垂直摆放
+  // const getRandomRotation = () => {
+  //   const angle = Math.random() * (2.5 - 0.5) + 0.5; 
+  //   return `rotateZ(${angle}deg)`;
+  // };
 
   return (
     <>
@@ -260,8 +265,7 @@ const LayoutPostList = props => {
                   <div 
                     key={post.id} 
                     className='book-card-item' 
-                    // >>>>>>> 修改点5: 应用随机倾斜角度 <<<<<<<
-                    style={{ transform: getRandomRotation() }} 
+                    // 移除 style={{ transform: getRandomRotation() }}
                   >
                     <SmartLink href={`${siteConfig('SUB_PATH', '')}/${post.slug}`}>
                       <div className='book-cover-wrapper'>
@@ -524,4 +528,4 @@ export {
   LayoutSlug,
   LayoutTagIndex,
   CONFIG as THEME_CONFIG
-            }
+          }
