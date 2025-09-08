@@ -256,11 +256,11 @@ export function Style () {
         height: calc(150px * 1.303); /* 高度按比例计算 */
         margin-bottom: 0px; 
         cursor: pointer;
-        /* <<<<<<< 优化1: 恢复 transform 动画，移除默认倾斜，由 JS 随机倾斜控制 >>>>>>> */
-        transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
+        transition: box-shadow 0.2s ease-in-out; /* 只保留阴影动画 */
         z-index: 20; 
         position: relative; 
-        /* transform 由 JS 控制，这里不设置默认值 */
+        transform-style: preserve-3d; /* <<<<<<< 优化1: 启用 3D 转换，为伪元素做准备 >>>>>>> */
+        transform: perspective(1000px); /* 设定透视效果 */
     }
 
     /* 触摸反馈（替代hover）*/
@@ -273,12 +273,12 @@ export function Style () {
     .book-cover-wrapper {
         width: 100%;
         height: 100%;
-        /* <<<<<<< 优化2: 封面圆角，仅右侧边缘圆角 >>>>>>> */
-        border-radius: 0 4px 4px 0; /* 顶部右侧和底部右侧圆角 */
+        /* <<<<<<< 优化2: 封面圆角设置为完全直角 >>>>>>> */
+        border-radius: 0px; 
         overflow: hidden;
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.9), 
-                    0 4px 10px rgba(0, 0, 0, 0.5), 
-                    inset 0 0 5px rgba(255, 255, 255, 0.1); 
+        /* <<<<<<< 优化3: 封面阴影，模拟书籍从背景中浮出 >>>>>>> */
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.9), /* 极深的底部阴影 */
+                    0 4px 10px rgba(0, 0, 0, 0.5); /* 顶部和两侧更柔和的阴影 */
         display: flex; 
         justify-content: center;
         align-items: center;
@@ -288,14 +288,41 @@ export function Style () {
         width: 100%;
         height: 100%;
         object-fit: cover; 
-        /* <<<<<<< 优化3: 确保图片本身也有相同的圆角 >>>>>>> */
-        border-radius: 0 4px 4px 0; /* 与容器一致 */
+        /* <<<<<<< 优化4: 确保图片本身也是完全直角 >>>>>>> */
+        border-radius: 0px; 
     }
-    
-    /* 书籍两边不再需要复杂的 3D 侧边 (保持移除) */
-    .book-cover-wrapper::before,
+
+    /* <<<<<<< 优化5: 恢复并优化书脊 (::before) 和书页侧边 (::after) >>>>>>> */
+    .book-cover-wrapper::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0; /* 书脊与封面左侧对齐 */
+        width: 15px; /* 书脊宽度，根据 HSK3 图调整 */
+        height: 100%;
+        background: linear-gradient(to right, #C04000 0%, #E06020 50%, #C04000 100%); /* 模拟 HSK3 的橘红色书脊渐变 */
+        transform-origin: left center; /* 旋转中心在左侧中点 */
+        transform: rotateY(90deg) translateX(-7.5px); /* 旋转 90 度，并向后平移一半宽度 */
+        box-shadow: inset 1px 0px 3px rgba(0, 0, 0, 0.5), /* 内部阴影 */
+                    -2px 0px 5px rgba(0, 0, 0, 0.3); /* 外部柔和阴影 */
+        border-radius: 0 2px 2px 0; /* 右侧边缘有轻微圆角 */
+        z-index: -1; /* 确保在封面之下 */
+    }
+
     .book-cover-wrapper::after {
-        content: none; 
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0; /* 书页侧边与封面右侧对齐 */
+        width: 5px; /* 书页侧边宽度 */
+        height: 100%;
+        background-color: #F8F8F8; /* 模拟书页的浅色 */
+        background-image: repeating-linear-gradient(to bottom, #F8F8F8 0px, #F8F8F8 1px, #E8E8E8 1px, #E8E8E8 2px); /* 模拟书页纹理 */
+        transform-origin: right center; /* 旋转中心在右侧中点 */
+        transform: rotateY(-90deg) translateX(2.5px); /* 旋转 -90 度，并向前平移一半宽度 */
+        box-shadow: inset -1px 0px 2px rgba(0, 0, 0, 0.3); /* 内部阴影 */
+        border-radius: 2px 0 0 2px; /* 左侧边缘有轻微圆角 */
+        z-index: -1; /* 确保在封面之下 */
     }
     
     /* 书名在封面上显示 (依然隐藏) */
@@ -339,7 +366,7 @@ export function Style () {
         background-size: 100% 100%, 20px 20px, 30px 30px; 
         background-position: 0 0;
         box-shadow: 0 15px 40px rgba(0, 0, 0, 0.98), 
-                    inset /* <<<<<<< 优化4: 修正错误的 inset 语法 >>>>>>> */ 0 5px 12px rgba(255,255,255,0.5), 
+                    inset 0 5px 12px rgba(255,255,255,0.5), 
                     inset 0 -5px 12px rgba(0,0,0,0.8); 
         border-radius: 4px; 
         z-index: 10;
@@ -382,15 +409,23 @@ export function Style () {
                         0 2px 5px rgba(0, 0, 0, 0.4); 
         }
         .book-cover-wrapper {
-            /* <<<<<<< 修改点5: 手机端封面圆角 >>>>>>> */
-            border-radius: 0 4px 4px 0; 
+            border-radius: 0px; 
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8), 
                         0 2px 5px rgba(0, 0, 0, 0.4); 
         }
         .book-cover-wrapper img {
-            /* <<<<<<< 修改点6: 手机端图片圆角 >>>>>>> */
-            border-radius: 0 4px 4px 0; 
+            border-radius: 0px; 
         }
+        /* 手机端伪元素调整 */
+        .book-cover-wrapper::before {
+            width: 10px; /* 手机端书脊宽度 */
+            transform: rotateY(90deg) translateX(-5px);
+        }
+        .book-cover-wrapper::after {
+            width: 4px; /* 手机端书页侧边宽度 */
+            transform: rotateY(-90deg) translateX(2px);
+        }
+
         .shelf-plank { 
             height: 15px; 
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.95), 
@@ -423,14 +458,12 @@ export function Style () {
             margin-bottom: 0;
         }
         .book-cover-wrapper {
-            /* <<<<<<< 修改点7: 电脑端封面圆角 >>>>>>> */
-            border-radius: 0 4px 4px 0; 
+            border-radius: 0px; 
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9), 
                         0 5px 12px rgba(0, 0, 0, 0.7); 
         }
         .book-cover-wrapper img {
-            /* <<<<<<< 修改点8: 电脑端图片圆角 >>>>>>> */
-            border-radius: 0 4px 4px 0; 
+            border-radius: 0px; 
         }
         .shelf-plank {
             border-radius: 4px;
