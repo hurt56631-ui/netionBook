@@ -210,7 +210,7 @@ export function Style () {
     /* 单个书架行 */
     .shelf-row {
         position: relative;
-        margin-bottom: 1.5rem; /* <<<<<<< 优化1: 进一步减小上下两层间距 >>>>>>> */
+        margin-bottom: 1.5rem; /* <<<<<<< 优化1: 再次减小上下两层间距 >>>>>>> */
         padding-top: 1rem; 
         display: flex; 
         flex-wrap: wrap; 
@@ -218,7 +218,7 @@ export function Style () {
         align-items: flex-end; 
         min-height: 15rem; 
         padding-bottom: 15px; 
-        gap: 0.5rem; 
+        gap: 0.4rem; /* <<<<<<< 优化2: 书本之间默认水平和垂直间距更小 >>>>>>> */
     }
 
     /* 放置书本的容器 */
@@ -228,26 +228,30 @@ export function Style () {
         justify-content: space-evenly; 
         align-items: flex-end; 
         width: 100%; 
-        gap: 0.5rem; /* 书本之间的间距 */
+        gap: 0.4rem; /* <<<<<<< 优化3: 放置书本容器内部间距更小 >>>>>>> */
     }
     
     /* 书本卡片 */
     .book-card-item { 
         flex-shrink: 0; 
-        flex-basis: calc(33.33% - 0.7rem); /* 确保一行3本 */
-        max-width: 130px; 
-        height: 195px; 
+        /* <<<<<<< 优化4: 调整书籍尺寸为16开比例，并增大尺寸 >>>>>>> */
+        /* 16开比例约 1.303 (高/宽)。这里取 1.30 */
+        flex-basis: calc(33.33% - 0.6rem); /* 确保一行3本，减去更小的间距 */
+        max-width: 150px; /* 增加手机端最大宽度 */
+        width: 150px; /* 强制宽度，防止变窄 */
+        height: calc(150px * 1.303); /* 高度按比例计算 */
         margin-bottom: 0px; 
         cursor: pointer;
-        /* <<<<<<< 优化2: 移除 transform 动画，因为由 JS 内联 style 控制 >>>>>>> */
-        transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out; /* 保留阴影动画 */
+        /* <<<<<<< 优化5: 移除 transform 动画，恢复垂直摆放 >>>>>>> */
+        transition: box-shadow 0.2s ease-in-out; /* 只保留阴影动画 */
         z-index: 20; 
         position: relative; 
+        transform: none !important; /* 强制移除 JS 带来的倾斜 */
     }
 
     /* 触摸反馈（替代hover）*/
     .book-card-item:active { 
-        transform: translateY(-5px) scale(1.02); /* 轻微上浮和放大 */
+        transform: translateY(-5px) scale(1.02); 
         box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4); 
     }
     
@@ -255,12 +259,12 @@ export function Style () {
     .book-cover-wrapper {
         width: 100%;
         height: 100%;
-        border-radius: 4px; 
+        border-radius: 4px; /* 封面带一小点圆角 */
         overflow: hidden;
-        /* <<<<<<< 优化3: 封面阴影更深更大，模拟书籍从背景中浮出 >>>>>>> */
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8), /* 极深的底部阴影 */
-                    0 4px 10px rgba(0, 0, 0, 0.5), /* 顶部和两侧更柔和的阴影，模拟光线 */
-                    inset 0 0 5px rgba(255, 255, 255, 0.1); /* 顶部轻微高光内阴影 */
+        /* <<<<<<< 优化6: 封面阴影更深更大 >>>>>>> */
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.9), /* 极深的底部阴影 */
+                    0 4px 10px rgba(0, 0, 0, 0.5), /* 顶部和两侧更柔和的阴影 */
+                    inset 0 0 5px rgba(255, 255, 255, 0.1); 
         display: flex; 
         justify-content: center;
         align-items: center;
@@ -341,19 +345,21 @@ export function Style () {
             margin: 0.2rem; 
         } 
         .shelf-row { 
-            margin-bottom: 1rem; /* <<<<<<< 优化8: 手机端进一步减小行间距 >>>>>>> */
+            margin-bottom: 1rem; 
             padding-top: 0.8rem;
             min-height: 12rem;
             padding-bottom: 12px; 
-            gap: 0.4rem; 
+            gap: 0.3rem; /* <<<<<<< 优化7: 手机端书籍间距更小 >>>>>>> */
         }
         .books-on-shelf {
-            gap: 0.4rem; 
+            gap: 0.3rem; /* <<<<<<< 优化8: 手机端书籍之间的间距更小 >>>>>>> */
         }
         .book-card-item {
-            flex-basis: calc(33.33% - 0.6rem); 
-            max-width: 105px; 
-            height: 157.5px; 
+            /* 16开比例约 1.303 (高/宽) */
+            flex-basis: calc(33.33% - 0.5rem); /* 确保一行3本，减去更小的间距 */
+            max-width: 100px; /* 手机端书籍宽度 */
+            width: 100px;
+            height: calc(100px * 1.303); /* 高度按比例计算 */
             margin-bottom: 0; 
         }
         .book-card-item:active {
@@ -384,19 +390,21 @@ export function Style () {
     @media (min-width: 641px) {
         .bookshelf-main-container { padding: 5rem 2rem 4rem 2rem; }
         .shelf-row {
-            margin-bottom: 1.5rem; /* <<<<<<< 优化10: 电脑端减小行间距 >>>>>>> */
+            margin-bottom: 1.5rem; 
             padding-top: 1.5rem;
             min-height: 18rem;
             padding-bottom: 18px; 
-            gap: 0.8rem; /* <<<<<<< 优化11: 电脑端书籍间距更小 >>>>>>> */
+            gap: 0.6rem; /* <<<<<<< 优化9: 电脑端书籍间距更小 >>>>>>> */
         }
         .books-on-shelf {
-            gap: 0.8rem; /* <<<<<<< 优化12: 电脑端书籍之间的间距更小 >>>>>>> */
+            gap: 0.6rem; /* <<<<<<< 优化10: 电脑端书籍之间的间距更小 >>>>>>> */
         }
         .book-card-item {
-            flex-basis: calc(33.33% - 1.2rem); 
+            /* 16开比例约 1.303 (高/宽) */
+            flex-basis: calc(33.33% - 0.9rem); 
             max-width: 180px; 
-            height: 270px; 
+            width: 180px; /* 强制宽度，防止变窄 */
+            height: calc(180px * 1.303); /* 高度按比例计算 */
             margin-bottom: 0;
         }
         .book-cover-wrapper {
