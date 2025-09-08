@@ -66,9 +66,7 @@ export function Style () {
     
     /* 书架主容器 */
     .bookshelf-main-container {
-        background-color: #1a1a1a; /* 使用深色背景作为基底 */
-        background-size: cover;
-        background-attachment: fixed;
+        /* 背景色在 LayoutBase 中设置，这里只管布局 */
         min-height: 100vh;
         padding: 8rem 2rem 5rem 2rem;
         box-shadow: inset 0 0 80px rgba(0,0,0,0.9); /* 整体内阴影，增加深度 */
@@ -77,7 +75,7 @@ export function Style () {
     /* 单个书架行（包含书本和木板） */
     .shelf-row {
         position: relative;
-        margin-bottom: 4rem; /* << 修改点1: 减小垂直间距，让书架更紧凑 (原为 9rem) */
+        margin-bottom: 4rem; /* << 修改点: 减小垂直间距 (原为 9rem) */
         height: 16rem; /* 每层书架占据的高度 */
     }
     
@@ -203,7 +201,7 @@ export function Style () {
     
     /* 书名在封面上显示 */
     .book-title-overlay {
-        display: none; /* << 修改点2: 直接隐藏书名层 */
+        display: none; /* << 修改点: 直接隐藏书名层 */
     }
     
     /* 响应式调整 */
