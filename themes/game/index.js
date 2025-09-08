@@ -15,8 +15,8 @@ import { createContext, useContext, useEffect, useRef, useState } from 'react'
 import Announcement from './components/Announcement'
 import { ArticleLock } from './components/ArticleLock'
 import BlogArchiveItem from './components/BlogArchiveItem'
-// import { BlogListPage } from './components/BlogListPage' // 移除，因为逻辑将内联
-// import { BlogListScroll } from './components/BlogListScroll' // 移除或保留，取决于你是否使用滚动列表
+import { BlogListPage } from './components/BlogListPage'
+import { BlogListScroll } from './components/BlogListScroll'
 import BlogPostBar from './components/BlogPostBar'
 import { Footer } from './components/Footer'
 import GameEmbed from './components/GameEmbed'
@@ -31,34 +31,13 @@ import PostInfo from './components/PostInfo'
 import SideBarContent from './components/SideBarContent'
 import SideBarDrawer from './components/SideBarDrawer'
 import CONFIG from './config'
-import { Style } from './style' // 确保 Style 被导入
+import { Style } from './style'
 
 // const AlgoliaSearchModal = dynamic(() => import('@/components/AlgoliaSearchModal'), { ssr: false })
 
 // 主题全局状态
 const ThemeGlobalGame = createContext()
 export const useGameGlobal = () => useContext(ThemeGlobalGame)
-
-/**
- * 单个书籍卡片组件 - 从此文件内联定义，方便统一管理
- */
-const BookCard = ({ post }) => {
-  return (
-    <SmartLink href={post.pageLink} passHref legacyBehavior>
-      <a className="book-card-item">
-        <div className="book-cover-wrapper">
-          <img
-            src={post.pageCover} // 假设这是书籍封面URL
-            alt={post.title}
-            className="w-full h-full object-cover"
-          />
-          {post.title && <div className="book-title-overlay">{post.title}</div>}
-        </div>
-      </a>
-    </SmartLink>
-  );
-};
-
 
 /**
  * 基础布局 采用左右两侧布局，移动端使用顶部导航栏
@@ -112,9 +91,10 @@ const LayoutBase = props => {
       <div
         id='theme-game'
         className={`${siteConfig('FONT_STYLE')} w-full h-full min-h-screen justify-center dark:bg-black dark:bg-opacity-50 dark:text-gray-300 scroll-smooth`}
-        // >>>>>>> 全局背景设置为浅黑色 <<<<<<<
+        // >>>>>>> 在这里设置全局背景色，移除背景图片 <<<<<<<
         style={{
           backgroundColor: '#1a1a1a', // 浅黑色或深灰色作为背景
+          // 移除 backgroundImage, backgroundSize, backgroundPosition, backgroundAttachment
         }}
       >
         <Style /> {/* 你的全局样式在这里加载 */}
@@ -124,7 +104,7 @@ const LayoutBase = props => {
           id='wrapper'
           className={'relative flex justify-between w-full h-full mx-auto'}>
           {/* PC端左侧 */}
-          <div className='w-52 hidden xl:block relative z-20'> {/* 调整 z-index，确保侧边栏在内容之上 */}
+          <div className='w-52 hidden xl:block relative z-10'>
             <div className='py-4 px-2 sticky top-0 h-screen flex flex-col justify-between'>
               <div className='select-none'>
                 {/* 抬头logo等 */}
@@ -140,21 +120,33 @@ const LayoutBase = props => {
             </div>
           </div>
 
-          {/* 右侧主内容区 */}
-          {/* main 标签背景透明，z-index 确保它在全局背景之上 */}
-          <main className='flex-grow w-full h-full flex flex-col min-h-screen overflow-x-auto md:p-2 relative z-10 bg-transparent'>
-            <div className='relative flex-grow h-full'>{children}</div> {/* 确保子内容在 main 的 relative 容器中 */}
+          {/* 右侧 */}
+          {/* >>>>>>> 修改 main 标签，确保内容 z-index 正确 <<<<<<< */}
+          <main className='flex-grow w-full h-full flex flex-col min-h-screen overflow-x-auto md:p-2 relative'> {/* 添加 relative */}
+            <div className='relative z-10 flex-grow h-full'>{children}</div> {/* 添加 relative z-10 */}
             {/* 广告 */}
-            <div className='w-full py-4'>
+            <div className='relative z-10 w-full py-4'> {/* 同样确保广告在模糊层之上 */}
               <AdSlot type='in-article' />
             </div>
-            
+
             {/* --- 以下是被注释掉的区域 --- */}
-            {/* ... */}
+            {/* 主区域下方 导览 */}
+            {/*
+            <div className='relative z-10 w-full bg-white dark:bg-hexo-black-gray rounded-lg p-2'>
+              <GroupCategory
+                categoryOptions={categoryOptions}
+                currentCategory={currentCategory}
+              />
+              <hr />
+              <GroupTag tagOptions={tagOptions} currentTag={currentTag} />
+              <Announcement {...props} className='p-2' />
+            </div>
+            */}
+            {/* 页脚 */}
+            {/* <Footer /> */}
             {/* --- 注释结束 --- */}
             
           </main>
-          {/* 移除大底板结构，因为现在是每排有小底板 */}
         </div>
 
         <SideBarDrawer
@@ -185,16 +177,14 @@ const LayoutIndex = props => {
       </div>
       {/* 最近游戏 */}
       <GameListRecent />
-      {/* 游戏列表 - 包裹在 bookshelf-main-container 中 */}
-      <div className="bookshelf-main-container">
-        <LayoutPostList {...props} />
-      </div>
+      {/* 游戏列表 */}
+      <LayoutPostList {...props} />
     </>
   )
 }
 
 /**
- * 博客列表 - 现在内联了 BlogListPage 的逻辑，按行渲染带木板的书架
+ * 博客列表
  * @param {*} props
  * @returns
  */
@@ -212,38 +202,19 @@ const LayoutPostList = props => {
     filteredBlogPosts = deepClone(posts)
   }
 
-  if (!filteredBlogPosts || filteredBlogPosts.length === 0) {
-    return <p className="text-center text-gray-500 dark:text-gray-400 py-10">暂无书籍</p>;
-  }
-
-  // >>>>>> 定义每行书籍数量，可根据你的设计调整 <<<<<<<
-  const BOOKS_PER_ROW = 4; // 例如：每行4本书
-
-  // 将书籍数组按行分组
-  const groupedRows = [];
-  for (let i = 0; i < filteredBlogPosts.length; i += BOOKS_PER_ROW) {
-    groupedRows.push(filteredBlogPosts.slice(i, i + BOOKS_PER_ROW));
-  }
-
+  // >>>>>> 假设你的书架内容最终会渲染在这个地方，请确保它被包裹在 .bookshelf-main-container 中 <<<<<<<
+  // 如果你的 .bookshelf-main-container 在更深层次的组件中，那么效果会直接作用于那个组件。
+  // 如果你希望整个博客列表容器被模糊，那么你需要确保这个容器具有 .bookshelf-main-container 类。
   return (
     <>
-      <BlogPostBar {...props} /> {/* 博客文章栏，在书架上方 */}
-      <div className="book-shelf-grid-wrapper"> {/* 这个是包含所有书架行的容器 */}
-        {groupedRows.map((rowPosts, rowIndex) => (
-          <div className="shelf-row" key={rowIndex}> {/* 每一行书架 */}
-            <div className="books-on-shelf"> {/* 放置书本的容器 */}
-              {rowPosts.map(post => (
-                <BookCard key={post.id} post={post} />
-              ))}
-            </div>
-            <div className="shelf-plank"></div> {/* 书架木板 */}
-          </div>
-        ))}
-        {/* 你可能还需要一个底部的页码导航或者“加载更多”按钮 */}
-        {/* 例如：<Pagination {...props} /> */}
-      </div>
+      <BlogPostBar {...props} />
+      {siteConfig('POST_LIST_STYLE') === 'page' ? (
+        <BlogListPage posts={filteredBlogPosts} {...props} />
+      ) : (
+        <BlogListScroll posts={filteredBlogPosts} {...props} />
+      )}
     </>
-  );
+  )
 }
 
 /**
@@ -280,29 +251,15 @@ const LayoutSearch = props => {
     filteredBlogPosts = deepClone(posts)
   }
 
-  // 搜索结果也以书架形式展示
-  const BOOKS_PER_ROW = 4;
-  const groupedRows = [];
-  for (let i = 0; i < filteredBlogPosts.length; i += BOOKS_PER_ROW) {
-    groupedRows.push(filteredBlogPosts.slice(i, i + BOOKS_PER_ROW));
-  }
-
   return (
-    <div className="bookshelf-main-container"> {/* 搜索页面也包裹在磨砂玻璃容器中 */}
-      <div className="book-shelf-grid-wrapper">
-        {groupedRows.map((rowPosts, rowIndex) => (
-          <div className="shelf-row" key={rowIndex}>
-            <div className="books-on-shelf">
-              {rowPosts.map(post => (
-                <BookCard key={post.id} post={post} />
-              ))}
-            </div>
-            <div className="shelf-plank"></div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+    <>
+      {siteConfig('POST_LIST_STYLE') === 'page' ? (
+        <BlogListPage {...props} posts={filteredBlogPosts} />
+      ) : (
+        <BlogListScroll {...props} posts={filteredBlogPosts} />
+      )}
+    </>
+  )
 }
 
 /**
@@ -517,4 +474,4 @@ export {
   LayoutSlug,
   LayoutTagIndex,
   CONFIG as THEME_CONFIG
-                                 }
+    }
