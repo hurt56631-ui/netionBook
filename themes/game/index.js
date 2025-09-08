@@ -33,17 +33,13 @@ import SideBarDrawer from './components/SideBarDrawer'
 import CONFIG from './config'
 import { Style } from './style'
 
-// const AlgoliaSearchModal = dynamic(() => import('@/components/AlgoliaSearchModal'), { ssr: false })
-
 // 主题全局状态
 const ThemeGlobalGame = createContext()
 export const useGameGlobal = () => useContext(ThemeGlobalGame)
 
 /**
  * 基础布局 采用左右两侧布局，移动端使用顶部导航栏
-
  * @returns {JSX.Element}
- * @constructor
  */
 const LayoutBase = props => {
   const {
@@ -56,7 +52,6 @@ const LayoutBase = props => {
     currentCategory
   } = props
   const searchModal = useRef(null)
-  // 在列表中进行实时过滤
   const [filterKey, setFilterKey] = useState('')
 
   const [filterGames, setFilterGames] = useState(
@@ -91,61 +86,33 @@ const LayoutBase = props => {
       <div
         id='theme-game'
         className={`${siteConfig('FONT_STYLE')} w-full h-full min-h-screen justify-center dark:bg-black dark:bg-opacity-50 dark:text-gray-300 scroll-smooth`}
-        // >>>>>>> 在这里设置全局背景色，移除背景图片 <<<<<<<
+        // >>>>>>> 修改点1: 背景色已改为纯黑色 <<<<<<<
         style={{
-          backgroundColor: '#1a1a1a', // 浅黑色或深灰色作为背景
-          // 移除 backgroundImage, backgroundSize, backgroundPosition, backgroundAttachment
+          backgroundColor: '#000000'
         }}
       >
         <Style /> {/* 你的全局样式在这里加载 */}
 
-        {/* 左右布局 */}
         <div
           id='wrapper'
           className={'relative flex justify-between w-full h-full mx-auto'}>
-          {/* PC端左侧 */}
           <div className='w-52 hidden xl:block relative z-10'>
             <div className='py-4 px-2 sticky top-0 h-screen flex flex-col justify-between'>
               <div className='select-none'>
-                {/* 抬头logo等 */}
                 <Header siteInfo={siteInfo} />
-                {/* 菜单栏 */}
                 <MenuList {...props} />
               </div>
-
-              {/* 左侧广告栏目 */}
               <div className='w-full'>
                 <AdSlot />
               </div>
             </div>
           </div>
 
-          {/* 右侧 */}
-          {/* >>>>>>> 修改 main 标签，确保内容 z-index 正确 <<<<<<< */}
-          <main className='flex-grow w-full h-full flex flex-col min-h-screen overflow-x-auto md:p-2 relative'> {/* 添加 relative */}
-            <div className='relative z-10 flex-grow h-full'>{children}</div> {/* 添加 relative z-10 */}
-            {/* 广告 */}
-            <div className='relative z-10 w-full py-4'> {/* 同样确保广告在模糊层之上 */}
+          <main className='flex-grow w-full h-full flex flex-col min-h-screen overflow-x-auto md:p-2 relative'>
+            <div className='relative z-10 flex-grow h-full'>{children}</div>
+            <div className='relative z-10 w-full py-4'>
               <AdSlot type='in-article' />
             </div>
-
-            {/* --- 以下是被注释掉的区域 --- */}
-            {/* 主区域下方 导览 */}
-            {/*
-            <div className='relative z-10 w-full bg-white dark:bg-hexo-black-gray rounded-lg p-2'>
-              <GroupCategory
-                categoryOptions={categoryOptions}
-                currentCategory={currentCategory}
-              />
-              <hr />
-              <GroupTag tagOptions={tagOptions} currentTag={currentTag} />
-              <Announcement {...props} className='p-2' />
-            </div>
-            */}
-            {/* 页脚 */}
-            {/* <Footer /> */}
-            {/* --- 注释结束 --- */}
-            
           </main>
         </div>
 
@@ -163,7 +130,6 @@ const LayoutBase = props => {
 
 /**
  * 首页
- * 首页是个博客列表，加上顶部嵌入一个公告
  * @param {*} props
  * @returns
  */
@@ -171,16 +137,27 @@ const LayoutIndex = props => {
   const { siteInfo } = props
   return (
     <>
-      {/* 首页移动端顶部导航 */}
       <div className='p-2 xl:hidden'>
         <Header siteInfo={siteInfo} />
       </div>
-      {/* 最近游戏 */}
       <GameListRecent />
-      {/* 游戏列表 */}
       <LayoutPostList {...props} />
     </>
   )
+}
+
+// >>>>>>> 修改点2: 添加了 chunkArray 辅助函数 <<<<<<<
+function chunkArray(array, size) {
+  const chunkedArr = []
+  let index = 0
+  if (!array || array.length === 0) {
+    return []
+  }
+  while (index < array.length) {
+    chunkedArr.push(array.slice(index, size + index))
+    index += size
+  }
+  return chunkedArr
 }
 
 /**
@@ -194,7 +171,7 @@ const LayoutPostList = props => {
   let filteredBlogPosts = []
   if (filterKey && posts) {
     filteredBlogPosts = posts.filter(post => {
-      const tagContent = post?.tags ? post?.tags.join(' ') : ''
+      const tagContent = post?.tags ? post.tags.join(' ') : ''
       const searchContent = post.title + post.summary + tagContent
       return searchContent.toLowerCase().includes(filterKey.toLowerCase())
     })
@@ -202,24 +179,47 @@ const LayoutPostList = props => {
     filteredBlogPosts = deepClone(posts)
   }
 
-  // >>>>>> 假设你的书架内容最终会渲染在这个地方，请确保它被包裹在 .bookshelf-main-container 中 <<<<<<<
-  // 如果你的 .bookshelf-main-container 在更深层次的组件中，那么效果会直接作用于那个组件。
-  // 如果你希望整个博客列表容器被模糊，那么你需要确保这个容器具有 .bookshelf-main-container 类。
+  // >>>>>>> 修改点3: 完全重写渲染逻辑以适配3D书架 <<<<<<<
+  const booksPerRow = 5 // 每行显示的书本数量，你可以根据需要调整
+  const bookRows = chunkArray(filteredBlogPosts, booksPerRow)
+
   return (
     <>
       <BlogPostBar {...props} />
-      {siteConfig('POST_LIST_STYLE') === 'page' ? (
-        <BlogListPage posts={filteredBlogPosts} {...props} />
-      ) : (
-        <BlogListScroll posts={filteredBlogPosts} {...props} />
-      )}
+
+      <div className='bookshelf-main-container'>
+        {bookRows.length > 0 ? (
+          bookRows.map((row, rowIndex) => (
+            <div key={rowIndex} className='shelf-row'>
+              <div className='books-on-shelf'>
+                {row.map(post => (
+                  <div key={post.id} className='book-card-item'>
+                    <SmartLink href={`${siteConfig('SUB_PATH', '')}/${post.slug}`}>
+                      <div className='book-cover-wrapper'>
+                        <img
+                          src={post?.pageCover}
+                          alt={post.title}
+                          className='w-full h-full object-cover'
+                        />
+                        <div className="book-title-overlay">{post.title}</div>
+                      </div>
+                    </SmartLink>
+                  </div>
+                ))}
+              </div>
+              <div className='shelf-plank'></div>
+            </div>
+          ))
+        ) : (
+          <div className="p-12 text-center text-gray-400">暂无内容</div>
+        )}
+      </div>
     </>
   )
 }
 
 /**
  * 搜索
- * 页面是博客列表，上方嵌入一个搜索引导条
  * @param {*} props
  * @returns
  */
@@ -238,7 +238,6 @@ const LayoutSearch = props => {
     }
   }, [])
 
-  // 在列表中进行实时过滤
   const { filterKey } = useGameGlobal()
   let filteredBlogPosts = []
   if (filterKey && posts) {
@@ -271,7 +270,7 @@ const LayoutArchive = props => {
   const { archivePosts } = props
   return (
     <>
-      <div className='mb-10 pb-20 md:py-12 p-3  min-h-screen w-full'>
+      <div className='mb-10 pb-20 md:py-12 p-3 min-h-screen w-full'>
         {Object.keys(archivePosts).map(archiveTitle => (
           <BlogArchiveItem
             key={archiveTitle}
@@ -297,20 +296,17 @@ const LayoutSlug = props => {
   const relateGames = recommendPosts
   const randomGames = shuffleArray(deepClone(allNavPages))
 
-  // 初始化可安装应用
   initialPWA(post, siteInfo)
 
   useEffect(() => {
-    // 更新最新游戏
     const recentGames = localStorage.getItem('recent_games')
       ? JSON.parse(localStorage.getItem('recent_games'))
       : []
 
     const existedIndex = recentGames.findIndex(item => item?.id === post?.id)
     if (existedIndex === -1) {
-      recentGames.unshift(post) // 将游戏插入到数组头部
+      recentGames.unshift(post)
     } else {
-      // 如果游戏已存在于数组中，将其移至数组头部
       const existingGame = recentGames.splice(existedIndex, 1)[0]
       recentGames.unshift(existingGame)
     }
@@ -327,34 +323,23 @@ const LayoutSlug = props => {
         <div id='article-wrapper'>
           <div className='game-detail-wrapper w-full grow flex'>
             <div className={`w-full md:py-2`}>
-              {/* 游戏窗口 */}
               <GameEmbed post={post} siteInfo={siteInfo} />
-
-              {/* 资讯 */}
-              <div className='game-info  dark:text-white py-2 px-2 md:px-0 mt-14 md:mt-0'>
-                {/* 关联游戏 */}
+              <div className='game-info dark:text-white py-2 px-2 md:px-0 mt-14 md:mt-0'>
                 <div className='w-full'>
                   <GameListRelate posts={relateGames} />
                 </div>
-
-                {/* 详情描述 */}
                 {post && (
                   <div className='bg-white shadow-md my-2 p-4 rounded-md dark:bg-black'>
                     <PostInfo post={post} />
                     <NotionPage post={post} />
-                    {/* 广告嵌入 */}
                     <AdSlot />
-                    {/* 分享栏目 */}
                     <ShareBar post={post} />
-                    {/* 评论区 */}
                     <Comment frontMatter={post} />
                   </div>
                 )}
               </div>
             </div>
           </div>
-
-          {/* 其它游戏列表 */}
           <GameListIndexCombine posts={randomGames} />
         </div>
       )}
@@ -371,13 +356,10 @@ const Layout404 = props => {
   const router = useRouter()
   const { locale } = useGlobal()
   useEffect(() => {
-    // 延时3秒如果加载失败就返回首页
     setTimeout(() => {
       const article = isBrowser && document.getElementById('article-wrapper')
       if (!article) {
-        router.push('/').then(() => {
-          // console.log('找不到页面', router.asPath)
-        })
+        router.push('/')
       }
     }, 3000)
   }, [])
@@ -423,7 +405,6 @@ const LayoutCategoryIndex = props => {
                 className={
                   'bg-white rounded-lg hover:text-black dark:hover:text-white dark:text-gray-300 dark:hover:bg-gray-600 px-5 cursor-pointer py-2 hover:bg-gray-100'
                 }>
-                {/* <i className='mr-4 fas fa-folder' /> */}
                 {category.name}({category.count})
               </div>
             </SmartLink>
@@ -451,7 +432,7 @@ const LayoutTagIndex = props => {
                 key={tag.name}
                 href={`/tag/${encodeURIComponent(tag.name)}`}
                 passHref
-                className={` select-none cursor-pointer flex bg-white rounded-lg hover:bg-gray-500 hover:text-white duration-200 mr-2 py-1 px-2 text-xs whitespace-nowrap dark:hover:text-white  hover:shadow-xl  dark:bg-gray-800`}>
+                className={` select-none cursor-pointer flex bg-white rounded-lg hover:bg-gray-500 hover:text-white duration-200 mr-2 py-1 px-2 text-xs whitespace-nowrap dark:hover:text-white hover:shadow-xl dark:bg-gray-800`}>
                 <i className='mr-1 fas fa-tag' />{' '}
                 {tag.name + (tag.count ? `(${tag.count})` : '')}{' '}
               </SmartLink>
