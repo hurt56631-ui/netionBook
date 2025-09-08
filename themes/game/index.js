@@ -50,7 +50,7 @@ const LayoutBase = props => {
     currentTag,
     categoryOptions,
     currentCategory,
-    posts // <<<<< IMPORTANT: LayoutBase 需要接收 posts 数据来进行搜索过滤
+    posts // LayoutBase 需要接收 posts 数据来进行搜索过滤
   } = props
   const searchModal = useRef(null)
   const [filterKey, setFilterKey] = useState('')
@@ -246,11 +246,12 @@ const LayoutPostList = props => {
   const booksPerRow = 3 
   const bookRows = chunkArray(currentPosts, booksPerRow)
 
-  // 移除 getRandomRotation 函数，恢复垂直摆放
-  // const getRandomRotation = () => {
-  //   const angle = Math.random() * (2.5 - 0.5) + 0.5; 
-  //   return `rotateZ(${angle}deg)`;
-  // };
+  // >>>>>>> 修改点9: 重新引入 getRandomRotation 函数，生成向右上方倾斜的角度 <<<<<<<
+  const getRandomRotation = () => {
+    // 生成 0.5 到 2.5 之间的随机角度，确保是正值（右上方倾斜）
+    const angle = Math.random() * (2.5 - 0.5) + 0.5; 
+    return `rotateZ(${angle}deg)`;
+  };
 
   return (
     <>
@@ -265,7 +266,8 @@ const LayoutPostList = props => {
                   <div 
                     key={post.id} 
                     className='book-card-item' 
-                    // 移除 style={{ transform: getRandomRotation() }}
+                    // >>>>>>> 修改点10: 重新应用随机倾斜角度 <<<<<<<
+                    style={{ transform: getRandomRotation() }} 
                   >
                     <SmartLink href={`${siteConfig('SUB_PATH', '')}/${post.slug}`}>
                       <div className='book-cover-wrapper'>
@@ -528,4 +530,4 @@ export {
   LayoutSlug,
   LayoutTagIndex,
   CONFIG as THEME_CONFIG
-          }
+            }
