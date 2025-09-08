@@ -99,6 +99,7 @@ const LayoutBase = props => {
           <main className='flex-grow w-full h-full flex flex-col min-h-screen overflow-x-auto md:p-2'>
             <div className='flex-grow h-full'>{children}</div>
             <div className='w-full py-4'><AdSlot type='in-article' /></div>
+            <Footer {...props} /> {/* 确保Footer在这里被渲染 */}
           </main>
         </div>
         <SideBarDrawer isOpen={sideBarVisible} onClose={() => { setSideBarVisible(false) }}>
@@ -401,4 +402,4 @@ const LayoutTagIndex = props => {
 export {
   Layout404, LayoutArchive, LayoutBase, LayoutCategoryIndex, LayoutIndex,
   LayoutPostList, LayoutSearch, LayoutSlug, LayoutTagIndex, CONFIG as THEME_CONFIG
-}
+          }
