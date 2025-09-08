@@ -64,51 +64,43 @@ export function Style () {
         backdrop-filter: blur(5px);
     }
     
-    /* 书架主容器 - 包含所有书架行，并带有磨砂玻璃背景 */
+    /* 书架主容器 */
     .bookshelf-main-container {
-        /* 浅黑色背景，略透明，与全局背景 #1a1a1a 形成层次 */
-        background-color: rgba(44, 44, 44, 0.6); 
-        backdrop-filter: blur(8px); /* 磨砂玻璃效果，柔和模糊 */
+        /* >>>>>>> 调整为浅黑色背景和磨砂玻璃效果 <<<<<<< */
+        background-color: rgba(44, 44, 44, 0.7); /* 略透明的深灰色，与全局背景 #1a1a1a 形成层次 */
+        backdrop-filter: blur(8px); /* 磨砂玻璃效果，稍微降低模糊强度，更柔和 */
         -webkit-backdrop-filter: blur(8px); /* 兼容Safari */
-        border-radius: 12px; /* 圆角 */
+        border-radius: 12px; /* 增加一些圆角 */
         overflow: hidden; /* 防止内容溢出 */
+        
+        /* ------------------------------------- */
+
+        /* 移除原有的背景图片和内阴影，改为更简洁的风格 */
+        /* background-image: none; */
+        /* box-shadow: none; */ 
+        
         min-height: 100vh;
         padding: 8rem 2rem 5rem 2rem;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); /* 外部阴影，让容器浮动感更强 */
-        position: relative; /* 为内部的 shelf-row 提供定位上下文 */
-        z-index: 1; /* 确保它在全局背景之上 */
+        /* 可以添加一个轻微的外部阴影，让书架容器浮动感更强 */
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); 
     }
     
-    /* 包含所有书架行的外部容器 */
-    .book-shelf-grid-wrapper {
-        display: flex;
-        flex-direction: column;
-        gap: 0; /* 每层书架之间由 shelf-row 的 margin-bottom 控制 */
-    }
-
-    /* 单个书架行容器 */
+    /* 单个书架行（包含书本和木板） */
     .shelf-row {
         position: relative;
         margin-bottom: 9rem; /* 每层书架之间的垂直间距 */
         height: 16rem; /* 每层书架占据的高度 */
-        display: flex; /* 让书本和木板在同一行 */
-        flex-direction: column; /* 垂直堆叠书本区域和木板 */
-        align-items: center; /* 书架隔板和书本区域居中对齐 */
-        justify-content: flex-end; /* 让内容靠底部堆叠 */
     }
     
     /* 放置书本的容器 */
     .books-on-shelf {
-        display: grid; /* 使用 Grid 布局书籍 */
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* 响应式列，每本书最小150px宽 */
+        display: flex;
+        justify-content: center;
+        align-items: flex-end; /* 书本底部对齐 */
         gap: 1.5rem; /* 书本之间的紧凑间距 */
-        height: calc(100% - 25px); /* 减去木板高度，确保书本区域高度 */
-        padding-bottom: 5px; /* 确保书本底部略高于木板顶部 */
-        position: relative;
-        z-index: 15; /* 确保书本在木板之上 */
-        width: 100%; /* 占据 shelf-row 的宽度 */
-        max-width: 900px; /* 限制书架行的最大宽度，保持美观 */
-        justify-content: center; /* Grid 内部内容居中 */
+        height: 100%;
+        padding-bottom: 25px; /* 确保书本底部略高于木板正面 */
+        flex-wrap: wrap; /* 允许书本在小屏幕上换行 */
     }
     
     /* 书架木板的容器 */
@@ -119,14 +111,12 @@ export function Style () {
         right: 0;
         height: 25px; /* 木板厚度 */
         transform-style: preserve-3d;
-        perspective: 800px; /* 增加透视感 */
-        z-index: 10; /* 确保木板在书籍之下，但在书架容器背景之上 */
-        max-width: 1000px; /* 略宽于 books-on-shelf，形成视觉支撑 */
-        width: 100%;
-        margin: 0 auto; /* 居中 */
+        perspective: 800px;
+        z-index: 10;
     }
     
-    /* 木板的顶部表面 (使用 muban.jpg 作为纹理) */
+    /* >>>>>>> 调整木板的颜色和渐变，使其与深色背景更协调 <<<<<<< */
+    /* 木板的顶部表面 */
     .shelf-plank::before {
         content: '';
         position: absolute;
@@ -134,17 +124,15 @@ export function Style () {
         left: 0;
         width: 100%;
         height: 60px; /* 顶部平面的深度 */
-        background-image: url('/images/muban.jpg'); /* 使用 muban.jpg 图片 */
-        background-size: cover;
-        background-position: center;
+        background: #3a2e24; /* 更深的基色 */
+        background-image: linear-gradient(to right, #4c3e30, #665038, #4c3e30); /* 深色木纹渐变 */
         transform: rotateX(80deg) translateZ(-5px); /* 旋转并向上平移，形成顶部透视 */
         transform-origin: bottom center;
-        box-shadow: inset 0 0 20px rgba(0,0,0,0.5); /* 顶部阴影 */
+        box-shadow: inset 0 0 20px rgba(0,0,0,0.7); /* 顶部阴影更深 */
         border-radius: 5px;
-        filter: brightness(0.7) contrast(1.2); /* 调整亮度对比度，使其更深沉 */
     }
     
-    /* 木板的正面 (使用 muban.jpg 作为纹理) */
+    /* 木板的正面 */
     .shelf-plank::after {
         content: '';
         position: absolute;
@@ -152,30 +140,26 @@ export function Style () {
         left: 0;
         width: 100%;
         height: 100%; /* 木板厚度 */
-        background-image: url('/images/muban.jpg'); /* 使用 muban.jpg 图片 */
-        background-size: cover;
-        background-position: center;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.6); /* 正面下方的投影 */
+        background: #4c3e30; /* 更深的基色 */
+        background-image: linear-gradient(to top, #3a2e24, #4c3e30 30%, #5e4a38); /* 深色木纹渐变 */
+        box-shadow: 0 5px 15px rgba(0,0,0,0.8); /* 正面下方的投影更明显 */
         border-radius: 5px;
-        border-top: 1px solid rgba(255,255,255,0.1); /* 顶部高光 */
-        filter: brightness(0.6) contrast(1.3); /* 调整亮度对比度，使其更深沉 */
+        border-top: 1px solid rgba(255,255,255,0.05); /* 顶部高光更细微 */
     }
-    
+    /* ----------------------------------------------------------- */
+
     /* 书本卡片 */
     .book-card-item { 
         height: 100%; 
         flex-shrink: 0; /* 防止书本被压缩 */
         display: flex;
-        align-items: flex-end; /* 让书本底部对齐，配合 books-on-shelf 的 align-items: flex-end */
-        /* width 和 height 在 book-cover-wrapper 中控制 */
-        justify-content: center; /* 如果书本卡片有额外内容，可以居中 */
+        align-items: flex-end;
     }
     
     /* 包裹书本封面的容器，用于应用复杂的3D变换和阴影 */
     .book-cover-wrapper {
         transform-style: preserve-3d;
-        /* 调整书本的初始transform，使其更像是放在平面上 */
-        transform: perspective(1000px) rotateY(-8deg) rotateX(1deg); /* 略微倾斜 */
+        transform: perspective(1000px) rotateY(-12deg) rotateX(1deg); /* 倾斜角度 */
         transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* 弹性动画 */
         filter: drop-shadow(8px 12px 15px rgba(0, 0, 0, 0.7)); /* 初始阴影 */
         position: relative;
@@ -190,7 +174,7 @@ export function Style () {
     }
     
     .book-cover-wrapper:hover {
-        transform: perspective(1000px) rotateY(-2deg) rotateX(0deg) translateY(-20px) translateZ(30px) scale(1.1);
+        transform: perspective(1000px) rotateY(-3deg) rotateX(0deg) translateY(-20px) translateZ(30px) scale(1.1);
         filter: drop-shadow(15px 25px 40px rgba(0, 0, 0, 0.9));
         z-index: 50;
     }
@@ -203,6 +187,7 @@ export function Style () {
         left: -18px; /* 书脊宽度 */
         width: 18px; 
         height: 100%;
+        /* >>>>>>> 调整书脊颜色 <<<<<<< */
         background: linear-gradient(to right, #1a1a1a 0%, #2a2a2a 30%, #3a3a3a 60%, #2a2a2a 90%, #1a1a1a 100%);
         box-shadow: inset -6px 0 12px rgba(0, 0, 0, 0.9);
         transform-origin: left;
@@ -253,32 +238,14 @@ export function Style () {
     }
     
     /* 响应式调整 */
-    @media (max-width: 1024px) { /* 平板 */
-        .books-on-shelf { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1rem; max-width: 700px; }
-        .book-cover-wrapper { width: 130px; height: 195px; }
-        .shelf-plank { max-width: 750px; }
-    }
-    @media (max-width: 768px) { /* 平板-窄屏 */
-        .books-on-shelf { grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 0.8rem; max-width: 500px; }
-        .book-cover-wrapper { width: 110px; height: 165px; }
-        .shelf-plank { max-width: 550px; }
-    }
     @media (max-width: 640px) { /* 手机 */
-        .bookshelf-main-container { padding: 6rem 0.5rem 4rem 0.5rem; }
-        .shelf-row { margin-bottom: 7rem; height: 13rem; }
-        .books-on-shelf { 
-            grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); /* 更小的书本 */
-            gap: 0.5rem; 
-            max-width: 380px; /* 适应更窄的屏幕 */
-            padding-left: 0.5rem; 
-            padding-right: 0.5rem;
-            justify-content: center; /* 确保居中 */
-        }
-        .book-cover-wrapper { width: 90px; height: 135px; }
-        .book-cover-wrapper::before { left: -12px; width: 12px; }
-        .book-cover-wrapper::after { right: -6px; width: 6px; }
-        .book-title-overlay { font-size: 0.8rem; padding: 1rem 0.3rem 0.8rem 0.3rem; }
-        .shelf-plank { max-width: 420px; }
+        .bookshelf-main-container { padding: 6rem 1rem 4rem 1rem; }
+        .shelf-row { margin-bottom: 8rem; height: 14rem; }
+        .books-on-shelf { gap: 1rem; justify-content: flex-start; overflow-x: auto; padding-left: 1rem; padding-right: 1rem; }
+        .book-cover-wrapper { width: 120px; height: 180px; }
+        .book-cover-wrapper::before { left: -15px; width: 15px; }
+        .book-cover-wrapper::after { right: -8px; width: 8px; }
+        .book-title-overlay { font-size: 0.9rem; }
     }
   `}</style>)
 }
