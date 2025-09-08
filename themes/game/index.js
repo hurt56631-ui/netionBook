@@ -86,7 +86,7 @@ const LayoutBase = props => {
       <div
         id='theme-game'
         className={`${siteConfig('FONT_STYLE')} w-full h-full min-h-screen justify-center dark:bg-black dark:bg-opacity-50 dark:text-gray-300 scroll-smooth`}
-        // >>>>>>> 修改点: 设置背景图和磨砂玻璃效果 <<<<<<<
+        // >>>>>>> 修改点1: 设置背景图和磨砂玻璃效果 <<<<<<<
         style={{
           // 底层背景图
           backgroundImage: `url('/images/default_bg.jpg')`, 
@@ -94,10 +94,9 @@ const LayoutBase = props => {
           backgroundAttachment: 'fixed', // 背景图固定不随滚动
           backgroundPosition: 'center',
           // 磨砂玻璃效果层，覆盖在背景图之上
-          // 可以根据default_bg.jpg的亮度调整brightness，blur调整模糊度
-          backdropFilter: 'blur(8px) brightness(0.8)', 
-          WebkitBackdropFilter: 'blur(8px) brightness(0.8)', // 兼容Safari
-          backgroundColor: 'rgba(0,0,0,0.5)' // 作为不支持backdrop-filter时的fallback，或磨砂层下方的颜色
+          backdropFilter: 'blur(8px) brightness(1.0)', // 模糊度，亮度设为1.0即原图亮度
+          WebkitBackdropFilter: 'blur(8px) brightness(1.0)', // 兼容Safari
+          backgroundColor: 'rgba(0,0,0,0.2)' // 作为不支持backdrop-filter时的fallback，或磨砂层下方的颜色
         }}
       >
         <Style /> {/* 你的全局样式在这里加载 */}
@@ -149,14 +148,14 @@ const LayoutIndex = props => {
       <div className='p-2 xl:hidden'>
         <Header siteInfo={siteInfo} />
       </div>
-      {/* >>>>>>> 修改点: 移除 GameListRecent 组件 (观看记录) <<<<<<< */}
+      {/* >>>>>>> 修改点2: 移除 GameListRecent 组件 (观看记录) <<<<<<< */}
       {/* <GameListRecent /> */} 
       <LayoutPostList {...props} />
     </>
   )
 }
 
-// >>>>>>> 添加了 chunkArray 辅助函数 <<<<<<<
+// >>>>>>> 修改点3: 添加了 chunkArray 辅助函数 <<<<<<<
 function chunkArray(array, size) {
   const chunkedArr = []
   let index = 0
@@ -189,8 +188,8 @@ const LayoutPostList = props => {
     filteredBlogPosts = deepClone(posts)
   }
 
-  // >>>>>>> 渲染逻辑已适配2D书架 <<<<<<<
-  const booksPerRow = 5 // 每行显示的书本数量，你可以根据需要调整
+  // >>>>>>> 修改点4: 每行显示的书本数量改为 3 <<<<<<<
+  const booksPerRow = 3 // 每行显示的书本数量
   const bookRows = chunkArray(filteredBlogPosts, booksPerRow)
 
   return (
@@ -465,4 +464,4 @@ export {
   LayoutSlug,
   LayoutTagIndex,
   CONFIG as THEME_CONFIG
-  }
+                                                  }
