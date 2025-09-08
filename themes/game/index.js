@@ -246,12 +246,11 @@ const LayoutPostList = props => {
   const booksPerRow = 3 
   const bookRows = chunkArray(currentPosts, booksPerRow)
 
-  // >>>>>>> 修改点9: 重新引入 getRandomRotation 函数，生成向右上方倾斜的角度 <<<<<<<
-  const getRandomRotation = () => {
-    // 生成 0.5 到 2.5 之间的随机角度，确保是正值（右上方倾斜）
-    const angle = Math.random() * (2.5 - 0.5) + 0.5; 
-    return `rotateZ(${angle}deg)`;
-  };
+  // <<<<<<< 优化6: 彻底移除 getRandomRotation 函数 >>>>>>>
+  // const getRandomRotation = () => {
+  //   const angle = Math.random() * (2.5 - 0.5) + 0.5; 
+  //   return `rotateZ(${angle}deg)`;
+  // };
 
   return (
     <>
@@ -266,8 +265,7 @@ const LayoutPostList = props => {
                   <div 
                     key={post.id} 
                     className='book-card-item' 
-                    // >>>>>>> 修改点10: 重新应用随机倾斜角度 <<<<<<<
-                    style={{ transform: getRandomRotation() }} 
+                    // <<<<<<< 优化7: 移除 style={{ transform: getRandomRotation() }} >>>>>>>
                   >
                     <SmartLink href={`${siteConfig('SUB_PATH', '')}/${post.slug}`}>
                       <div className='book-cover-wrapper'>
@@ -530,4 +528,4 @@ export {
   LayoutSlug,
   LayoutTagIndex,
   CONFIG as THEME_CONFIG
-            }
+        }
