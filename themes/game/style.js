@@ -14,16 +14,15 @@ export function Style () {
 
     /*
     ============================================================
-    【【【 视觉升级 1：顶栏和背景使用图片纹理，移除模糊 】】】
+    【【【 视觉升级 1：顶栏和背景使用不同的图片，且背景清晰 】】】
     ============================================================
     */
     /* 主背景 */
     #theme-game {
-      background-image: url('/images/wood-texture.jpg'); /* 使用您的木纹图片 */
+      background-image: url('/images/shujiabeijing.jpg'); /* 主书架背景图 */
       background-size: cover;
       background-attachment: fixed;
       background-position: center;
-      /* 移除所有模糊效果 */
       backdrop-filter: none;
       -webkit-backdrop-filter: none;
     }
@@ -33,123 +32,101 @@ export function Style () {
         position: sticky; top: 0; z-index: 50; 
         padding: 0.8rem 1rem;
         display: flex; align-items: center; justify-content: space-between;
-        /* 使用与主背景相同的图片 */
-        background-image: url('/images/wood-texture.jpg');
-        background-size: cover;
-        background-position: center top;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-        border-bottom: 2px solid rgba(0,0,0,0.2);
-        color: #333; /* 深色文字以适应浅色背景 */
-    }
-    .top-app-bar .title { font-weight: bold; font-size: 1.25rem; }
-    .top-app-bar .subtitle { color: #555; }
-    .top-app-bar .search-button { color: #333; }
-
-    /* 书架主容器 - 现在是透明的，直接显示背景 */
-    .bookshelf-main-container {
-        padding: 4rem 1rem 3rem 1rem; 
-        margin: 0.5rem; 
-    }
-    
-    /*
-    ============================================================
-    【【【 视觉升级 2：书架底板使用图片 】】】
-    ============================================================
-    */
-    .shelf-plank {
-        position: absolute;
-        bottom: 0; left: 0; right: 0;
-        height: 25px;
-        background-image: url('/images/muban.jpg'); /* 使用您的木板图片 */
+        background-image: url('/images/wood-texture.jpg'); /* 独立的顶栏木纹图 */
         background-size: cover;
         background-position: center;
-        border-radius: 4px;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
-        border-top: 1px solid rgba(255, 255, 255, 0.3);
-        z-index: 10;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        border-bottom: 2px solid rgba(0,0,0,0.2);
+        color: #333;
     }
-    
+    .top-app-bar .title { font-weight: bold; font-size: 1.25rem; }
+    .top-app-bar .subtitle, .top-app-bar .search-button { color: #333; }
+
     /*
     ============================================================
-    【【【 视觉升级 3：书本3D倾斜、直角、16开比例 】】】
+    【【【 视觉升级 2：直接展示您的3D封面，效果完美 】】】
     ============================================================
     */
     .shelf-row {
         position: relative;
-        margin-bottom: 3rem;
-        display: flex; 
-        justify-content: center; 
-        align-items: flex-end; 
-        min-height: 18rem;
+        margin-bottom: 2rem;
+        padding-top: 2rem;
+        display: flex; justify-content: center; align-items: flex-end; 
     }
     .books-on-shelf {
-        display: flex; 
-        justify-content: center; 
-        align-items: flex-end; 
-        gap: 2.5rem; /* 增大间距以容纳倾斜效果 */
-        transform-style: preserve-3d;
-        perspective: 2000px; /* 设定3D舞台的透视深度 */
+        display: flex; justify-content: center; align-items: flex-end; 
+        gap: 1.5rem;
     }
     
     .book-card-item { 
-        width: 160px; /* 固定宽度以更好地控制布局 */
+        width: calc(33.33% - 1.5rem);
+        max-width: 180px;
         z-index: 20;
-        transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
-        
-        /* 关键：赋予书本强烈的3D倾斜效果 */
-        transform: rotateY(-30deg); 
+        transition: transform 0.3s ease-out;
+        /* 我们不再需要CSS来做复杂的3D变换了 */
     }
     .book-card-item:hover {
-        transform: rotateY(-15deg) scale(1.05) translateY(-10px);
-        box-shadow: 0 25px 40px rgba(0,0,0,0.4);
+        transform: translateY(-10px); /* 悬停时轻微上浮即可 */
     }
     
     .book-cover-wrapper {
         width: 100%;
-        aspect-ratio: 185 / 260; /* 严格维持16开比例 */
-        border-radius: 2px 0 0 2px; /* 左侧轻微圆角，右侧直角 */
-        overflow: hidden;
-        transform-style: preserve-3d; /* 允许子元素进行3D变换 */
-        box-shadow: -5px 5px 20px rgba(0,0,0,0.3);
+        /* 移除所有CSS模拟的3D效果、阴影和边框 */
+        /* 只保留一个容器 */
     }
+    
     .book-cover-wrapper img {
-        width: 100%; height: 100%;
-        object-fit: cover;
+        width: 100%; height: auto;
+        display: block;
+        /* 关键：使用 filter: drop-shadow 为您的透明PNG图片添加真实阴影 */
+        /* 这样阴影会根据书本的不规则形状而变化，非常真实 */
+        filter: drop-shadow(10px 10px 15px rgba(0,0,0,0.4));
+        transition: filter 0.3s ease-out;
     }
-    /* 模拟书脊厚度 */
-    .book-cover-wrapper::before {
-        content: ''; position: absolute;
-        top: 0; left: 0; width: 22px; height: 100%;
-        background: #f0f0f0; /* 书脊颜色 */
-        transform-origin: left;
-        transform: rotateY(90deg) translateX(-11px) translateZ(11px);
-        background-image: linear-gradient(to right, rgba(0,0,0,0.2), transparent 30%, transparent 70%, rgba(0,0,0,0.1));
+    .book-card-item:hover .book-cover-wrapper img {
+      filter: drop-shadow(15px 15px 25px rgba(0,0,0,0.3));
     }
     
     /*
     ============================================================
-    【【【 视觉升级 4：添加装饰品 】】】
+    【【【 视觉升级 3：装饰品透明背景处理 】】】
     ============================================================
     */
     .decoration {
-        position: absolute;
-        bottom: 25px; /* 放置在木板上方 */
-        z-index: 15; /* 在书本后面 */
-        filter: brightness(0.9) drop-shadow(5px 5px 10px rgba(0,0,0,0.3));
+        position: relative;
+        align-self: flex-end;
+        margin: 0 0.5rem;
+        z-index: 15;
     }
-    .deco-item-1 {
-        right: -30px;
-        width: 80px;
-        transform: rotateY(30deg); /* 让装饰品也有一点透视感 */
-    }
-    .deco-item-2 {
-        left: -40px;
-        width: 100px;
-        transform: rotateY(-20deg);
+    .decoration img {
+      display: block;
+      max-width: 80px;
+      height: auto;
+      /* 同样使用 drop-shadow 来确保透明图片的阴影效果正确 */
+      filter: drop-shadow(5px 5px 10px rgba(0,0,0,0.3));
     }
 
-    /* 搜索框等其他样式 */
-    /* ... (保持您原有的功能性样式) ... */
+    /* 底板样式 */
+    .shelf-plank {
+        position: absolute;
+        bottom: 0; left: 0; right: 0;
+        height: 25px;
+        background-image: url('/images/muban.jpg');
+        background-size: cover;
+        background-position: center;
+        border-radius: 4px;
+        z-index: 10;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+    }
+    .shelf-plank::after {
+      content: ''; position: absolute;
+      bottom: -5px; left: 5%;
+      width: 90%; height: 10px;
+      background: transparent;
+      box-shadow: 0 5px 15px 10px rgba(0, 0, 0, 0.8);
+      filter: blur(10px);
+      z-index: -1;
+    }
     
   `}</style>)
 }
