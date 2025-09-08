@@ -10,8 +10,8 @@ export function Style () {
     @tailwind utilities;
 
     /* -- 通用基础样式 -- */
-    html { 
-        overflow-x: hidden; 
+    html {
+        overflow-x: hidden;
     }
 
     body {
@@ -66,11 +66,23 @@ export function Style () {
     
     /* 书架主容器 */
     .bookshelf-main-container {
-        background-color: #1a1a1a; /* 使用深色背景作为基底 */
+        /* >>>>>>> 在这里添加磨砂玻璃效果 <<<<<<< */
+        background-color: rgba(26, 26, 26, 0.7); /* 深色半透明背景，与原背景色融合 */
+        backdrop-filter: blur(10px); /* 磨砂玻璃效果，调整模糊强度 */
+        -webkit-backdrop-filter: blur(10px); /* 兼容Safari */
+        border-radius: 12px; /* 增加一些圆角，让容器更柔和 */
+        overflow: hidden; /* 防止模糊效果溢出 */
+        /* position: relative; */ /* 如果需要 z-index，通常是必要的，但如果其父级已经有，则可省略 */
+        /* z-index: 0; */ /* 确保它在 Header 等上方，但又不是最高层，具体看页面布局层级 */
+
+        /* ------------------------------------- */
+
+        /* 原有的背景图可以移除，因为它现在是模糊下方的全局背景 */
         /* background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('/images/default_bg.jpg'); */
-        /* 上面的背景图在 LayoutBase 中设置，这里只管书架本体的背景 */
+        /* background-image: none; */ /* 或者你可以这样直接移除 */
+
         background-size: cover;
-        background-attachment: fixed;
+        background-attachment: fixed; /* 这个属性现在可能不会完全按预期工作，因为 background-image 被 backdrop-filter 处理 */
         min-height: 100vh;
         padding: 8rem 2rem 5rem 2rem;
         box-shadow: inset 0 0 80px rgba(0,0,0,0.9); /* 整体内阴影，增加深度 */
