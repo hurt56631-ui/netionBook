@@ -10,8 +10,8 @@ export function Style () {
     @tailwind utilities;
 
     /* -- 通用基础样式 -- */
-    html {
-        overflow-x: hidden;
+    html { 
+        overflow-x: hidden; 
     }
 
     body {
@@ -66,29 +66,18 @@ export function Style () {
     
     /* 书架主容器 */
     .bookshelf-main-container {
-        /* >>>>>>> 调整为浅黑色背景和磨砂玻璃效果 <<<<<<< */
-        background-color: rgba(44, 44, 44, 0.7); /* 略透明的深灰色，与全局背景 #1a1a1a 形成层次 */
-        backdrop-filter: blur(8px); /* 磨砂玻璃效果，稍微降低模糊强度，更柔和 */
-        -webkit-backdrop-filter: blur(8px); /* 兼容Safari */
-        border-radius: 12px; /* 增加一些圆角 */
-        overflow: hidden; /* 防止内容溢出 */
-        
-        /* ------------------------------------- */
-
-        /* 移除原有的背景图片和内阴影，改为更简洁的风格 */
-        /* background-image: none; */
-        /* box-shadow: none; */ 
-        
+        background-color: #1a1a1a; /* 使用深色背景作为基底 */
+        background-size: cover;
+        background-attachment: fixed;
         min-height: 100vh;
         padding: 8rem 2rem 5rem 2rem;
-        /* 可以添加一个轻微的外部阴影，让书架容器浮动感更强 */
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); 
+        box-shadow: inset 0 0 80px rgba(0,0,0,0.9); /* 整体内阴影，增加深度 */
     }
     
     /* 单个书架行（包含书本和木板） */
     .shelf-row {
         position: relative;
-        margin-bottom: 9rem; /* 每层书架之间的垂直间距 */
+        margin-bottom: 4rem; /* << 修改点1: 减小垂直间距，让书架更紧凑 (原为 9rem) */
         height: 16rem; /* 每层书架占据的高度 */
     }
     
@@ -115,8 +104,7 @@ export function Style () {
         z-index: 10;
     }
     
-    /* >>>>>>> 调整木板的颜色和渐变，使其与深色背景更协调 <<<<<<< */
-    /* 木板的顶部表面 */
+    /* 木板的顶部表面 (使用CSS渐变模拟木纹) */
     .shelf-plank::before {
         content: '';
         position: absolute;
@@ -124,15 +112,15 @@ export function Style () {
         left: 0;
         width: 100%;
         height: 60px; /* 顶部平面的深度 */
-        background: #3a2e24; /* 更深的基色 */
-        background-image: linear-gradient(to right, #4c3e30, #665038, #4c3e30); /* 深色木纹渐变 */
+        background: #583c27; /* 基色 */
+        background-image: linear-gradient(to right, #6b4f2c, #8a6c42, #6b4f2c); /* 木纹渐变 */
         transform: rotateX(80deg) translateZ(-5px); /* 旋转并向上平移，形成顶部透视 */
         transform-origin: bottom center;
-        box-shadow: inset 0 0 20px rgba(0,0,0,0.7); /* 顶部阴影更深 */
+        box-shadow: inset 0 0 20px rgba(0,0,0,0.5); /* 顶部阴影 */
         border-radius: 5px;
     }
     
-    /* 木板的正面 */
+    /* 木板的正面 (使用CSS渐变模拟木纹) */
     .shelf-plank::after {
         content: '';
         position: absolute;
@@ -140,14 +128,13 @@ export function Style () {
         left: 0;
         width: 100%;
         height: 100%; /* 木板厚度 */
-        background: #4c3e30; /* 更深的基色 */
-        background-image: linear-gradient(to top, #3a2e24, #4c3e30 30%, #5e4a38); /* 深色木纹渐变 */
-        box-shadow: 0 5px 15px rgba(0,0,0,0.8); /* 正面下方的投影更明显 */
+        background: #6b4f2c; /* 基色 */
+        background-image: linear-gradient(to top, #583c27, #6b4f2c 30%, #7d5e35); /* 木纹渐变 */
+        box-shadow: 0 5px 15px rgba(0,0,0,0.6); /* 正面下方的投影 */
         border-radius: 5px;
-        border-top: 1px solid rgba(255,255,255,0.05); /* 顶部高光更细微 */
+        border-top: 1px solid rgba(255,255,255,0.1); /* 顶部高光 */
     }
-    /* ----------------------------------------------------------- */
-
+    
     /* 书本卡片 */
     .book-card-item { 
         height: 100%; 
@@ -187,8 +174,7 @@ export function Style () {
         left: -18px; /* 书脊宽度 */
         width: 18px; 
         height: 100%;
-        /* >>>>>>> 调整书脊颜色 <<<<<<< */
-        background: linear-gradient(to right, #1a1a1a 0%, #2a2a2a 30%, #3a3a3a 60%, #2a2a2a 90%, #1a1a1a 100%);
+        background: linear-gradient(to right, #202020 0%, #3a3a3a 30%, #505050 60%, #3a3a3a 90%, #202020 100%);
         box-shadow: inset -6px 0 12px rgba(0, 0, 0, 0.9);
         transform-origin: left;
         transform: rotateY(-75deg) translateZ(-8px);
@@ -217,35 +203,17 @@ export function Style () {
     
     /* 书名在封面上显示 */
     .book-title-overlay {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        color: white;
-        font-size: 1rem;
-        font-weight: 700;
-        text-align: center;
-        background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
-        padding: 1.5rem 0.5rem 1rem 0.5rem;
-        text-shadow: 2px 2px 5px rgba(0,0,0,0.9);
-        pointer-events: none;
-        z-index: 1;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        border-bottom-left-radius: 8px;
-        border-bottom-right-radius: 8px;
+        display: none; /* << 修改点2: 直接隐藏书名层 */
     }
     
     /* 响应式调整 */
     @media (max-width: 640px) { /* 手机 */
         .bookshelf-main-container { padding: 6rem 1rem 4rem 1rem; }
-        .shelf-row { margin-bottom: 8rem; height: 14rem; }
+        .shelf-row { margin-bottom: 4rem; height: 14rem; } /* 同样减小手机端的间距 */
         .books-on-shelf { gap: 1rem; justify-content: flex-start; overflow-x: auto; padding-left: 1rem; padding-right: 1rem; }
         .book-cover-wrapper { width: 120px; height: 180px; }
         .book-cover-wrapper::before { left: -15px; width: 15px; }
         .book-cover-wrapper::after { right: -8px; width: 8px; }
-        .book-title-overlay { font-size: 0.9rem; }
     }
   `}</style>)
 }
