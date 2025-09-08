@@ -11,7 +11,7 @@ import { loadWowJS } from '@/lib/plugins/wow'
 import { deepClone, isBrowser, shuffleArray } from '@/lib/utils'
 import SmartLink from '@/components/SmartLink'
 import { useRouter } from 'next/router'
-import React, { createContext, useContext, useEffect, useRef, useState } from 'react' // 明确导入 React
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react'
 import Announcement from './components/Announcement'
 import { ArticleLock } from './components/ArticleLock'
 import BlogArchiveItem from './components/BlogArchiveItem'
@@ -156,28 +156,20 @@ const LayoutPostList = props => {
           bookRows.map((row, rowIndex) => (
             <div key={rowIndex} className='shelf-row'>
               <div className='books-on-shelf'>
-                {row.map((post, postIndex) => {
+                {row.map(post => {
                   const isExternalLink = post.slug?.startsWith('http')
                   const finalHref = isExternalLink ? post.slug : `${siteConfig('SUB_PATH', '')}/${post.slug}`
-                  const showDecoration = postIndex === 0 && rowIndex % 2 === 0
                   
                   return (
-                    <React.Fragment key={post.id}>
-                      {showDecoration && (
-                        <div className="decoration">
-                          <img src="/images/deco1.png" alt="decoration" />
-                        </div>
-                      )}
-                      <div className='book-card-item'>
-                        <SmartLink href={finalHref} passHref legacyBehavior>
-                          <a target="_blank" rel="noopener noreferrer" className="block w-full h-full">
-                            <div className='book-cover-wrapper'>
-                              <img src={post?.pageCover} alt={post.title} />
-                            </div>
-                          </a>
-                        </SmartLink>
-                      </div>
-                    </React.Fragment>
+                    <div key={post.id} className='book-card-item'>
+                      <SmartLink href={finalHref} passHref legacyBehavior>
+                        <a target="_blank" rel="noopener noreferrer" className="block w-full h-full">
+                          <div className='book-cover-wrapper'>
+                            <img src={post?.pageCover} alt={post.title} />
+                          </div>
+                        </a>
+                      </SmartLink>
+                    </div>
                   )
                 })}
               </div>
@@ -241,7 +233,7 @@ const LayoutArchive = props => {
   const { archivePosts } = props
   return (
     <>
-      <div className='mb-10 pb-20 md:py-12 p-3  min-h-screen w-full'>
+      <div className='mb-10 pb-20 md:py-12 p-3 min-h-screen w-full'>
         {Object.keys(archivePosts).map(archiveTitle => (
           <BlogArchiveItem
             key={archiveTitle}
@@ -401,4 +393,4 @@ export {
   LayoutSlug,
   LayoutTagIndex,
   CONFIG as THEME_CONFIG
-  }
+}
