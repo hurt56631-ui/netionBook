@@ -106,7 +106,23 @@ const LayoutBase = props => {
         </SideBarDrawer>
         {isSearchOpen && (
             <div className="search-modal-overlay">
-                <div className="search-modal-content">{/* ... 搜索框内容 ... */}</div>
+                <div className="search-modal-content">
+                    <div className="search-modal-header">
+                        <div className="title">搜索书籍</div>
+                        <button className="close-button" onClick={() => { setIsSearchOpen(false); setFilterKey(''); }}>
+                            <i className="fas fa-times text-lg"></i>
+                        </button>
+                    </div>
+                    <div className="search-input-wrapper">
+                        <i className="fas fa-search search-icon"></i>
+                        <input type="text" placeholder="输入书名..." value={filterKey} onChange={(e) => setFilterKey(e.target.value)} />
+                        {filterKey && (
+                            <button className="clear-button" onClick={() => setFilterKey('')}>
+                                <i className="fas fa-times-circle"></i>
+                            </button>
+                        )}
+                    </div>
+                </div>
                 <div className="search-input-results"><LayoutPostList posts={searchResults || []} isSearchResult={true} /></div>
             </div>
         )}
@@ -383,14 +399,6 @@ const LayoutTagIndex = props => {
 }
 
 export {
-  Layout404,
-  LayoutArchive,
-  LayoutBase,
-  LayoutCategoryIndex,
-  LayoutIndex,
-  LayoutPostList,
-  LayoutSearch,
-  LayoutSlug,
-  LayoutTagIndex,
-  CONFIG as THEME_CONFIG
+  Layout404, LayoutArchive, LayoutBase, LayoutCategoryIndex, LayoutIndex,
+  LayoutPostList, LayoutSearch, LayoutSlug, LayoutTagIndex, CONFIG as THEME_CONFIG
 }
