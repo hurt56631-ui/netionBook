@@ -90,8 +90,17 @@ const LayoutBase = props => {
       }}>
       <div
         id='theme-game'
-        className={`${siteConfig('FONT_STYLE')} w-full h-full min-h-screen justify-center dark:bg-black dark:bg-opacity-50 dark:text-gray-300 scroll-smooth`}>
-        <Style />
+        className={`${siteConfig('FONT_STYLE')} w-full h-full min-h-screen justify-center dark:bg-black dark:bg-opacity-50 dark:text-gray-300 scroll-smooth`}
+        // >>>>>>> 在这里添加全局背景图，以便磨砂玻璃效果有东西可以模糊 <<<<<<<
+        // 请将 '/images/default_bg.jpg' 替换为你的实际背景图片路径
+        style={{
+          backgroundImage: `url('/images/default_bg.jpg')`, // 确保你有这个图片或者替换它
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed' // 背景固定，滚动时效果更佳
+        }}
+      >
+        <Style /> {/* 你的全局样式在这里加载 */}
 
         {/* 左右布局 */}
         <div
@@ -115,17 +124,18 @@ const LayoutBase = props => {
           </div>
 
           {/* 右侧 */}
-          <main className='flex-grow w-full h-full flex flex-col min-h-screen overflow-x-auto md:p-2'>
-            <div className='flex-grow h-full'>{children}</div>
+          {/* >>>>>>> 修改 main 标签，确保内容 z-index 正确 <<<<<<< */}
+          <main className='flex-grow w-full h-full flex flex-col min-h-screen overflow-x-auto md:p-2 relative'> {/* 添加 relative */}
+            <div className='relative z-10 flex-grow h-full'>{children}</div> {/* 添加 relative z-10 */}
             {/* 广告 */}
-            <div className='w-full py-4'>
+            <div className='relative z-10 w-full py-4'> {/* 同样确保广告在模糊层之上 */}
               <AdSlot type='in-article' />
             </div>
 
             {/* --- 以下是被注释掉的区域 --- */}
             {/* 主区域下方 导览 */}
             {/*
-            <div className='w-full bg-white dark:bg-hexo-black-gray rounded-lg p-2'>
+            <div className='relative z-10 w-full bg-white dark:bg-hexo-black-gray rounded-lg p-2'>
               <GroupCategory
                 categoryOptions={categoryOptions}
                 currentCategory={currentCategory}
@@ -195,6 +205,9 @@ const LayoutPostList = props => {
     filteredBlogPosts = deepClone(posts)
   }
 
+  // >>>>>> 假设你的书架内容最终会渲染在这个地方，请确保它被包裹在 .bookshelf-main-container 中 <<<<<<<
+  // 如果你的 .bookshelf-main-container 在更深层次的组件中，那么效果会直接作用于那个组件。
+  // 如果你希望整个博客列表容器被模糊，那么你需要确保这个容器具有 .bookshelf-main-container 类。
   return (
     <>
       <BlogPostBar {...props} />
@@ -464,4 +477,4 @@ export {
   LayoutSlug,
   LayoutTagIndex,
   CONFIG as THEME_CONFIG
-                  }
+  }
