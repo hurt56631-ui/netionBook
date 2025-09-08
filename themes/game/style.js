@@ -69,46 +69,54 @@ export function Style () {
         min-height: 100vh;
         padding: 4rem 1rem 3rem 1rem; /* 整体内边距，手机友好 */
         box-shadow: inset 0 0 80px rgba(0,0,0,0.9); /* 整体内阴影，增加深度 */
+        /* <<<<<<< 修改点1: 书架区域自身的背景色，使其不透明 >>>>>>> */
+        background-color: rgba(255, 255, 255, 0.1); /* 半透明白色，能透出模糊背景但又不是全透明 */
+        -webkit-backdrop-filter: blur(5px); /* 给书架区域也加一点模糊，提升质感 */
+        backdrop-filter: blur(5px);
+        border-radius: 8px; /* 增加一点圆角让整个书架区域看起来更柔和 */
+        margin: 0.5rem; /* 让书架区域与边缘有点距离 */
     }
     
     /* 单个书架行 - 2D */
     .shelf-row {
         position: relative;
-        margin-bottom: 3rem; /* 每层书架之间的垂直间距 */
-        padding-top: 1rem; /* 书本上方留一些空间 */
-        display: flex; /* 让书籍在行内平铺 */
-        flex-wrap: wrap; /* 允许书籍换行 */
-        justify-content: space-evenly; /* 均匀分布书籍 */
-        align-items: flex-start; /* 书本顶部对齐 */
-        min-height: 15rem; /* 确保有足够空间放书和底板 */
-        padding-bottom: 10px; /* 为木板留出空间 */
+        margin-bottom: 3rem; 
+        padding-top: 1rem; 
+        display: flex; 
+        flex-wrap: wrap; 
+        justify-content: space-evenly; 
+        align-items: flex-end; /* <<<<<<< 修改点2: 书本底部对齐，使其立在底板上 >>>>>>> */
+        min-height: 15rem; 
+        padding-bottom: 15px; /* <<<<<<< 修改点3: 为木板留出更多空间，并确保书本略高于木板上方 >>>>>>> */
     }
     
     /* 书本卡片 - 2D */
     .book-card-item { 
         flex-shrink: 0; 
-        width: 120px; /* 手机端书籍宽度 */
-        height: 180px; /* 保持2:3比例 */
-        margin-bottom: 1.5rem; /* 书本之间的垂直间距 */
+        /* <<<<<<< 修改点4: 调整宽度以适应一行3本 >>>>>>> */
+        width: calc(33.33% - 1.5rem); /* 手机端宽度，3本一行，考虑间距 */
+        max-width: 120px; /* 限制最大宽度 */
+        height: 180px; 
+        margin-bottom: 0px; /* <<<<<<< 修改点5: 书本不向下推，只横向排布 >>>>>>> */
         cursor: pointer;
         transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-        z-index: 20; /* 确保书籍在底板之上 */
-        position: relative; /* 用于阴影 */
+        z-index: 20; 
+        position: relative; 
     }
 
     .book-card-item:hover {
         transform: translateY(-8px) scale(1.05);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5); /* Hover 阴影 */
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5); 
     }
     
     /* 书本封面容器 - 2D */
     .book-cover-wrapper {
         width: 100%;
         height: 100%;
-        border-radius: 0px; /* << 修改点: 直角封面 */
+        border-radius: 0px; 
         overflow: hidden;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* 封面阴影 */
-        display: flex; /* 让图片在容器内居中 */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); 
+        display: flex; 
         justify-content: center;
         align-items: center;
     }
@@ -116,19 +124,27 @@ export function Style () {
     .book-cover-wrapper img {
         width: 100%;
         height: 100%;
-        object-fit: cover; /* 确保图片覆盖 */
-        border-radius: 0px; /* << 修改点: 确保图片本身也是直角 */
+        object-fit: cover; 
+        border-radius: 0px; 
     }
     
     /* 书籍两边不再需要 3D 侧边 */
     .book-cover-wrapper::before,
     .book-cover-wrapper::after {
-        content: none; /* 移除 3D 书脊和书页侧边 */
+        content: none; 
     }
     
     /* 书名在封面上显示 (依然隐藏) */
     .book-title-overlay {
         display: none; 
+    }
+
+    /* 移除观看记录图标 */
+    .book-card-item .recent-icon, 
+    .book-card-item .history-indicator, 
+    .book-cover-wrapper > svg, 
+    .book-cover-wrapper > i {
+        display: none !important;
     }
     
     /* 书架木板的容器 - 2D */
@@ -138,19 +154,19 @@ export function Style () {
         left: 0;
         right: 0;
         height: 20px; /* 木板厚度 */
-        background-image: url('/images/muban.jpg'); /* << 修改点: 使用你的底板图片 */
-        background-size: cover; /* 确保图片覆盖 */
+        background-image: url('/images/muban.jpg'); /* 使用你的底板图片 */
+        background-size: cover; 
         background-repeat: no-repeat;
         background-position: center;
-        box-shadow: 0 5px 10px rgba(0,0,0,0.5); /* 木板下方投影 */
-        border-radius: 2px; /* 木板也稍微有点圆角 */
+        box-shadow: 0 5px 10px rgba(0,0,0,0.5); 
+        border-radius: 2px; 
         z-index: 10;
-        /* 对于 2D 布局，不需要复杂的伪元素来模拟 3D 顶部和正面，直接用主元素即可 */
-        /* 如果 muban.jpg 纹理本身需要调整，可以添加亮度或对比度滤镜 */
-        /* filter: brightness(0.9) contrast(1.1); */
+        /* <<<<<<< 修改点6: 增加木板的视觉厚度，使其更像实体 >>>>>>> */
+        border-top: 2px solid rgba(255,255,255,0.2); /* 顶部高光 */
+        border-bottom: 2px solid rgba(0,0,0,0.4); /* 底部阴影 */
     }
 
-    /* 移除 shelf-plank 的伪元素，因为 2D 布局不需要它们来模拟 3D */
+    /* 移除 shelf-plank 的伪元素 */
     .shelf-plank::before,
     .shelf-plank::after {
         content: none;
@@ -158,17 +174,21 @@ export function Style () {
     
     /* 响应式调整 - 手机端 */
     @media (max-width: 640px) { 
-        .bookshelf-main-container { padding: 3rem 0.5rem 2rem 0.5rem; } 
+        .bookshelf-main-container { 
+            padding: 3rem 0.5rem 2rem 0.5rem; 
+            margin: 0.2rem; /* 手机端微调外边距 */
+        } 
         .shelf-row { 
-            margin-bottom: 2.5rem; /* 手机端行间距 */
+            margin-bottom: 2.5rem; 
             padding-top: 0.8rem;
             min-height: 12rem;
-            padding-bottom: 8px;
+            padding-bottom: 12px; /* 手机端为木板留出空间 */
         }
         .book-card-item {
-            width: 100px; 
+            width: calc(33.33% - 0.8rem); /* 手机端一行3本，更小的间距 */
+            max-width: 100px; /* 限制手机端最大宽度 */
             height: 150px; 
-            margin-bottom: 1rem;
+            margin-bottom: 0; /* 确保不产生额外的垂直间距 */
         }
         .book-card-item:hover {
             transform: translateY(-5px) scale(1.03);
@@ -177,19 +197,20 @@ export function Style () {
         .shelf-plank { height: 15px; } 
     }
 
-    /* 电脑端 (可选，如果需要和手机端不同样式) */
+    /* 电脑端 */
     @media (min-width: 641px) {
         .bookshelf-main-container { padding: 5rem 2rem 4rem 2rem; }
         .shelf-row {
             margin-bottom: 4rem;
             padding-top: 1.5rem;
             min-height: 18rem;
-            padding-bottom: 15px;
+            padding-bottom: 18px; /* 电脑端为木板留出空间 */
         }
         .book-card-item {
-            width: 150px;
-            height: 225px;
-            margin-bottom: 2rem;
+            width: calc(33.33% - 2rem); /* 电脑端一行3本，更大的间距 */
+            max-width: 180px; /* 限制电脑端最大宽度 */
+            height: 270px; /* 保持2:3比例 */
+            margin-bottom: 0;
         }
     }
   `}</style>)
