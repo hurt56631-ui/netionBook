@@ -53,17 +53,147 @@ export function Style () {
 
     /* --- 新的 2D 书架和书本样式 (针对手机优化) --- */
 
-    /* 头部搜索框区域 (保持在最上层) */
-    #header-above {
-        position: sticky;
+    /* 顶部导航栏样式 */
+    .top-app-bar {
+        position: sticky; 
         top: 0;
+        left: 0;
+        right: 0;
         z-index: 50; 
-        background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.6) 70%, transparent 100%);
-        padding-bottom: 2rem;
-        -webkit-backdrop-filter: blur(5px);
-        backdrop-filter: blur(5px);
+        background: rgba(255, 255, 255, 0.4); 
+        backdrop-filter: blur(10px); 
+        -webkit-backdrop-filter: blur(10px);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+        border-bottom-left-radius: 8px; 
+        border-bottom-right-radius: 8px;
+        padding: 0.8rem 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 100%; 
+        margin: 0 auto;
     }
-    
+
+    .top-app-bar .title {
+        font-size: 1.25rem; 
+        font-weight: 700;
+        color: #333;
+    }
+
+    .top-app-bar .subtitle {
+        font-size: 0.8rem;
+        color: #666;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+    .top-app-bar .subtitle .flag-icon {
+        font-size: 1rem; 
+    }
+
+    .top-app-bar .search-button {
+        padding: 0.5rem;
+        border-radius: 50%;
+        background-color: transparent;
+        color: #666;
+        transition: all 0.2s ease-in-out;
+    }
+    .top-app-bar .search-button:active {
+        background-color: rgba(0,0,0,0.1);
+        transform: scale(0.95);
+    }
+
+    /* 搜索模态框样式 */
+    .search-modal-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        background-color: rgba(0, 0, 0, 0.4); 
+        backdrop-filter: blur(15px); 
+        -webkit-backdrop-filter: blur(15px);
+        display: flex;
+        flex-direction: column;
+        animation: fadeIn 0.3s ease-out; 
+    }
+
+    .search-modal-content {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.85); 
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        border-bottom-left-radius: 12px;
+        border-bottom-right-radius: 12px;
+        padding: 1rem;
+    }
+
+    .search-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 1rem;
+    }
+    .search-modal-header .title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #333;
+    }
+    .search-modal-header .close-button {
+        padding: 0.5rem;
+        border-radius: 50%;
+        background-color: rgba(0,0,0,0.05);
+        color: #666;
+        transition: all 0.2s ease-in-out;
+    }
+    .search-modal-header .close-button:active {
+        background-color: rgba(0,0,0,0.15);
+        transform: scale(0.9);
+    }
+
+    .search-input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        background-color: rgba(0,0,0,0.05); 
+        border-radius: 25px; 
+        padding: 0.6rem 1rem;
+        box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); 
+        transition: box-shadow 0.2s ease-in-out;
+    }
+    .search-input-wrapper:focus-within {
+        box-shadow: inset 0 1px 5px rgba(0,0,0,0.15), 0 0 0 2px rgba(96,165,250,0.5); 
+    }
+    .search-input-wrapper .search-icon {
+        color: #888;
+        margin-right: 0.8rem;
+    }
+    .search-input-wrapper input {
+        flex-grow: 1;
+        background: transparent;
+        border: none;
+        outline: none;
+        font-size: 1rem;
+        color: #333;
+    }
+    .search-input-wrapper input::placeholder {
+        color: #A0A0A0;
+    }
+    .search-input-wrapper .clear-button {
+        padding: 0.3rem;
+        border-radius: 50%;
+        background-color: transparent;
+        color: #888;
+        transition: background-color 0.2s ease-in-out;
+    }
+    .search-input-wrapper .clear-button:active {
+        background-color: rgba(0,0,0,0.1);
+    }
+    .search-input-results {
+        flex-grow: 1; 
+        overflow-y: auto;
+        padding: 1rem;
+    }
+
     /* 书架主容器 */
     .bookshelf-main-container {
         min-height: 100vh;
@@ -80,7 +210,7 @@ export function Style () {
     /* 单个书架行 */
     .shelf-row {
         position: relative;
-        margin-bottom: 1.8rem; /* <<<<<<< 优化1: 进一步减小上下两层间距 >>>>>>> */
+        margin-bottom: 1.5rem; /* <<<<<<< 优化1: 进一步减小上下两层间距 >>>>>>> */
         padding-top: 1rem; 
         display: flex; 
         flex-wrap: wrap; 
@@ -88,7 +218,7 @@ export function Style () {
         align-items: flex-end; 
         min-height: 15rem; 
         padding-bottom: 15px; 
-        gap: 0.5rem; /* <<<<<<< 优化2: 书本之间默认水平和垂直间距更小 >>>>>>> */
+        gap: 0.5rem; 
     }
 
     /* 放置书本的容器 */
@@ -98,27 +228,26 @@ export function Style () {
         justify-content: space-evenly; 
         align-items: flex-end; 
         width: 100%; 
-        gap: 0.5rem; /* <<<<<<< 优化3: 放置书本容器内部间距更小 >>>>>>> */
+        gap: 0.5rem; /* 书本之间的间距 */
     }
     
     /* 书本卡片 */
     .book-card-item { 
         flex-shrink: 0; 
-        /* <<<<<<< 优化4: 增加书籍尺寸，并确保一行3本 >>>>>>> */
-        /* 使用 flex-basis 和 max-width 结合，让其在不同屏幕尺寸下自适应，同时确保单行书籍数量 */
-        flex-basis: calc(33.33% - 0.7rem); /* 3本书占据约1/3空间，减去更小的间距 (0.5rem * 2) */
-        max-width: 130px; /* 增加手机端最大宽度 */
-        height: 195px; /* 保持2:3比例 */
+        flex-basis: calc(33.33% - 0.7rem); /* 确保一行3本 */
+        max-width: 130px; 
+        height: 195px; 
         margin-bottom: 0px; 
         cursor: pointer;
-        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        /* <<<<<<< 优化2: 移除 transform 动画，因为由 JS 内联 style 控制 >>>>>>> */
+        transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out; /* 保留阴影动画 */
         z-index: 20; 
         position: relative; 
     }
 
     /* 触摸反馈（替代hover）*/
     .book-card-item:active { 
-        transform: translateY(-5px) scale(1.02); 
+        transform: translateY(-5px) scale(1.02); /* 轻微上浮和放大 */
         box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4); 
     }
     
@@ -126,11 +255,11 @@ export function Style () {
     .book-cover-wrapper {
         width: 100%;
         height: 100%;
-        border-radius: 4px; /* 封面带一小点圆角 */
+        border-radius: 4px; 
         overflow: hidden;
-        /* <<<<<<< 优化5: 封面阴影更深更大，模拟书籍从背景中浮出 >>>>>>> */
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.9), /* 极深的底部阴影 */
-                    0 3px 8px rgba(0, 0, 0, 0.5), /* 顶部和两侧更柔和的阴影，模拟光线 */
+        /* <<<<<<< 优化3: 封面阴影更深更大，模拟书籍从背景中浮出 >>>>>>> */
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8), /* 极深的底部阴影 */
+                    0 4px 10px rgba(0, 0, 0, 0.5), /* 顶部和两侧更柔和的阴影，模拟光线 */
                     inset 0 0 5px rgba(255, 255, 255, 0.1); /* 顶部轻微高光内阴影 */
         display: flex; 
         justify-content: center;
@@ -169,35 +298,34 @@ export function Style () {
         bottom: 0;
         left: 0;
         right: 0;
-        height: 20px; /* 木板厚度 */
-        /* <<<<<<< 优化6: 纯 CSS 渲染逼真木纹底板，放弃图片，并优化颜色和纹理 >>>>>>> */
+        height: 20px; 
         background: 
-            linear-gradient(135deg, #503010 0%, #705020 20%, #503010 40%, #705020 60%, #503010 80%, #705020 100%), /* 调整木纹颜色，更深更暖 */
+            linear-gradient(135deg, #503010 0%, #705020 20%, #503010 40%, #705020 60%, #503010 80%, #705020 100%), 
             repeating-linear-gradient(
                 90deg,
-                rgba(0,0,0,0.15) 0px, /* 细微划痕更明显 */
+                rgba(0,0,0,0.15) 0px, 
                 rgba(0,0,0,0.15) 1px,
                 transparent 1px,
                 transparent 3px
             ), 
             repeating-linear-gradient(
                 0deg,
-                rgba(0,0,0,0.08) 0px, /* 垂直纹理更明显 */
+                rgba(0,0,0,0.08) 0px, 
                 rgba(0,0,0,0.08) 1px,
                 transparent 1px,
                 transparent 5px
             ); 
-        background-color: #604020; /* 更深的fallback颜色 */
+        background-color: #604020; 
         background-blend-mode: multiply; 
         background-size: 100% 100%, 20px 20px, 30px 30px; 
         background-position: 0 0;
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.98), /* 更深更广的底部阴影 */
-                    inset 0 5px 12px rgba(255,255,255,0.5), /* 顶部高光内阴影更亮更厚 */
-                    inset 0 -5px 12px rgba(0,0,0,0.8); /* 底部深色内阴影更深更厚 */
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.98), 
+                    inset 0 5px 12px rgba(255,255,255,0.5), 
+                    inset 0 -5px 12px rgba(0,0,0,0.8); 
         border-radius: 4px; 
         z-index: 10;
-        border-top: 4px solid rgba(255,255,255,0.5); /* 顶部高光更亮更厚 */
-        border-bottom: 4px solid rgba(0,0,0,0.7); /* 底部边框更深更厚 */
+        border-top: 4px solid rgba(255,255,255,0.5); 
+        border-bottom: 4px solid rgba(0,0,0,0.7); 
     }
 
     /* 移除 shelf-plank 的伪元素 */
@@ -213,28 +341,29 @@ export function Style () {
             margin: 0.2rem; 
         } 
         .shelf-row { 
-            margin-bottom: 1.2rem; /* <<<<<<< 优化7: 手机端进一步减小行间距 >>>>>>> */
+            margin-bottom: 1rem; /* <<<<<<< 优化8: 手机端进一步减小行间距 >>>>>>> */
             padding-top: 0.8rem;
             min-height: 12rem;
             padding-bottom: 12px; 
-            gap: 0.4rem; /* <<<<<<< 优化8: 手机端书籍间距更小，让它们挨近 >>>>>>> */
+            gap: 0.4rem; 
         }
         .books-on-shelf {
-            gap: 0.4rem; /* <<<<<<< 优化9: 手机端书籍之间的间距更小 >>>>>>> */
+            gap: 0.4rem; 
         }
         .book-card-item {
-            flex-basis: calc(33.33% - 0.6rem); /* 手机端每本书占据1/3空间，减去更小的间距 */
+            flex-basis: calc(33.33% - 0.6rem); 
             max-width: 105px; 
             height: 157.5px; 
             margin-bottom: 0; 
         }
         .book-card-item:active {
             transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8), 
+                        0 2px 5px rgba(0, 0, 0, 0.4); 
         }
         .book-cover-wrapper {
             border-radius: 4px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8), /* 手机端封面阴影更深更大 */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8), 
                         0 2px 5px rgba(0, 0, 0, 0.4); 
         }
         .book-cover-wrapper img {
@@ -255,25 +384,25 @@ export function Style () {
     @media (min-width: 641px) {
         .bookshelf-main-container { padding: 5rem 2rem 4rem 2rem; }
         .shelf-row {
-            margin-bottom: 2rem; /* 电脑端减小行间距 */
+            margin-bottom: 1.5rem; /* <<<<<<< 优化10: 电脑端减小行间距 >>>>>>> */
             padding-top: 1.5rem;
             min-height: 18rem;
             padding-bottom: 18px; 
-            gap: 1rem; /* 电脑端书籍间距更小 */
+            gap: 0.8rem; /* <<<<<<< 优化11: 电脑端书籍间距更小 >>>>>>> */
         }
         .books-on-shelf {
-            gap: 1rem; /* 电脑端书籍之间的间距更小 */
+            gap: 0.8rem; /* <<<<<<< 优化12: 电脑端书籍之间的间距更小 >>>>>>> */
         }
         .book-card-item {
-            flex-basis: calc(33.33% - 1.5rem); /* 电脑端每本书占据1/3空间，减去更小的间距 */
+            flex-basis: calc(33.33% - 1.2rem); 
             max-width: 180px; 
             height: 270px; 
             margin-bottom: 0;
         }
         .book-cover-wrapper {
             border-radius: 4px;
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.9), 
-                        0 4px 10px rgba(0, 0, 0, 0.6); 
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9), 
+                        0 5px 12px rgba(0, 0, 0, 0.7); 
         }
         .book-cover-wrapper img {
             border-radius: 4px;
