@@ -73,13 +73,13 @@ export function Style () {
     
     .book-card-item { 
         width: calc(33.33% - 1.2rem); /* 调整宽度以适配间隙和总宽度 */
-        max-width: 190px; /* 确保书本足够大 */
+        max-width: 220px; /* 确保书本足够大 */
         z-index: 20;
         transition: transform 0.3s ease-out;
         transform-style: preserve-3d;
         
         /* 关键：正确的透视旋转！书本向右后方倾斜，左边宽右边窄 */
-        transform: rotateY(-35deg); /* 向负Y轴旋转，制造左宽右窄效果 */
+        transform: rotateY(35deg); /* 向负Y轴旋转，制造左宽右窄效果 */
         transform-origin: center left; /* 旋转轴心在书本的左边缘中心 */
     }
     .book-card-item:hover {
