@@ -86,9 +86,18 @@ const LayoutBase = props => {
       <div
         id='theme-game'
         className={`${siteConfig('FONT_STYLE')} w-full h-full min-h-screen justify-center dark:bg-black dark:bg-opacity-50 dark:text-gray-300 scroll-smooth`}
-        // >>>>>>> 修改点1: 背景色已改为纯黑色 <<<<<<<
+        // >>>>>>> 修改点: 设置背景图和磨砂玻璃效果 <<<<<<<
         style={{
-          backgroundColor: '#000000'
+          // 底层背景图
+          backgroundImage: `url('/images/default_bg.jpg')`, 
+          backgroundSize: 'cover',
+          backgroundAttachment: 'fixed', // 背景图固定不随滚动
+          backgroundPosition: 'center',
+          // 磨砂玻璃效果层，覆盖在背景图之上
+          // 可以根据default_bg.jpg的亮度调整brightness，blur调整模糊度
+          backdropFilter: 'blur(8px) brightness(0.8)', 
+          WebkitBackdropFilter: 'blur(8px) brightness(0.8)', // 兼容Safari
+          backgroundColor: 'rgba(0,0,0,0.5)' // 作为不支持backdrop-filter时的fallback，或磨砂层下方的颜色
         }}
       >
         <Style /> {/* 你的全局样式在这里加载 */}
@@ -140,13 +149,14 @@ const LayoutIndex = props => {
       <div className='p-2 xl:hidden'>
         <Header siteInfo={siteInfo} />
       </div>
-      <GameListRecent />
+      {/* >>>>>>> 修改点: 移除 GameListRecent 组件 (观看记录) <<<<<<< */}
+      {/* <GameListRecent /> */} 
       <LayoutPostList {...props} />
     </>
   )
 }
 
-// >>>>>>> 修改点2: 添加了 chunkArray 辅助函数 <<<<<<<
+// >>>>>>> 添加了 chunkArray 辅助函数 <<<<<<<
 function chunkArray(array, size) {
   const chunkedArr = []
   let index = 0
@@ -179,7 +189,7 @@ const LayoutPostList = props => {
     filteredBlogPosts = deepClone(posts)
   }
 
-  // >>>>>>> 修改点3: 完全重写渲染逻辑以适配3D书架 <<<<<<<
+  // >>>>>>> 渲染逻辑已适配2D书架 <<<<<<<
   const booksPerRow = 5 // 每行显示的书本数量，你可以根据需要调整
   const bookRows = chunkArray(filteredBlogPosts, booksPerRow)
 
@@ -455,4 +465,4 @@ export {
   LayoutSlug,
   LayoutTagIndex,
   CONFIG as THEME_CONFIG
-    }
+  }
