@@ -83,22 +83,33 @@ export function Style () {
         margin-bottom: 3rem; 
         padding-top: 1rem; 
         display: flex; 
-        flex-wrap: wrap; 
-        justify-content: center; /* 居中对齐 */
+        flex-wrap: wrap; /* <<<<<<< 关键点1: 确保书籍可以换行 >>>>>>> */
+        justify-content: space-evenly; /* <<<<<<< 关键点2: 均匀分布书籍，两侧留空 >>>>>>> */
         align-items: flex-end; 
         min-height: 15rem; 
         padding-bottom: 15px; 
+        gap: 1.5rem; /* <<<<<<< 关键点3: 书本之间的水平和垂直间距 >>>>>>> */
+    }
+
+    /* 放置书本的容器 */
+    .books-on-shelf {
+        display: flex; /* 让书籍在行内平铺的关键 */
+        flex-wrap: wrap; /* 确保书籍可以换行 */
+        justify-content: space-evenly; /* 均匀分布书籍 */
+        align-items: flex-end; /* 书本底部对齐 */
+        width: 100%; /* 确保占据父容器全部宽度 */
         gap: 1.5rem; /* 书本之间的间距 */
     }
     
     /* 书本卡片 - 2D */
     .book-card-item { 
         flex-shrink: 0; 
-        /* <<<<<<< 修改点1: 重新计算宽度以适配一行3本，使用更稳定的 flex-basis >>>>>>> */
-        flex-basis: calc(33.33% - 1.5rem); /* 让每本书占据约1/3空间，减去间距 */
-        max-width: 120px; /* 手机端最大宽度 */
+        /* <<<<<<< 关键点4: 重新计算宽度以适配一行3本，并调整尺寸 >>>>>>> */
+        /* 使用 calc(100% / 3 - 间距)，让3本书加间距正好填满一行 */
+        width: calc(33.33% - 1rem); /* 假设 3本书，每个0.5rem的gap，总共2个gap */
+        max-width: 120px; /* 限制手机端最大宽度 */
         height: 180px; /* 保持2:3比例 */
-        margin-bottom: 0px; 
+        margin-bottom: 0px; /* 垂直间距由 shelf-row 的 gap 控制 */
         cursor: pointer;
         transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
         z-index: 20; 
@@ -154,8 +165,8 @@ export function Style () {
         bottom: 0;
         left: 0;
         right: 0;
-        height: 20px; /* 木板厚度 */
-        /* <<<<<<< 修改点2: 纯 CSS 渲染逼真木纹底板，放弃图片 >>>>>>> */
+        height: 20px; 
+        /* <<<<<<< 关键点5: 纯 CSS 渲染逼真木纹底板，放弃图片 >>>>>>> */
         background: 
             linear-gradient(135deg, rgba(107,79,44,1) 0%, rgba(138,108,66,1) 20%, rgba(107,79,44,1) 40%, rgba(138,108,66,1) 60%, rgba(107,79,44,1) 80%, rgba(138,108,66,1) 100%), /* 主要木纹颜色渐变 */
             repeating-linear-gradient(
@@ -204,6 +215,9 @@ export function Style () {
             padding-bottom: 12px; 
             gap: 1rem; /* 手机端书籍间距 */
         }
+        .books-on-shelf {
+            gap: 1rem; /* 手机端书籍之间的间距 */
+        }
         .book-card-item {
             flex-basis: calc(33.33% - 1rem); /* 手机端每本书占据1/3空间，减去间距 */
             max-width: 90px; /* 手机端每本书的宽度 */
@@ -233,6 +247,9 @@ export function Style () {
             min-height: 18rem;
             padding-bottom: 18px; 
             gap: 2rem; /* 电脑端书籍间距 */
+        }
+        .books-on-shelf {
+            gap: 2rem; /* 电脑端书籍之间的间距 */
         }
         .book-card-item {
             flex-basis: calc(33.33% - 2rem); /* 电脑端每本书占据1/3空间，减去间距 */
