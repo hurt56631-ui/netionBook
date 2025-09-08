@@ -10,205 +10,164 @@ export function Style () {
     @tailwind utilities;
 
     /* -- 通用基础样式 -- */
-    html, body {
-        overflow-x: hidden; /* 避免水平滚动条 */
-    }
     body { -webkit-tap-highlight-color: transparent; }
 
-    /*
-    ============================================================
-    【【【 视觉最终版 1：背景图固定，顶栏/底板样式修复 】】】
-    ============================================================
-    */
+    /* 背景图 & 磨砂玻璃效果 */
     #theme-game {
-      background-image: url('/images/shujiabeijing.jpg'); /* 主背景图 */
+      background-image: url('/images/shujiabeijing.jpg');
       background-size: cover;
-      background-attachment: fixed; /* 关键：背景图固定 */
+      background-attachment: fixed;
       background-position: center;
-      /* 确保没有模糊 */
-      backdrop-filter: none;
-      -webkit-backdrop-filter: none;
+      position: relative;
+    }
+    #theme-game::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      z-index: 1;
+    }
+    #wrapper, .top-app-bar, #footer-container, .main-search-bar {
+      position: relative;
+      z-index: 2;
     }
 
-    /* 顶部导航栏 (顶板) */
+    /* 顶栏 */
     .top-app-bar {
-        position: sticky; top: 2; z-index: 50; 
+        position: sticky; top: 0; z-index: 50; 
         padding: 0.8rem 1rem;
         display: flex; align-items: center; justify-content: space-between;
-        background-image: url('/images/wood-texture.jpg'); /* 独立的深色木纹图 */
-        background-size: cover;
-        background-position: center;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-        border-bottom: 2px solid rgba(0,0,0,0.3);
-        /* 关键：粗体白字，保证清晰度 */
+        background-color: rgba(20, 20, 20, 0.5);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         color: #FFFFFF;
         font-weight: bold;
-        text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
-    }
-    .top-app-bar .subtitle, .top-app-bar .search-button { color: #FFFFFF; }
-
-    /* 底部导航栏 (Footer) 样式 */
-    /* 请确保您的Footer组件的根元素有 .footer-container 类名 */
-    .footer-container {
-        background-image: url('/images/muban.jpg'); /* 底板使用深色木纹图 */
-        background-size: cover;
-        background-position: center;
-        box-shadow: 0 -4px 12px rgba(0,0,0,0.5); /* 向上阴影 */
-        border-top: 2px solid rgba(0,0,0,0.3);
-        padding: 1rem;
-        color: #FFFFFF;
-        font-weight: bold;
-        text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
-    }
-    .footer-container a, .footer-container i {
-        color: #FFFFFF !important; /* 确保链接和图标也是白色 */
-        font-weight: bold !important;
     }
 
+    /* 主页搜索框 */
+    .main-search-bar {
+      padding: 1rem;
+      background-color: rgba(20, 20, 20, 0.5);
+      position: sticky;
+      top: 57px;
+      z-index: 40;
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+    }
+    .main-search-input-wrapper {
+        position: relative; display: flex; align-items: center;
+        background-color: rgba(255,255,255,0.1); 
+        border-radius: 25px; 
+        padding: 0.6rem 1rem;
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+    .main-search-input-wrapper .search-icon { color: #ccc; margin-right: 0.8rem; }
+    .main-search-input-wrapper input {
+        width: 100%;
+        background: transparent; border: none; outline: none;
+        font-size: 1rem; color: #fff;
+    }
+    .main-search-input-wrapper input::placeholder { color: #aaa; }
 
     /*
     ============================================================
-    【【【 视觉最终版 2：书本尺寸、间距、正确透视与阴影 】】】
+    【【【 3D效果最终版：正确的透视关系 】】】
     ============================================================
     */
+    .bookshelf-main-container {
+        padding-top: 2rem;
+    }
     .shelf-row {
         position: relative;
-        margin-bottom: 2.5rem; /* 调整行间距 */
+        margin-bottom: 3rem;
         display: flex; justify-content: center; align-items: flex-end;
-        padding-bottom: 25px; /* 关键：确保书本立在底板上方 */
-        perspective: 3500px; /* 增强3D舞台感 */
+        padding-bottom: 10px;
+        perspective: 2500px; /* 设定3D舞台感 */
     }
     .books-on-shelf {
         display: flex; justify-content: center; align-items: flex-end; 
-        gap: 0.8rem; /* 减小书本间隙，让它们更紧凑 */
+        gap: 2rem; /* 调整间距以适应3D效果 */
         transform-style: preserve-3d;
     }
     
     .book-card-item { 
-        width: calc(33.33% - 1.2rem); /* 调整宽度以适配间隙和总宽度 */
-        max-width: 170px; /* 确保书本足够大 */
+        width: calc(33.33% - 2rem);
+        max-width: 160px;
         z-index: 20;
         transition: transform 0.3s ease-out;
         transform-style: preserve-3d;
-        
-        /* 关键：正确的透视旋转！书本向右后方倾斜，左边宽右边窄 */
-        transform: rotateY(35deg); /* 向负Y轴旋转，制造左宽右窄效果 */
-        transform-origin: center left; /* 旋转轴心在书本的左边缘中心 */
+        /* 关键：正确的透视旋转！书本向左后方倾斜，左边宽右边窄 */
+        transform: rotateY(30deg); 
+        transform-origin: center right; /* 旋转轴心在书本的右边缘中心 */
     }
     .book-card-item:hover {
-        transform: rotateY(-25deg) scale(1.05) translateY(-10px);
+        transform: rotateY(20deg) scale(1.05) translateY(-10px);
     }
     
     .book-cover-wrapper {
         width: 100%;
-        aspect-ratio: 185 / 260; /* 严格维持16开比例 (正16开) */
-        overflow: visible; /* 允许阴影超出容器 */
+        aspect-ratio: 185 / 260;
+        box-shadow: 0 12px 25px rgba(0,0,0,0.5);
+        border-radius: 4px;
+        overflow: hidden;
     }
-    
     .book-cover-wrapper img {
         width: 100%; height: 100%; object-fit: cover;
-        display: block;
-        border-radius: 2px; /* 封面图片也带轻微圆角 */
-        /* 关键：左侧的强烈阴影，越靠近书越黑 */
-        filter: drop-shadow(-18px 12px 25px rgba(0,0,0,0.6)); /* 调整阴影强度和方向 */
-        transition: filter 0.3s ease-out;
-    }
-    .book-card-item:hover .book-cover-wrapper img {
-      filter: drop-shadow(-25px 18px 35px rgba(0,0,0,0.5));
     }
     
-    /*
-    ============================================================
-    【【【 视觉最终版 3：底板图片与更黑的阴影 】】】
-    ============================================================
-    */
+    /* 底板立体感 */
     .shelf-plank {
         position: absolute;
-        bottom: 0; left: 0; right: 0;
-        height: 25px;
-        background-image: url('/images/muban.jpg'); /* 深色木板底图 */
-        background-size: cover;
-        background-position: center;
+        bottom: 5px;
+        left: 5%;
+        width: 90%;
+        height: 8px;
+        background-color: #252525;
         border-radius: 4px;
         z-index: 10;
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    }
+    .shelf-plank::before {
+      content: '';
+      position: absolute;
+      top: -4px;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background-color: #333;
+      border-radius: 4px 4px 0 0;
+      border-top: 1px solid rgba(255,255,255,0.1);
     }
     .shelf-plank::after {
-      content: ''; position: absolute;
-      bottom: -10px; left: 0%; /* 关键：阴影面积更靠近底板 */
-      width: 100%; height: 20px; /* 阴影面积更大 */
-      background: transparent;
-      /* 关键：更黑、更实的阴影，越靠近底板越黑 */
-      box-shadow: 0 10px 25px 15px rgba(0, 0, 0, 0.95);
-      filter: blur(15px); /* 更模糊，更自然 */
-      z-index: -1;
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background-color: #000;
+      filter: blur(3px);
     }
 
-    /*
+    /* 
     ============================================================
-    【【【 恢复的样式：搜索模态框等 】】】
+    【【【 关键：移动端兼容性处理 】】】
     ============================================================
     */
-    .search-modal-overlay {
-        position: fixed; inset: 0; z-index: 100;
-        background-color: rgba(0, 0, 0, 0.4); 
-        backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-        display: flex; flex-direction: column;
-    }
-    .search-modal-content {
-        width: 100%; background: rgba(255, 255, 255, 0.85); 
-        backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-        border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;
-        padding: 1rem;
-    }
-    .search-modal-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 1rem; }
-    .search-modal-header .title { font-size: 1.25rem; font-weight: 700; color: #333; }
-    .search-modal-header .close-button { padding: 0.5rem; border-radius: 50%; background-color: rgba(0,0,0,0.05); color: #666; }
-    .search-input-wrapper {
-        position: relative; display: flex; align-items: center;
-        background-color: rgba(0,0,0,0.05); border-radius: 25px; 
-        padding: 0.6rem 1rem; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); 
-    }
-    .search-input-wrapper .search-icon { color: #888; margin-right: 0.8rem; }
-    .search-input-wrapper input {
-        flex-grow: 1; background: transparent; border: none;
-        outline: none; font-size: 1rem; color: #333;
-    }
-    .search-input-wrapper .clear-button { padding: 0.3rem; border-radius: 50%; color: #888; }
-    .search-input-results { flex-grow: 1; overflow-y: auto; padding-top: 1rem; }
-
-    /* 其他通用样式 */
-    .animate__animated {
-        -webkit-animation-duration: .5s;
-        animation-duration: .5s;
-        -webkit-animation-duration: .5s;
-        animation-duration: .5s;
-        -webkit-animation-fill-mode: both;
-        animation-fill-mode: both
-    }
-
-    #theme-game::-webkit-scrollbar,
-    #wrapper::-webkit-scrollbar {
-        display: none;
+    @media (max-width: 640px) {
+      .book-card-item {
+        /* 在手机等小屏幕上，取消所有3D旋转，恢复直立状态 */
+        transform: none !important; 
+      }
+      .book-card-item:hover {
+        /* 保留简单的上浮效果 */
+        transform: translateY(-8px) !important;
+      }
+      .books-on-shelf {
+        gap: 1.5rem; /* 恢复较小的间距 */
+      }
     }
     
-    .notion-text-align-center {
-        text-align: center;
-    }
-
-    .notion-text-align-right {
-        text-align: right;
-    }
-
-    .lazy-image-placeholder {
-      background: linear-gradient(90deg,#0001 33%,#0005 50%,#0001 66%) #f2f2f2;
-      background-size: 300% 100%;
-      animation: l1 1s infinite linear;
-    }
-
-    @keyframes l1 { 
-        0% {background-position: right} 
-    }
   `}</style>)
 }
