@@ -17,7 +17,7 @@ export function Style () {
 
     /*
     ============================================================
-    【【【 视觉最终版 1：背景图固定，顶栏/底板文字修复 】】】
+    【【【 视觉最终版 1：背景图固定，顶栏/底板样式修复 】】】
     ============================================================
     */
     #theme-game {
@@ -25,7 +25,7 @@ export function Style () {
       background-size: cover;
       background-attachment: fixed; /* 关键：背景图固定 */
       background-position: center;
-      /* 移除所有模糊和亮度调整 */
+      /* 确保没有模糊 */
       backdrop-filter: none;
       -webkit-backdrop-filter: none;
     }
@@ -35,7 +35,7 @@ export function Style () {
         position: sticky; top: 0; z-index: 50; 
         padding: 0.8rem 1rem;
         display: flex; align-items: center; justify-content: space-between;
-        background-image: url('/images/dark-wood.jpg'); /* 独立的深色木纹图 */
+        background-image: url('/images/wood-texture.jpg'); /* 顶栏使用深色木纹图 */
         background-size: cover;
         background-position: center;
         box-shadow: 0 4px 12px rgba(0,0,0,0.5);
@@ -47,11 +47,24 @@ export function Style () {
     }
     .top-app-bar .subtitle, .top-app-bar .search-button { color: #FFFFFF; }
 
-    /* 修复底部导航栏图标颜色，确保也是白字 */
-    footer, #footer a, #footer i {
-        color: #FFFFFF !important;
+    /* 底部导航栏 (Footer) 样式 */
+    /* 请确保您的Footer组件的根元素有 .footer-container 类名 */
+    .footer-container {
+        background-image: url('/images/muban.jpg'); /* 底板使用深色木纹图 */
+        background-size: cover;
+        background-position: center;
+        box-shadow: 0 -4px 12px rgba(0,0,0,0.5); /* 向上阴影 */
+        border-top: 2px solid rgba(0,0,0,0.3);
+        padding: 1rem;
+        color: #FFFFFF;
+        font-weight: bold;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+    }
+    .footer-container a, .footer-container i {
+        color: #FFFFFF !important; /* 确保链接和图标也是白色 */
         font-weight: bold !important;
     }
+
 
     /*
     ============================================================
@@ -73,49 +86,47 @@ export function Style () {
     
     .book-card-item { 
         width: calc(33.33% - 1.2rem); /* 调整宽度以适配间隙和总宽度 */
-        max-width: 220px; /* 确保书本足够大 */
+        max-width: 220px; /* 增大书本尺寸 */
         z-index: 20;
         transition: transform 0.3s ease-out;
         transform-style: preserve-3d;
         
-        /* 关键：正确的透视旋转！书本向右后方倾斜，左边宽右边窄 */
-        transform: rotateY(35deg); /* 向负Y轴旋转，制造左宽右窄效果 */
-        transform-origin: center left; /* 旋转轴心在书本的左边缘中心 */
+        /* 关键：正确的透视旋转！书本向左后方倾斜，左边宽右边窄 */
+        transform: rotateY(35deg); /* 向正Y轴旋转，制造左宽右窄效果 */
+        transform-origin: center right; /* 旋转轴心在书本的右边缘中心 */
     }
     .book-card-item:hover {
-        transform: rotateY(-25deg) scale(1.05) translateY(-10px);
+        transform: rotateY(25deg) scale(1.05) translateY(-10px);
     }
     
     .book-cover-wrapper {
         width: 100%;
-        aspect-ratio: 185 / 260; /* 严格维持16开比例 (正16开) */
+        aspect-ratio: 185 / 240; /* 严格维持16开比例 (正16开) */
         overflow: visible; /* 允许阴影超出容器 */
-        border-radius: 2px; /* 整体轻微圆角 */
-        transform-style: preserve-3d;
     }
     
     .book-cover-wrapper img {
         width: 100%; height: 100%; object-fit: cover;
         display: block;
         border-radius: 2px; /* 封面图片也带轻微圆角 */
-        /* 关键：左侧的强烈阴影，越靠近书越黑 */
-        filter: drop-shadow(-18px 12px 25px rgba(0,0,0,0.6)); /* 调整阴影强度和方向 */
+        /* 关键：左侧封面底部加上大阴影 */
+        filter: drop-shadow(-18px 15px 25px rgba(0,0,0,0.6)); /* 调整阴影强度和方向 */
         transition: filter 0.3s ease-out;
     }
     .book-card-item:hover .book-cover-wrapper img {
-      filter: drop-shadow(-25px 18px 35px rgba(0,0,0,0.5));
+      filter: drop-shadow(-25px 20px 35px rgba(0,0,0,0.5));
     }
     
     /*
     ============================================================
-    【【【 视觉最终版 3：底板图片与更黑的阴影 】】】
+    【【【 视觉最终版 3：底板阴影更黑更大 】】】
     ============================================================
     */
     .shelf-plank {
         position: absolute;
         bottom: 0; left: 0; right: 0;
         height: 25px;
-        background-image: url('/images/dark-muban.jpg'); /* 深色木板底图 */
+        background-image: url('/images/dark-wood.jpg'); /* 底板使用深色木纹图 */
         background-size: cover;
         background-position: center;
         border-radius: 4px;
@@ -124,11 +135,10 @@ export function Style () {
     }
     .shelf-plank::after {
       content: ''; position: absolute;
-      bottom: -10px; left: 0%; /* 关键：阴影面积更靠近底板 */
+      bottom: -10px; left: 0%; /* 阴影面积更靠近底板 */
       width: 100%; height: 20px; /* 阴影面积更大 */
       background: transparent;
-      /* 关键：更黑、更实的阴影，越靠近底板越黑 */
-      box-shadow: 0 10px 25px 15px rgba(0, 0, 0, 0.95);
+      box-shadow: 0 10px 25px 15px rgba(0, 0, 0, 0.95); /* 关键：更黑、更实的阴影 */
       filter: blur(15px); /* 更模糊，更自然 */
       z-index: -1;
     }
