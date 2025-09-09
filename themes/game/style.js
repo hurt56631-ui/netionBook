@@ -107,7 +107,7 @@ export function Style () {
         position: relative;
         transform-style: preserve-3d;
         box-shadow: inset 4px 0 6px -3px rgba(0,0,0,0.55);
-        border-radius: 5px 3 3 5px;
+        border-radius: 5px 3px 3px 5px;
     }
     
     .book-cover-wrapper::before {
