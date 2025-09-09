@@ -38,7 +38,7 @@ const ThemeGlobalGame = createContext()
 export const useGameGlobal = () => useContext(ThemeGlobalGame)
 
 /**
- * 基础布局
+ * 基础布局 - 已恢复到原始版本
  */
 const LayoutBase = props => {
   const {
@@ -56,33 +56,18 @@ const LayoutBase = props => {
 
   useEffect(() => { loadWowJS() }, [])
 
-  // 主页列表的实时过滤逻辑
-  const router = useRouter()
-  const isHomePage = router.pathname === '/'
-  let filteredPosts = posts
-  if (isHomePage && filterKey && posts) {
-    filteredPosts = posts.filter(post => {
-      const tagContent = post?.tags ? post.tags.join(' ') : ''
-      const searchContent = post.title + post.summary + tagContent
-      return searchContent.toLowerCase().includes(filterKey.toLowerCase())
-    })
-  } else if (!posts) {
-    filteredPosts = []
-  }
-
-  // 搜索模态框的逻辑
   useEffect(() => {
-    if (isSearchOpen && filterKey && posts) {
-        const filtered = posts.filter(post => {
-            const tagContent = post?.tags ? post.tags.join(' ') : ''
-            const searchContent = post.title + post.summary + tagContent
-            return searchContent.toLowerCase().includes(filterKey.toLowerCase())
-        })
-        setSearchResults(filtered)
+    if (filterKey && posts) {
+      const filtered = posts.filter(post => {
+        const tagContent = post?.tags ? post.tags.join(' ') : ''
+        const searchContent = post.title + post.summary + tagContent
+        return searchContent.toLowerCase().includes(filterKey.toLowerCase())
+      })
+      setSearchResults(filtered)
     } else {
-        setSearchResults([])
+      setSearchResults([])
     }
-  }, [filterKey, posts, isSearchOpen])
+  }, [filterKey, posts])
 
   return (
     <ThemeGlobalGame.Provider
@@ -97,27 +82,10 @@ const LayoutBase = props => {
       <div id='theme-game' className={`${siteConfig('FONT_STYLE')} w-full h-full min-h-screen justify-center dark:text-gray-300 scroll-smooth`}>
         <Style />
         <div className="top-app-bar xl:hidden">
-            <div className="title"></div> {/* 左侧标题留空 */}
-            <div className="center-title">书柜</div> {/* 中间标题 */}
-            <button className="search-button" onClick={() => setIsSearchOpen(true)}>
-                <i className="fas fa-search text-lg"></i>
-            </button>
+            <div className="title">书籍</div>
+            <div className="subtitle"><i className="fas fa-flag flag-icon"></i> 中国</div>
+            <button className="search-button" onClick={() => setIsSearchOpen(true)}><i className="fas fa-search text-lg"></i></button>
         </div>
-        
-        {isHomePage && (
-          <div className="main-search-bar xl:hidden">
-            <div className="main-search-input-wrapper">
-              <i className="fas fa-search search-icon"></i>
-              <input 
-                type="text" 
-                placeholder="在书柜中搜索..." 
-                value={filterKey} 
-                onChange={(e) => setFilterKey(e.target.value)}
-              />
-            </div>
-          </div>
-        )}
-
         <div id='wrapper' className={'relative flex justify-between w-full h-full mx-auto'}>
           <div className='w-52 hidden xl:block relative z-10'>
             <div className='py-4 px-2 sticky top-0 h-screen flex flex-col justify-between'>
@@ -129,9 +97,7 @@ const LayoutBase = props => {
             </div>
           </div>
           <main className='flex-grow w-full h-full flex flex-col min-h-screen overflow-x-auto md:p-2'>
-            <div className='flex-grow h-full'>
-              {React.cloneElement(children, { posts: filteredPosts })}
-            </div>
+            <div className='flex-grow h-full'>{children}</div>
             <div className='w-full py-4'><AdSlot type='in-article' /></div>
             <Footer {...props} />
           </main>
@@ -139,7 +105,6 @@ const LayoutBase = props => {
         <SideBarDrawer isOpen={sideBarVisible} onClose={() => { setSideBarVisible(false) }}>
           <SideBarContent siteInfo={siteInfo} {...props} />
         </SideBarDrawer>
-
         {isSearchOpen && (
             <div className="search-modal-overlay">
                 <div className="search-modal-content">
@@ -225,9 +190,7 @@ const LayoutPostList = props => {
   )
 }
 
-/**
- * 搜索
- */
+// ... 其他组件 (LayoutSearch, LayoutSlug, etc.) 的完整代码保持不变 ...
 const LayoutSearch = props => {
   const { keyword, posts } = props
   useEffect(() => {
@@ -242,7 +205,6 @@ const LayoutSearch = props => {
       })
     }
   }, [])
-
   const { filterKey } = useGameGlobal()
   let filteredBlogPosts = []
   if (filterKey && posts) {
@@ -254,7 +216,6 @@ const LayoutSearch = props => {
   } else {
     filteredBlogPosts = deepClone(posts)
   }
-
   return (
     <>
       <BlogPostBar {...props} />
@@ -266,10 +227,6 @@ const LayoutSearch = props => {
     </>
   )
 }
-
-/**
- * 归档
- */
 const LayoutArchive = props => {
   const { archivePosts } = props
   return (
@@ -286,10 +243,6 @@ const LayoutArchive = props => {
     </>
   )
 }
-
-/**
- * 文章详情
- */
 const LayoutSlug = props => {
   const { setRecentGames } = useGameGlobal()
   const { post, siteInfo, allNavPages, recommendPosts, lock, validPassword } = props
@@ -310,7 +263,6 @@ const LayoutSlug = props => {
         setRecentGames(recentGames)
     }
   }, [post, setRecentGames])
-
   return (
     <>
       {lock && <ArticleLock validPassword={validPassword} />}
@@ -341,10 +293,6 @@ const LayoutSlug = props => {
     </>
   )
 }
-
-/**
- * 404 页面
- */
 const Layout404 = props => {
   const router = useRouter()
   const { locale } = useGlobal()
@@ -356,7 +304,6 @@ const Layout404 = props => {
       }
     }, 3000)
   }, [])
-
   return (
     <>
       <div className='md:-mt-20 text-black w-full h-screen text-center justify-center content-center items-center flex flex-col'>
@@ -373,10 +320,6 @@ const Layout404 = props => {
     </>
   )
 }
-
-/**
- * 文章分类列表
- */
 const LayoutCategoryIndex = props => {
   const { categoryOptions } = props
   return (
@@ -395,10 +338,6 @@ const LayoutCategoryIndex = props => {
     </>
   )
 }
-
-/**
- * 文章标签列表
- */
 const LayoutTagIndex = props => {
   const { tagOptions } = props
   return (
@@ -426,4 +365,4 @@ const LayoutTagIndex = props => {
 export {
   Layout404, LayoutArchive, LayoutBase, LayoutCategoryIndex, LayoutIndex,
   LayoutPostList, LayoutSearch, LayoutSlug, LayoutTagIndex, CONFIG as THEME_CONFIG
-}
+        }
