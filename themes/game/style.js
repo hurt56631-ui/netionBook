@@ -14,7 +14,7 @@ export function Style () {
 
     /*
     ============================================================
-    【【【 视觉最终版 1：背景图 & 磨砂玻璃效果 】】】
+    【 视觉最终版 1：背景图 & 磨砂玻璃效果 】
     ============================================================
     */
     #theme-game {
@@ -28,8 +28,8 @@ export function Style () {
       content: '';
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
-      background-color: rgba(0, 0, 0, 0.25); /* 稍微加深蒙版 */
-      backdrop-filter: blur(8px); /* 磨砂效果 */
+      background-color: rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       z-index: 1;
     }
@@ -40,14 +40,14 @@ export function Style () {
 
     /*
     ============================================================
-    【【【 视觉最终版 2：顶栏美化 】】】
+    【 视觉最终版 2：顶栏美化 】
     ============================================================
     */
     .top-app-bar {
         position: sticky; top: 0; z-index: 50; 
         padding: 0.8rem 1rem;
         display: flex; align-items: center; justify-content: space-between;
-        background-color: rgba(10, 10, 10, 0.6); /* 更深邃的半透明背景 */
+        background-color: rgba(10, 10, 10, 0.6);
         border-bottom: 1px solid rgba(255, 255, 255, 0.15);
         box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         color: #EAEAEA;
@@ -63,25 +63,25 @@ export function Style () {
       font-size: 1.25rem;
       font-weight: bold;
     }
-    /* 关键：将搜索图标从右侧向左移动一点 */
     .top-app-bar .search-button {
       font-size: 1.25rem;
       position: absolute;
-      right: 1rem; /* 调整右边距 */
+      right: 1rem;
     }
-     .top-app-bar .center-title {
+    .top-app-bar .center-title {
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
+        font-weight: bold;
+        font-size: 1.25rem;
     }
 
-
-    /* 主页搜索框 - 样式微调 */
+    /* 主页搜索框 */
     .main-search-bar {
       padding: 1rem;
-      background-color: transparent; /* 背景透明，融入整体 */
+      background-color: transparent;
       position: sticky;
-      top: 57px; /* 紧随顶栏 */
+      top: 57px; /* 假设顶栏高度 */
       z-index: 40;
     }
     .main-search-input-wrapper {
@@ -102,32 +102,31 @@ export function Style () {
 
     /*
     ============================================================
-    【【【 视觉最终版 3：书本、底板立体感与空间感 】】】
+    【 视觉最终版 3：书本、底板立体感与空间感 】
     ============================================================
     */
     .bookshelf-main-container {
-        padding-top: 3rem; /* 关键：增加第一排书的顶部空间 */
+        padding-top: 3rem;
     }
     .shelf-row {
         position: relative;
-        margin-bottom: 4rem; /* 增大行间距 */
+        margin-bottom: 4rem;
         display: flex; justify-content: center; align-items: flex-end;
-        padding-bottom: 15px; /* 为底板和阴影留出空间 */
+        padding-bottom: 15px;
         perspective: 3000px;
     }
     .books-on-shelf {
         display: flex; justify-content: center; align-items: flex-end; 
-        gap: 2.5rem; /* 调整间距以适应3D效果 */
+        gap: 2.5rem;
         transform-style: preserve-3d;
     }
     
     .book-card-item { 
         width: calc(33.33% - 2.5rem);
-        max-width: 150px; /* 关键：让书本更矮、更精致 */
+        max-width: 150px;
         z-index: 20;
         transition: transform 0.3s ease-out;
         transform-style: preserve-3d;
-        /* 关键：更高的倾斜度 */
         transform: rotateY(40deg); 
         transform-origin: center right;
     }
@@ -146,13 +145,13 @@ export function Style () {
         width: 100%; height: 100%; object-fit: cover;
     }
     
-    /* 关键：底板立体感 */
+    /* 底板立体感 */
     .shelf-plank {
         position: absolute;
         bottom: 10px;
-        left: 2.5%; /* 两端留空 */
-        width: 95%; /* 两端留空 */
-        height: 12px; /* 板面厚度 */
+        left: 2.5%;
+        width: 95%;
+        height: 12px;
         background-image: url('/images/muban.jpg');
         background-size: cover;
         background-position: center;
@@ -160,28 +159,20 @@ export function Style () {
         z-index: 10;
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
     }
-    /* 模拟板面厚度与高光 */
     .shelf-plank::before {
       content: '';
       position: absolute;
-      top: -6px;
-      left: 0;
-      width: 100%;
-      height: 6px;
+      top: -6px; left: 0; width: 100%; height: 6px;
       background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);
       border-radius: 6px 6px 0 0;
       border-top: 1px solid rgba(255,255,255,0.1);
     }
-    /* 关键：底部的粗黑线阴影 */
     .shelf-plank::after {
       content: '';
       position: absolute;
-      bottom: -10px;
-      left: 0;
-      width: 100%;
-      height: 10px; /* 增加黑线粗细 */
+      bottom: -10px; left: 0; width: 100%; height: 10px;
       background-color: #000;
-      filter: blur(8px); /* 调整模糊度 */
+      filter: blur(8px);
     }
 
     /* 移动端兼容性处理 */
