@@ -92,7 +92,7 @@ export function Style () {
         transform-style: preserve-3d;
         
         /* 【核心修正】加入 rotateY 来创建正确的透视效果 */
-        transform: rotateX(8deg) rotateY(15deg) rotateZ(4deg);
+        transform: rotateX(7deg) rotateY(9deg) rotateZ(1deg);
     }
 
     .book-card-item:hover {
@@ -107,7 +107,7 @@ export function Style () {
         position: relative;
         transform-style: preserve-3d;
         box-shadow: inset 4px 0 6px -3px rgba(0,0,0,0.55);
-        border-radius: 4px 0 0 4px;
+        border-radius: 7px 0 0 7px;
     }
     
     .book-cover-wrapper::before {
@@ -116,7 +116,7 @@ export function Style () {
         width: 100%;
         height: 16px; 
         background: linear-gradient(to right, #e8e8e8, #ffffff, #f0f0f0);
-        border-top-left-radius: 8px;
+        border-top-left-radius: 7px;
         transform-origin: bottom;
         transform: translateY(-16px) rotateX(90deg);
     }
