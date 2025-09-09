@@ -56,18 +56,34 @@ const LayoutBase = props => {
 
   useEffect(() => { loadWowJS() }, [])
 
+  // 主页列表的实时过滤逻辑
+  const router = useRouter()
+  const isHomePage = router.pathname === '/'
+  let filteredPosts = posts
+  if (isHomePage && filterKey && posts) {
+    filteredPosts = posts.filter(post => {
+      const tagContent = post?.tags ? post.tags.join(' ') : ''
+      const searchContent = post.title + post.summary + tagContent
+      return searchContent.toLowerCase().includes(filterKey.toLowerCase())
+    })
+  } else if (!posts) {
+    filteredPosts = []
+  }
+
+  // 搜索模态框的逻辑
   useEffect(() => {
-    if (filterKey && posts) {
-      const filtered = posts.filter(post => {
-        const tagContent = post?.tags ? post.tags.join(' ') : ''
-        const searchContent = post.title + post.summary + tagContent
-        return searchContent.toLowerCase().includes(filterKey.toLowerCase())
-      })
-      setSearchResults(filtered)
+    if (isSearchOpen && filterKey && posts) {
+        const filtered = posts.filter(post => {
+            const tagContent = post?.tags ? post.tags.join(' ') : ''
+            const searchContent = post.title + post.summary + tagContent
+            return searchContent.toLowerCase().includes(filterKey.toLowerCase())
+        })
+        setSearchResults(filtered)
     } else {
-      setSearchResults([])
+        setSearchResults([])
     }
-  }, [filterKey, posts])
+  }, [filterKey, posts, isSearchOpen])
+
 
   return (
     <ThemeGlobalGame.Provider
@@ -82,10 +98,27 @@ const LayoutBase = props => {
       <div id='theme-game' className={`${siteConfig('FONT_STYLE')} w-full h-full min-h-screen justify-center dark:text-gray-300 scroll-smooth`}>
         <Style />
         <div className="top-app-bar xl:hidden">
-            <div className="title">书籍</div>
-            <div className="subtitle"><i className="fas fa-flag flag-icon"></i> 中国</div>
-            <button className="search-button" onClick={() => setIsSearchOpen(true)}><i className="fas fa-search text-lg"></i></button>
+            <div className="title"></div> {/* 左侧标题留空 */}
+            <div className="center-title">书柜</div> {/* 中间标题 */}
+            <button className="search-button" onClick={() => setIsSearchOpen(true)}>
+                <i className="fas fa-search text-lg"></i>
+            </button>
         </div>
+        
+        {isHomePage && !isSearchOpen && (
+          <div className="main-search-bar xl:hidden">
+            <div className="main-search-input-wrapper">
+              <i className="fas fa-search search-icon"></i>
+              <input 
+                type="text" 
+                placeholder="在书柜中搜索..." 
+                value={filterKey} 
+                onChange={(e) => setFilterKey(e.target.value)}
+              />
+            </div>
+          </div>
+        )}
+
         <div id='wrapper' className={'relative flex justify-between w-full h-full mx-auto'}>
           <div className='w-52 hidden xl:block relative z-10'>
             <div className='py-4 px-2 sticky top-0 h-screen flex flex-col justify-between'>
@@ -97,14 +130,17 @@ const LayoutBase = props => {
             </div>
           </div>
           <main className='flex-grow w-full h-full flex flex-col min-h-screen overflow-x-auto md:p-2'>
-            <div className='flex-grow h-full'>{children}</div>
+            <div className='flex-grow h-full'>
+              {React.cloneElement(children, { posts: filteredPosts })}
+            </div>
             <div className='w-full py-4'><AdSlot type='in-article' /></div>
-            <Footer {...props} /> {/* 确保Footer在这里被渲染 */}
+            <Footer {...props} />
           </main>
         </div>
         <SideBarDrawer isOpen={sideBarVisible} onClose={() => { setSideBarVisible(false) }}>
           <SideBarContent siteInfo={siteInfo} {...props} />
         </SideBarDrawer>
+
         {isSearchOpen && (
             <div className="search-modal-overlay">
                 <div className="search-modal-content">
@@ -150,24 +186,13 @@ function chunkArray (array, size) {
  * 博客列表
  */
 const LayoutPostList = props => {
-  const { posts, isSearchResult } = props
-  const { filterKey: globalFilterKey } = useGameGlobal()
-  let currentPosts = posts
-
-  if (!isSearchResult && globalFilterKey) {
-    currentPosts = posts.filter(post => {
-      const tagContent = post?.tags ? post.tags.join(' ') : ''
-      const searchContent = post.title + post.summary + tagContent
-      return searchContent.toLowerCase().includes(globalFilterKey.toLowerCase())
-    })
-  }
-
+  const { posts } = props
+  
   const booksPerRow = 3
-  const bookRows = chunkArray(currentPosts, booksPerRow)
+  const bookRows = chunkArray(posts, booksPerRow)
 
   return (
     <>
-      <BlogPostBar {...props} />
       <div className='bookshelf-main-container'>
         {bookRows.length > 0 ? (
           bookRows.map((row, rowIndex) => (
@@ -194,7 +219,7 @@ const LayoutPostList = props => {
             </div>
           ))
         ) : (
-          <div className="p-12 text-center text-gray-400">暂无内容</div>
+          <div className="p-12 text-center text-gray-400">暂无内容或未找到结果</div>
         )}
       </div>
     </>
@@ -402,4 +427,4 @@ const LayoutTagIndex = props => {
 export {
   Layout404, LayoutArchive, LayoutBase, LayoutCategoryIndex, LayoutIndex,
   LayoutPostList, LayoutSearch, LayoutSlug, LayoutTagIndex, CONFIG as THEME_CONFIG
-          }
+}
