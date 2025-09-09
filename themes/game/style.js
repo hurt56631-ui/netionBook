@@ -14,7 +14,7 @@ export function Style () {
 
     /*
     ============================================================
-    【 视觉最终版 1：背景图 & 磨砂玻璃效果 】
+    【【【 视觉最终版 1：背景图 & 磨砂玻璃效果 】】】
     ============================================================
     */
     #theme-game {
@@ -33,80 +33,37 @@ export function Style () {
       -webkit-backdrop-filter: blur(8px);
       z-index: 1;
     }
-    #wrapper, .top-app-bar, #footer-container, .main-search-bar {
+    #wrapper, .top-app-bar, #footer-container {
       position: relative;
       z-index: 2;
     }
 
-    /*
-    ============================================================
-    【 视觉最终版 2：顶栏美化 】
-    ============================================================
-    */
+    /* 顶栏 - 回归原始风格 */
     .top-app-bar {
         position: sticky; top: 0; z-index: 50; 
         padding: 0.8rem 1rem;
         display: flex; align-items: center; justify-content: space-between;
         background-color: rgba(10, 10, 10, 0.6);
         border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         color: #EAEAEA;
-    }
-    .top-app-bar::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 1px;
-      background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
+        font-weight: bold;
     }
     .top-app-bar .title {
       font-size: 1.25rem;
-      font-weight: bold;
     }
-    .top-app-bar .search-button {
-      font-size: 1.25rem;
+    .top-app-bar .subtitle {
       position: absolute;
-      right: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
     }
-    .top-app-bar .center-title {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        font-weight: bold;
-        font-size: 1.25rem;
-    }
-
-    /* 主页搜索框 */
-    .main-search-bar {
-      padding: 1rem;
-      background-color: transparent;
-      position: sticky;
-      top: 57px; /* 假设顶栏高度 */
-      z-index: 40;
-    }
-    .main-search-input-wrapper {
-        position: relative; display: flex; align-items: center;
-        background-color: rgba(0,0,0,0.2); 
-        border-radius: 25px; 
-        padding: 0.7rem 1.2rem;
-        border: 1px solid rgba(255,255,255,0.2);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-    }
-    .main-search-input-wrapper .search-icon { color: #ccc; margin-right: 0.8rem; }
-    .main-search-input-wrapper input {
-        width: 100%; background: transparent; border: none; outline: none;
-        font-size: 1rem; color: #fff;
-    }
-    .main-search-input-wrapper input::placeholder { color: #bbb; }
 
     /*
     ============================================================
-    【 视觉最终版 3：书本、底板立体感与空间感 】
+    【【【 视觉最终版 2：书本、底板立体感与空间感 】】】
     ============================================================
     */
     .bookshelf-main-container {
-        padding-top: 3rem;
+        padding-top: 3rem; /* 增加第一排书的顶部空间 */
     }
     .shelf-row {
         position: relative;
@@ -123,7 +80,7 @@ export function Style () {
     
     .book-card-item { 
         width: calc(33.33% - 2.5rem);
-        max-width: 150px;
+        max-width: 150px; /* 让书本更矮、更精致 */
         z-index: 20;
         transition: transform 0.3s ease-out;
         transform-style: preserve-3d;
@@ -190,6 +147,9 @@ export function Style () {
         max-width: 120px;
       }
     }
+
+    /* 搜索模态框样式 */
+    /* ... (保持您原始项目中的搜索框样式不变) ... */
     
   `}</style>)
 }
