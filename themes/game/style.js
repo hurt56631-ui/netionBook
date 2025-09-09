@@ -73,7 +73,6 @@ export function Style () {
         display: flex; justify-content: center; align-items: flex-end;
         padding-bottom: 15px;
         z-index: 5;
-        /* 【核心修订】为3D变换提供舞台 */
         perspective: 2000px;
     }
 
@@ -90,13 +89,11 @@ export function Style () {
         max-width: 150px;
         z-index: 20;
         transition: transform 0.35s ease-out;
-        /* 【核心修订】启用3D变换，并应用轻微的后仰和侧倾角度 */
         transform-style: preserve-3d;
-        transform: rotateX(8deg) rotateZ(4deg);
+        transform: rotateX(8deg) rotateZ(1deg);
     }
 
     .book-card-item:hover {
-        /* 悬停时，恢复正常角度，并向上弹出放大 */
         transform: translateY(-20px) scale(1.08) rotateX(0deg) rotateZ(0deg);
         z-index: 30;
     }
@@ -105,23 +102,23 @@ export function Style () {
         width: 100%;
         aspect-ratio: 3 / 4;
         position: relative;
-        /* 【核心修订】为伪元素提供3D容器 */
         transform-style: preserve-3d;
-        /* 保留之前的内阴影 */
         box-shadow: inset 4px 0 6px -3px rgba(0,0,0,0.55);
-        /* 【核心修订】移除 clip-path */
-        /* clip-path: ...; */ 
+        
+        /* 【核心修订】为左侧添加圆角。顺序：左上 右上 右下 左下 */
+        border-radius: 3px 0 0 3px;
     }
     
-    /* 【核心修订】新增：使用伪元素创建书本的顶部厚度（书页） */
     .book-cover-wrapper::before {
         content: '';
         position: absolute;
         width: 100%;
-        height: 16px; /* 书本的厚度，可以调整 */
-        background: linear-gradient(to right, #e8e8e8, #ffffff, #f0f0f0); /* 模拟书页颜色和光感 */
+        height: 16px; 
+        background: linear-gradient(to right, #e8e8e8, #ffffff, #f0f0f0);
         
-        /* 关键：将其旋转90度并放到封面的顶部 */
+        /* 【核心修订】让顶部的左角也变圆，与封面匹配 */
+        border-top-left-radius: 3px;
+        
         transform-origin: bottom;
         transform: translateY(-16px) rotateX(90deg);
     }
@@ -129,7 +126,10 @@ export function Style () {
     .book-cover-wrapper img {
         width: 100%; height: 100%; object-fit: cover;
         display: block;
-        /* 保留厚重的阴影效果 */
+        
+        /* 【核心修订】让图片继承父容器的圆角 */
+        border-radius: inherit;
+        
         filter: drop-shadow(-6px 8px 12px rgba(0,0,0,0.45)) 
                 drop-shadow(-8px 2px 5px rgba(0,0,0,0.5)); 
         transition: filter 0.3s ease-out;
@@ -162,7 +162,7 @@ export function Style () {
         left: 7%; 
         width: 86%; 
         height: 8px;
-        background-image: url('/images/your-strip-image.png'); /* <-- 这里是护栏图片 */
+        background-image: url('/images/muban.jpg'); /* <-- 这里是护栏图片 */
         background-size: cover;
         background-position: center;
         border-radius: 2px; 
