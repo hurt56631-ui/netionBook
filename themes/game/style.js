@@ -75,7 +75,7 @@ export function Style () {
         z-index: 5;
     }
 
-    .shelf-row:first-of-type { margin-top: 4rem; }
+    .shelf-row:first-of-type { margin-top: 3rem; }
     
     .books-on-shelf {
         display: flex; justify-content: center; align-items: flex-end; 
@@ -88,13 +88,10 @@ export function Style () {
         max-width: 150px;
         z-index: 20;
         transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
-        
-        /* 【核心修订】重新加入自然的、轻微的2D倾斜效果 */
-        transform: rotateZ(6deg);
+        transform: rotateZ(4deg);
     }
 
     .book-card-item:hover {
-        /* 悬停时，向上弹出、放大并摆正（rotateZ恢复为0） */
         transform: translateY(-20px) scale(1.08);
         z-index: 30;
     }
@@ -104,19 +101,24 @@ export function Style () {
         aspect-ratio: 3 / 4;
         position: relative;
         box-shadow: inset 4px 0 6px -3px rgba(0,0,0,0.55);
-        clip-path: polygon(5% 0, 100% 0, 100% 100%, 0 100%, 0 5%);
+        clip-path: polygon(2.5% 0, 100% 0, 100% 100%, -10 100%, 0 2.5%);
         border-radius: 0 2px 2px 0; 
     }
     
+    /* 【核心修订】为图片添加了第二个 drop-shadow 来模拟书脊的厚重阴影 */
     .book-cover-wrapper img {
         width: 100%; height: 100%; object-fit: cover;
         display: block;
-        filter: drop-shadow(-6px 8px 12px rgba(0,0,0,0.45)); 
+        /* filter: [环境光阴影] [书脊阴影] */
+        filter: drop-shadow(-6px 8px 12px rgba(0,0,0,0.45)) 
+                drop-shadow(-8px 2px 5px rgba(0,0,0,0.5)); 
         transition: filter 0.3s ease-out;
     }
 
     .book-card-item:hover .book-cover-wrapper img {
-      filter: drop-shadow(-10px 14px 20px rgba(0,0,0,0.4));
+      /* 悬停时，两种阴影都变得更深、更广 */
+      filter: drop-shadow(-10px 14px 20px rgba(0,0,0,0.4))
+              drop-shadow(-12px 4px 8px rgba(0,0,0,0.45));
     }
     
     /*
@@ -135,11 +137,17 @@ export function Style () {
     
     /* 护栏样式 */
     .shelf-row::before {
-        content: ''; position: absolute;
-        bottom: 10px; left: 7%; width: 86%; 
+        content: ''; 
+        position: absolute;
+        bottom: 10px; 
+        left: 7%; 
+        width: 86%; 
         height: 8px;
-        background-image: linear-gradient(to bottom, #7b5c44, #4a382a);
-        border-radius: 2px; z-index: 25; 
+        background-image: url('/images/muban.jpg'); /* <-- 这里是护栏图片 */
+        background-size: cover;
+        background-position: center;
+        border-radius: 2px; 
+        z-index: 25; 
         box-shadow: 0 1px 3px rgba(0,0,0,0.4);
     }
 
