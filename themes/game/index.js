@@ -38,7 +38,7 @@ const ThemeGlobalGame = createContext()
 export const useGameGlobal = () => useContext(ThemeGlobalGame)
 
 /**
- * 基础布局 - 已恢复到原始版本
+ * 基础布局
  */
 const LayoutBase = props => {
   const {
@@ -99,7 +99,6 @@ const LayoutBase = props => {
           <main className='flex-grow w-full h-full flex flex-col min-h-screen overflow-x-auto md:p-2'>
             <div className='flex-grow h-full'>{children}</div>
             <div className='w-full py-4'><AdSlot type='in-article' /></div>
-            <Footer {...props} />
           </main>
         </div>
         <SideBarDrawer isOpen={sideBarVisible} onClose={() => { setSideBarVisible(false) }}>
@@ -190,7 +189,9 @@ const LayoutPostList = props => {
   )
 }
 
-// ... 其他组件 (LayoutSearch, LayoutSlug, etc.) 的完整代码保持不变 ...
+/**
+ * 搜索
+ */
 const LayoutSearch = props => {
   const { keyword, posts } = props
   useEffect(() => {
@@ -205,6 +206,7 @@ const LayoutSearch = props => {
       })
     }
   }, [])
+
   const { filterKey } = useGameGlobal()
   let filteredBlogPosts = []
   if (filterKey && posts) {
@@ -216,6 +218,7 @@ const LayoutSearch = props => {
   } else {
     filteredBlogPosts = deepClone(posts)
   }
+
   return (
     <>
       <BlogPostBar {...props} />
@@ -227,6 +230,10 @@ const LayoutSearch = props => {
     </>
   )
 }
+
+/**
+ * 归档
+ */
 const LayoutArchive = props => {
   const { archivePosts } = props
   return (
@@ -243,6 +250,10 @@ const LayoutArchive = props => {
     </>
   )
 }
+
+/**
+ * 文章详情
+ */
 const LayoutSlug = props => {
   const { setRecentGames } = useGameGlobal()
   const { post, siteInfo, allNavPages, recommendPosts, lock, validPassword } = props
@@ -263,6 +274,7 @@ const LayoutSlug = props => {
         setRecentGames(recentGames)
     }
   }, [post, setRecentGames])
+
   return (
     <>
       {lock && <ArticleLock validPassword={validPassword} />}
@@ -293,6 +305,10 @@ const LayoutSlug = props => {
     </>
   )
 }
+
+/**
+ * 404 页面
+ */
 const Layout404 = props => {
   const router = useRouter()
   const { locale } = useGlobal()
@@ -304,6 +320,7 @@ const Layout404 = props => {
       }
     }, 3000)
   }, [])
+
   return (
     <>
       <div className='md:-mt-20 text-black w-full h-screen text-center justify-center content-center items-center flex flex-col'>
@@ -320,6 +337,10 @@ const Layout404 = props => {
     </>
   )
 }
+
+/**
+ * 文章分类列表
+ */
 const LayoutCategoryIndex = props => {
   const { categoryOptions } = props
   return (
@@ -338,6 +359,10 @@ const LayoutCategoryIndex = props => {
     </>
   )
 }
+
+/**
+ * 文章标签列表
+ */
 const LayoutTagIndex = props => {
   const { tagOptions } = props
   return (
@@ -365,4 +390,4 @@ const LayoutTagIndex = props => {
 export {
   Layout404, LayoutArchive, LayoutBase, LayoutCategoryIndex, LayoutIndex,
   LayoutPostList, LayoutSearch, LayoutSlug, LayoutTagIndex, CONFIG as THEME_CONFIG
-        }
+}
