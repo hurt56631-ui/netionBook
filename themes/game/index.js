@@ -84,7 +84,6 @@ const LayoutBase = props => {
     }
   }, [filterKey, posts, isSearchOpen])
 
-
   return (
     <ThemeGlobalGame.Provider
       value={{
@@ -105,7 +104,7 @@ const LayoutBase = props => {
             </button>
         </div>
         
-        {isHomePage && !isSearchOpen && (
+        {isHomePage && (
           <div className="main-search-bar xl:hidden">
             <div className="main-search-input-wrapper">
               <i className="fas fa-search search-icon"></i>
