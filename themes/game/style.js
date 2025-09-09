@@ -75,7 +75,7 @@ export function Style () {
         z-index: 5;
     }
 
-    .shelf-row:first-of-type { margin-top: 3rem; }
+    .shelf-row:first-of-type { margin-top: 1.6rem; }
     
     .books-on-shelf {
         display: flex; justify-content: center; align-items: flex-end; 
@@ -101,7 +101,7 @@ export function Style () {
         aspect-ratio: 3 / 4;
         position: relative;
         box-shadow: inset 4px 0 6px -3px rgba(0,0,0,0.55);
-        clip-path: polygon(2.5% 0, 100% 0, 100% 100%, -10 100%, 0 2.5%);
+        clip-path: polygon(-2.5% 0, 100% 0, 100% 100%, 10 100%, 0 2.5%);
         border-radius: 0 2px 2px 0; 
     }
     
