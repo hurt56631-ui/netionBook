@@ -90,7 +90,7 @@ export function Style () {
         transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
         
         /* 【核心修订】重新加入自然的、轻微的2D倾斜效果 */
-        transform: rotateZ(-4deg);
+        transform: rotateZ(6deg);
     }
 
     .book-card-item:hover {
