@@ -11,7 +11,7 @@ export function Style () {
 
     /* -- 通用基础样式 -- */
     html, body {
-        overflow-x: hidden; /* 避免水平滚动条 */
+        overflow-x: hidden;
     }
     body { -webkit-tap-highlight-color: transparent; }
 
@@ -21,41 +21,36 @@ export function Style () {
     ============================================================
     */
     #theme-game {
-      background-image: url('/images/shujiabeijing.jpg'); /* 主背景图 */
+      background-image: url('/images/shujiabeijing.jpg');
       background-size: cover;
-      /* [修改] 取消背景图固定，改为随页面滚动 */
       background-attachment: scroll; 
       background-position: center;
-      /* [修改] 增加轻微的磨砂玻璃效果，提升整体质感 */
       backdrop-filter: blur(3px);
       -webkit-backdrop-filter: blur(3px);
-      /* [新增] 为第一排书架增加顶部空间，避免紧贴顶栏 */
-      padding-top: 3rem;
     }
 
-    /* 顶部导航栏 (顶板) */
+    /* 顶部导航栏 (顶板) - 保持不变 */
     .top-app-bar {
         position: sticky; top: 0; z-index: 50; 
         padding: 0.8rem 1rem;
         display: flex; align-items: center; justify-content: space-between;
-        background-image: url('/images/wood-texture.jpg'); /* 独立的深色木纹图 */
+        background-image: url('/images/wood-texture.jpg');
         background-size: cover;
         background-position: center;
         box-shadow: 0 4px 12px rgba(0,0,0,0.5);
         border-bottom: 2px solid rgba(0,0,0,0.3);
-        /* 关键：粗体白字，保证清晰度 */
         color: #FFFFFF;
         font-weight: bold;
         text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
     }
     .top-app-bar .subtitle, .top-app-bar .search-button { color: #FFFFFF; }
 
-    /* 底部导航栏 (Footer) 样式 */
+    /* 底部导航栏 (Footer) 样式 - 保持不变 */
     .footer-container {
-        background-image: url('/images/muban.jpg'); /* 底板使用深色木纹图 */
+        background-image: url('/images/muban.jpg');
         background-size: cover;
         background-position: center;
-        box-shadow: 0 -4px 12px rgba(0,0,0,0.5); /* 向上阴影 */
+        box-shadow: 0 -4px 12px rgba(0,0,0,0.5);
         border-top: 2px solid rgba(0,0,0,0.3);
         padding: 1rem;
         color: #FFFFFF;
@@ -63,137 +58,139 @@ export function Style () {
         text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
     }
     .footer-container a, .footer-container i {
-        color: #FFFFFF !important; /* 确保链接和图标也是白色 */
+        color: #FFFFFF !important;
         font-weight: bold !important;
     }
 
 
     /*
     ============================================================
-    【【【 视觉优化版 2：书本尺寸、立体感、透视与阴影 】】】
+    【【【 视觉优化版 2：书本尺寸、位置、阴影与细节 】】】
     ============================================================
     */
     .shelf-row {
         position: relative;
-        margin-bottom: 3.5rem; /* 适当增加行间距以容纳更强的阴影和立体效果 */
+        margin-bottom: 3.5rem;
         display: flex; justify-content: center; align-items: flex-end;
-        padding-bottom: 25px; /* 关键：确保书本立在底板上方 */
-        perspective: 4000px; /* 增强3D舞台感, 为更强的3D效果做准备 */
+        padding-bottom: 15px; /* 调整数值以匹配更薄的底板 */
     }
+
+    /* 【用户反馈修订】为第一排书架增加顶部空间，远离顶栏 */
+    .shelf-row:first-of-type {
+        margin-top: 4rem; /* 显著增加与顶部导航栏的距离 */
+    }
+    
     .books-on-shelf {
         display: flex; justify-content: center; align-items: flex-end; 
-        gap: 1.2rem; /* 调整书本间隙 */
-        transform-style: preserve-3d;
+        gap: 1.5rem; /* 稍微增加书本间隙 */
+        /* 【用户反馈修订】增加左右内边距，防止书本看起来要掉下去 */
+        padding: 0 1.5rem;
+        width: 100%;
     }
     
     .book-card-item { 
-        position: relative; /* [新增] 为伪元素定位提供基准 */
+        position: relative;
         width: calc(33.33% - 1.5rem); 
-        max-width: 170px; /* 略微增大最大宽度 */
+        max-width: 150px; /* 适当调整最大宽度 */
         z-index: 20;
-        transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        transform-style: preserve-3d;
-        
-        /* 关键：正确的透视旋转！书本向右后方倾斜，左边宽右边窄 */
-        transform: rotateY(45deg); 
-        transform-origin: center left; /* 旋转轴心在书本的左边缘中心 */
-    }
-
-    /* [新增] 使用伪元素模拟书本的厚度（书页侧面），这是立体感的关键！ */
-    .book-card-item::before {
-        content: '';
-        position: absolute;
-        top: 2px; /* 细微调整，避免与封面完全重合 */
-        left: 0;
-        width: 18px; /* 书本的厚度 */
-        height: calc(100% - 4px); /* 模拟上下书壳的边距 */
-        background: linear-gradient(to right, #ddd, #fff, #ddd); /* 模拟书页的颜色和光感 */
-        transform-origin: left;
-        transform: rotateY(-90deg) translateX(-18px); /* 旋转90度并移到正确位置形成侧面 */
-        box-shadow: inset 2px 0 5px rgba(0,0,0,0.2); /* 增加内阴影，更有层次 */
+        /* 【用户反馈修订】移除3D旋转，改用更直接的2D变换 */
+        transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
     }
 
     .book-card-item:hover {
-        /* [优化] 悬停效果更明显，向前弹出，更有交互感 */
-        transform: translateZ(35px) rotateY(-20deg) scale(1.08) translateY(-15px);
-        z-index: 30; /* 确保弹出的书在最上层 */
+        /* 【用户反馈修订】简化悬停效果为向上、放大，更稳定 */
+        transform: translateY(-20px) scale(1.08);
+        z-index: 30;
     }
     
     .book-cover-wrapper {
         width: 100%;
-        /* [修改] 调整宽高比，让封面更矮一些 (视觉上更宽) */
-        aspect-ratio: 4 / 5; 
-        overflow: visible; /* 允许阴影超出容器 */
-        position: relative; /* [新增] 为伪元素定位提供基准 */
-        transform-style: preserve-3d; /* [新增] 确保3D变换生效 */
+        aspect-ratio: 3 / 4; /* 调整为更常见的书本比例 */
+        position: relative;
+        /* 【用户反馈修订】增加 overflow: hidden 来配合实现折角效果 */
+        overflow: hidden;
+        border-radius: 3px 3px 2px 2px; /* 给书皮一个轻微的圆角 */
     }
     
-    /* [新增] 封面上的光影叠加层，避免封面过于平淡，增加光照感 */
-    .book-cover-wrapper::after {
+    /* 【用户反馈修订】新增：左上角折角效果 */
+    .book-cover-wrapper::before {
         content: '';
         position: absolute;
-        inset: 0;
-        background: linear-gradient(to top right, rgba(0,0,0,0.15) 0%, transparent 40%);
-        border-radius: 0.6px;
+        top: 0;
+        left: 0;
+        width: 25px; /* 折角的大小 */
+        height: 25px;
+        /* 关键：通过渐变创建三角形，模拟翻开的书页颜色 */
+        background: linear-gradient(135deg, #f0f0f0 0%, #dddddd 50%, transparent 50%);
+        /* 关键：给折角本身加上阴影，使其有立体感 */
+        box-shadow: -2px 2px 4px rgba(0, 0, 0, 0.3);
+        border-bottom-right-radius: 3px; /* 让折角的尖端也带一点圆润 */
     }
     
     .book-cover-wrapper img {
         width: 100%; height: 100%; object-fit: cover;
         display: block;
-        border-radius: 0.6px; 
-        /* 关键：左侧的强烈阴影，越靠近书越黑 */
-        filter: drop-shadow(-18px 12px 25px rgba(0,0,0,0.6)); 
+        border-radius: inherit; /* 继承父容器的圆角 */
+        /* 【用户反馈修订】调整阴影，使其更像书本厚度产生的自然阴影 */
+        filter: drop-shadow(-6px 8px 12px rgba(0,0,0,0.45)); 
         transition: filter 0.3s ease-out;
     }
+
     .book-card-item:hover .book-cover-wrapper img {
-      filter: drop-shadow(-28px 20px 40px rgba(0,0,0,0.5));
+      /* 悬停时阴影更深更广，突出层次感 */
+      filter: drop-shadow(-10px 14px 20px rgba(0,0,0,0.4));
     }
     
     /*
     ============================================================
-    【【【 视觉优化版 3：底板图片、细节与阴影 】】】
+    【【【 视觉优化版 3：底板、护栏与阴影 】】】
     ============================================================
     */
     .shelf-plank {
         position: absolute;
         bottom: 0; 
-        /* [修改] 两端留空，不再是100%宽度 */
         left: 5%;
         width: 90%;
-        height: 25px;
-        background-image: url('/images/muban.jpg'); /* 深色木板底图 */
+        /* 【用户反馈修订】底板改薄 */
+        height: 15px; 
+        background-image: url('/images/muban.jpg');
         background-size: cover;
         background-position: center;
-        border-radius: 4px;
+        border-radius: 3px;
         z-index: 10;
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
     }
+    
+    /* 【用户反馈修订】移除压条，因为新的护栏效果更好 */
+    /* .shelf-plank::before { ... } */
 
-    /* [新增] 在木板上方增加一个深色压条，增加细节和高级感，两端直角 */
-    .shelf-plank::before {
+    /* 【用户反馈修订】新增：使用 shelf-row 的伪元素来创建木条护栏 */
+    .shelf-row::before {
         content: '';
         position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 5px; /* 压条的高度 */
-        background-color: #2a1d12; /* 深木色 */
-        border-top-left-radius: 4px; /* 跟随父元素圆角 */
-        border-top-right-radius: 4px;
-        box-shadow: inset 0 1px 2px rgba(0,0,0,0.5); /* 压条的内阴影，增加立体感 */
+        /* 定位在底板的上方和前方 */
+        bottom: 10px; 
+        left: 5%;
+        width: 90%;
+        height: 8px; /* 护栏的高度 */
+        background-color: #4a382a; /* 一个比木板稍深的颜色 */
+        background-image: linear-gradient(to right, rgba(255,255,255,0.1), transparent, rgba(0,0,0,0.2)); /* 模拟高光和暗部 */
+        border-radius: 2px;
+        /* 关键：z-index要高于书本，才能挡在书前 */
+        z-index: 25; 
+        box-shadow: 0 1px 3px rgba(0,0,0,0.4);
     }
 
     .shelf-plank::after {
       content: ''; position: absolute;
-      bottom: -10px; 
-      /* [修改] 阴影也跟随父元素宽度 */
+      bottom: -8px; 
       left: 0;
       width: 100%; 
-      height: 20px; 
+      height: 15px; 
       background: transparent;
-      /* [优化] 调整阴影参数，使其更集中、更真实 */
-      box-shadow: 0 12px 28px 12px rgba(0, 0, 0, 0.9);
-      filter: blur(15px); 
+      /* 优化底板下方的环境阴影 */
+      box-shadow: 0 10px 20px 8px rgba(0, 0, 0, 0.8);
+      filter: blur(12px); 
       z-index: -1;
     }
 
@@ -211,6 +208,7 @@ export function Style () {
         border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;
         padding: 1rem;
     }
+    /* ... (其余搜索样式保持不变) ... */
     .search-modal-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 1rem; }
     .search-modal-header .title { font-size: 1.25rem; font-weight: 700; color: #333; }
     .search-modal-header .close-button { padding: 0.5rem; border-radius: 50%; background-color: rgba(0,0,0,0.05); color: #666; }
