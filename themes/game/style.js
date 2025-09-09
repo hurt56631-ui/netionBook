@@ -21,7 +21,7 @@ export function Style () {
     ============================================================
     */
     #theme-game {
-      background-image: url('/images/shujiabeijing.jpg');
+      background-image: url('/images/shujiabeijing.png');
       background-size: cover;
       background-attachment: scroll; 
       background-position: center;
@@ -90,11 +90,14 @@ export function Style () {
         z-index: 20;
         transition: transform 0.35s ease-out;
         transform-style: preserve-3d;
-        transform: rotateX(8deg) rotateZ(1deg);
+        
+        /* 【核心修正】加入 rotateY 来创建正确的透视效果 */
+        transform: rotateX(8deg) rotateY(15deg) rotateZ(4deg);
     }
 
     .book-card-item:hover {
-        transform: translateY(-20px) scale(1.08) rotateX(0deg) rotateZ(0deg);
+        /* 悬停时，所有角度恢复为0，让书本完全“正”对我们 */
+        transform: translateY(-20px) scale(1.08) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
         z-index: 30;
     }
     
@@ -104,9 +107,7 @@ export function Style () {
         position: relative;
         transform-style: preserve-3d;
         box-shadow: inset 4px 0 6px -3px rgba(0,0,0,0.55);
-        
-        /* 【核心修订】为左侧添加圆角。顺序：左上 右上 右下 左下 */
-        border-radius: 3px 0 0 3px;
+        border-radius: 4px 0 0 4px;
     }
     
     .book-cover-wrapper::before {
@@ -115,10 +116,7 @@ export function Style () {
         width: 100%;
         height: 16px; 
         background: linear-gradient(to right, #e8e8e8, #ffffff, #f0f0f0);
-        
-        /* 【核心修订】让顶部的左角也变圆，与封面匹配 */
-        border-top-left-radius: 3px;
-        
+        border-top-left-radius: 8px;
         transform-origin: bottom;
         transform: translateY(-16px) rotateX(90deg);
     }
@@ -126,10 +124,7 @@ export function Style () {
     .book-cover-wrapper img {
         width: 100%; height: 100%; object-fit: cover;
         display: block;
-        
-        /* 【核心修订】让图片继承父容器的圆角 */
         border-radius: inherit;
-        
         filter: drop-shadow(-6px 8px 12px rgba(0,0,0,0.45)) 
                 drop-shadow(-8px 2px 5px rgba(0,0,0,0.5)); 
         transition: filter 0.3s ease-out;
