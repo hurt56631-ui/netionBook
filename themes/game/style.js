@@ -64,7 +64,7 @@ export function Style () {
 
     /*
     ============================================================
-    【【【 视觉优化版 2：书本细节（倾斜、透视斜角、阴影） 】】】
+    【【【 视觉优化版 2：书本立体效果（核心修改） 】】】
     ============================================================
     */
     .shelf-row {
@@ -73,9 +73,11 @@ export function Style () {
         display: flex; justify-content: center; align-items: flex-end;
         padding-bottom: 15px;
         z-index: 5;
+        /* 【核心修订】为3D变换提供舞台 */
+        perspective: 2000px;
     }
 
-    .shelf-row:first-of-type { margin-top: 1.6rem; }
+    .shelf-row:first-of-type { margin-top: 4rem; }
     
     .books-on-shelf {
         display: flex; justify-content: center; align-items: flex-end; 
@@ -87,12 +89,15 @@ export function Style () {
         width: calc(33.33% - 1.5rem); 
         max-width: 150px;
         z-index: 20;
-        transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
-        transform: rotateZ(4deg);
+        transition: transform 0.35s ease-out;
+        /* 【核心修订】启用3D变换，并应用轻微的后仰和侧倾角度 */
+        transform-style: preserve-3d;
+        transform: rotateX(8deg) rotateZ(4deg);
     }
 
     .book-card-item:hover {
-        transform: translateY(-20px) scale(1.08);
+        /* 悬停时，恢复正常角度，并向上弹出放大 */
+        transform: translateY(-20px) scale(1.08) rotateX(0deg) rotateZ(0deg);
         z-index: 30;
     }
     
@@ -100,23 +105,37 @@ export function Style () {
         width: 100%;
         aspect-ratio: 3 / 4;
         position: relative;
+        /* 【核心修订】为伪元素提供3D容器 */
+        transform-style: preserve-3d;
+        /* 保留之前的内阴影 */
         box-shadow: inset 4px 0 6px -3px rgba(0,0,0,0.55);
-        clip-path: polygon(-2.5% 0, 100% 0, 100% 100%, 10 100%, 0 2.5%);
-        border-radius: 0 2px 2px 0; 
+        /* 【核心修订】移除 clip-path */
+        /* clip-path: ...; */ 
     }
     
-    /* 【核心修订】为图片添加了第二个 drop-shadow 来模拟书脊的厚重阴影 */
+    /* 【核心修订】新增：使用伪元素创建书本的顶部厚度（书页） */
+    .book-cover-wrapper::before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 16px; /* 书本的厚度，可以调整 */
+        background: linear-gradient(to right, #e8e8e8, #ffffff, #f0f0f0); /* 模拟书页颜色和光感 */
+        
+        /* 关键：将其旋转90度并放到封面的顶部 */
+        transform-origin: bottom;
+        transform: translateY(-16px) rotateX(90deg);
+    }
+    
     .book-cover-wrapper img {
         width: 100%; height: 100%; object-fit: cover;
         display: block;
-        /* filter: [环境光阴影] [书脊阴影] */
+        /* 保留厚重的阴影效果 */
         filter: drop-shadow(-6px 8px 12px rgba(0,0,0,0.45)) 
                 drop-shadow(-8px 2px 5px rgba(0,0,0,0.5)); 
         transition: filter 0.3s ease-out;
     }
 
     .book-card-item:hover .book-cover-wrapper img {
-      /* 悬停时，两种阴影都变得更深、更广 */
       filter: drop-shadow(-10px 14px 20px rgba(0,0,0,0.4))
               drop-shadow(-12px 4px 8px rgba(0,0,0,0.45));
     }
@@ -143,7 +162,7 @@ export function Style () {
         left: 7%; 
         width: 86%; 
         height: 8px;
-        background-image: url('/images/muban.jpg'); /* <-- 这里是护栏图片 */
+        background-image: url('/images/your-strip-image.png'); /* <-- 这里是护栏图片 */
         background-size: cover;
         background-position: center;
         border-radius: 2px; 
