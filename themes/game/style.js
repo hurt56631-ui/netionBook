@@ -92,7 +92,7 @@ export function Style () {
         transform-style: preserve-3d;
         
         /* 【核心修正】加入 rotateY 来创建正确的透视效果 */
-        transform: rotateX(3deg) rotateY(6deg) rotateZ(0.6deg);
+        transform: rotateX(0.1deg) rotateY(3deg) rotateZ(0.6deg);
     }
 
     .book-card-item:hover {
