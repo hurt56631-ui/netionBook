@@ -1,4 +1,4 @@
-// themes/heo/components/BottomNav.js (修改版)
+// themes/heo/components/BottomNav.js (最终修改版 - 平板和手机均显示底部导航)
 
 import Link from 'next/link'
 import React, { useState, useEffect } from 'react'
@@ -54,18 +54,24 @@ const BottomNav = () => {
   return (
     <>
       <style jsx global>{`
-        /* 针对所有页面，在小屏幕上为 body 底部留出空间 */
-        @media (max-width: 767px) {
+        /* 针对所有屏幕尺寸小于等于 lg (即手机和平板) 为 body 底部留出空间 */
+        @media (max-width: 1023px) { /* lg 断点是 1024px，所以 max-width: 1023px 表示小于 lg */
           body {
             padding-bottom: 70px; /* 底部导航栏高度 + 一点间距 */
           }
         }
+        /* 如果在 lg 及以上屏幕不显示底部导航栏，则不需要 padding-bottom */
+        @media (min-width: 1024px) { /* lg 尺寸及以上 */
+          body {
+            padding-bottom: 0px !important; /* 强制移除留白，避免影响桌面布局 */
+          }
+        }
       `}</style>
 
-      {/* 底部导航栏本身 */}
+      {/* 将 md:hidden 改为 lg:hidden，表示在 lg 及以上屏幕尺寸才隐藏 */}
       <div id='bottom-nav' className='fixed bottom-0 left-0 w-full bg-white dark:bg-[#18171d] shadow-lg
                                      flex justify-around items-center h-16 z-40 border-t border-gray-100 dark:border-gray-800
-                                     md:hidden'>
+                                     lg:hidden'> {/* <-- 从 md:hidden 改为 lg:hidden */}
         {navItems.map(item => {
           // 如果是普通的链接
           if (item.isLink) {
