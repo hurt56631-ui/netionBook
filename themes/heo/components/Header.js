@@ -36,7 +36,7 @@ const Header = props => {
     throttle(() => {
       const scrollS = window.scrollY
       if (scrollS <= 1) {
-        setFixedNav(false)
+        setFixedNav(true)
         setBgWhite(false)
         setTextWhite(false)
         if (document?.querySelector('#post-bg')) {
