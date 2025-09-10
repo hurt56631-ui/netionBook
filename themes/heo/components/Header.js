@@ -1,23 +1,26 @@
+// themes/heo/components/Header.js (修改版)
+
 import { siteConfig } from '@/lib/config'
 import { isBrowser } from '@/lib/utils'
 import throttle from 'lodash.throttle'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import DarkModeButton from './DarkModeButton'
+import DarkModeButton from './DarkModeButton' // 如果需要，可以重新加回来
 import Logo from './Logo'
 import { MenuListTop } from './MenuListTop'
-import ReadingProgress from './ReadingProgress'
-import SearchButton from './SearchButton'
+// import ReadingProgress from './ReadingProgress' // 已移除
+import SearchButton from './SearchButton' // 如果需要，可以重新加回来
 import SlideOver from './SlideOver'
 import LazyImage from '@/components/LazyImage' // 导入 LazyImage 组件
 
 /**
- * 页头：顶部导航 (已精简)
+ * 页头：顶部导航 (已修改，取消浮动)
  * @param {*} param0
  * @returns
  */
 const Header = props => {
-  const [fixedNav, setFixedNav] = useState(false)
+  // fixedNav 状态不再用于控制导航栏的固定定位
+  const [fixedNav, setFixedNav] = useState(false) // 保持声明，但其值可能不再影响 'fixed' 样式
   const [textWhite, setTextWhite] = useState(false)
   const [navBgWhite, setBgWhite] = useState(false)
   const [activeIndex, setActiveIndex] = useState(0)
@@ -31,25 +34,27 @@ const Header = props => {
 
   /**
    * 根据滚动条，切换导航栏样式
+   * fixedNav 将不再设为 true，从而取消顶部导航的固定浮动
    */
   const scrollTrigger = useCallback(
     throttle(() => {
       const scrollS = window.scrollY
-      if (scrollS <= 1) {
-        setFixedNav(true)
+      if (scrollS <= 1) { // 滚动到顶部时
+        setFixedNav(false) // 始终为 false
         setBgWhite(false)
         setTextWhite(false)
         if (document?.querySelector('#post-bg')) {
-          setFixedNav(true)
-          setTextWhite(true)
+          // setFixedNav(true) // **移除或注释此行，不再固定**
+          setTextWhite(true) // 保持文字白色
         }
-      } else {
-        setFixedNav(true)
+      } else { // 滚动离开顶部时
+        setFixedNav(false) // **始终为 false，取消固定**
         setTextWhite(false)
-        setBgWhite(true)
+        setBgWhite(true) // 仍然可以在滚动时改变背景颜色和阴影
       }
     }, 100)
   )
+
   useEffect(() => {
     scrollTrigger()
   }, [router])
@@ -97,8 +102,7 @@ const Header = props => {
     { title: 'Facebook', url: 'https://www.facebook.com/share/16fpFsbhh2/', icon: 'fa-brands fa-facebook', img: '' },
     { title: 'TikTok', url: 'https://vt.tiktok.com/ZSHGDjda1hkwq-Pz4h9/', icon: 'fa-brands fa-tiktok', img: '' },
     { title: 'YouTube', url: 'https://www.youtube.com/YOUR_CHANNEL', icon: 'fa-brands fa-youtube', img: '' },
-    // 微信使用图片图标
-    { title: 'telegar', url: 'https://t.me/+PVH4J-Mz5i81YzFl', icon: 'fa-brands fa-telegram', img: '' } // <-- 假设您有微信图标和二维码
+    { title: 'telegar', url: 'https://t.me/+PVH4J-Mz5i81YzFl', icon: 'fa-brands fa-telegram', img: '' }
   ];
   // --- 定义结束 ---
 
@@ -137,16 +141,16 @@ const Header = props => {
         }
       `}</style>
 
-      {/* fixed时留白高度 */}
-      {fixedNav && !document?.querySelector('#post-bg') && (
+      {/* fixed时留白高度 - 由于我们取消了 fixedNav，这行将不再渲染 */}
+      {/* {fixedNav && !document?.querySelector('#post-bg') && (
         <div className='h-16'></div>
-      )}
+      )} */}
 
       {/* 顶部导航菜单栏 */}
       <nav
         id='nav'
         className={`z-20 h-16 top-0 w-full duration-300 transition-all
-            ${fixedNav ? 'fixed' : 'relative bg-transparent'} 
+            relative bg-transparent // **直接设为 relative，不再依赖 fixedNav**
             ${textWhite ? 'text-white ' : 'text-black dark:text-white'}  
             ${navBgWhite ? 'bg-white dark:bg-[#18171d] shadow' : 'bg-transparent'}`}>
         <div className='flex h-full mx-auto justify-between items-center max-w-[86rem] px-6'>
@@ -170,8 +174,8 @@ const Header = props => {
             </div>
           </div>
 
-          {/* --- 右侧固定 (已修改) --- */}
-          <div className='flex flex-shrink-0 justify-end items-center space-x-1'> {/* 将 space-x-2 改为 space-x-1，减小间距 */}
+          {/* --- 右侧固定 --- */}
+          <div className='flex flex-shrink-0 justify-end items-center space-x-1'>
             {/* 循环渲染社交按钮 */}
             {socialButtons.map(button => (
               <a
@@ -183,12 +187,15 @@ const Header = props => {
                 className='p-2 cursor-pointer text-gray-500 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full w-9 h-9 flex items-center justify-center'
                 title={button.title}
               >
-                {button.icon && <i className={button.icon} />} {/* 如果有 icon 则显示 icon */}
-                {button.img && <LazyImage src={button.img} alt={button.title} className="w-6 h-6 object-contain" />} {/* 如果有 img 则显示图片 */}
+                {button.icon && <i className={button.icon} />}
+                {button.img && <LazyImage src={button.img} alt={button.title} className="w-6 h-6 object-contain" />}
               </a>
             ))}
 
-            {/* SearchButton 和 ReadingProgress 已被移除 */}
+            {/* DarkModeButton, SearchButton 可以根据需要重新添加 */}
+            {/* <DarkModeButton /> */}
+            {/* <SearchButton /> */}
+
             {/* 移动端菜单按钮 */}
             <div
               onClick={toggleMenuOpen}
