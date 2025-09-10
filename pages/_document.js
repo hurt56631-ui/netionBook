@@ -1,5 +1,7 @@
+// pages/_document.js (修改版 - 添加 PWA meta 标签)
+
 // eslint-disable-next-line @next/next/no-document-import-in-page
-import BLOG from '@/blog.config'
+import BLOG from './blog.config' // 假设 blog.config 在根目录，或者你需要调整导入路径
 import Document, { Head, Html, Main, NextScript } from 'next/document'
 
 // 预先设置深色模式的脚本内容
@@ -43,6 +45,15 @@ class MyDocument extends Document {
     return (
       <Html lang={BLOG.LANG}>
         <Head>
+          {/* PWA 相关的 meta 标签 --- 新增或修改的部分 --- */}
+          <link rel="manifest" href="/manifest.json" />
+          <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+          <meta name="theme-color" content="#007aff" /> {/* 确保这个颜色与 manifest.json 中的 theme_color 匹配 */}
+          <meta name="apple-mobile-web-app-capable" content="yes" />
+          <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+          <meta name="apple-mobile-web-app-title" content="学习网站" />
+          {/* --- PWA 相关的 meta 标签结束 --- */}
+
           {/* 预加载字体 */}
           {BLOG.FONT_AWESOME && (
             <>

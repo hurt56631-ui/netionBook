@@ -1,8 +1,21 @@
+// next.config.js (修改版 - 集成 next-pwa)
+
 const { THEME } = require('./blog.config')
 const fs = require('fs')
 const path = require('path')
 const BLOG = require('./blog.config')
 const { extractLangPrefix } = require('./lib/utils/pageId')
+
+// --- PWA 配置开始 ---
+const withPWA = require('next-pwa')({
+  dest: 'public', // Service Worker 和相关文件将生成到 public 目录下
+  register: true, // 自动在客户端注册 Service Worker
+  skipWaiting: true, // 当有新的 Service Worker 时，立即激活而不是等待
+  disable: process.env.NODE_ENV === 'development' // 在开发环境中禁用 PWA，只在生产环境生效
+  // 更多选项可以在这里添加，例如 exclude: ['some-path'], buildExcludes: [/middleware/]
+})
+// --- PWA 配置结束 ---
+
 
 // 打包时是否分析代码
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
@@ -110,7 +123,9 @@ const nextConfig = {
       'source.unsplash.com',
       'p1.qhimg.com',
       'webmention.io',
-      'ko-fi.com'
+      'ko-fi.com',
+      // --- 新增 PWA 图标可能引用的域名 ---
+      'raw.githubusercontent.com' // 如果你的图标是通过 githubusercontent.com 加载的
     ]
   },
 
@@ -233,6 +248,11 @@ const nextConfig = {
   }
 }
 
+// --- 用 withPWA 包裹你的 nextConfig ---
 module.exports = process.env.ANALYZE
-  ? withBundleAnalyzer(nextConfig)
-  : nextConfig
+  ? withBundleAnalyzer(withPWA(nextConfig)) // 如果启用了分析，则先用 withPWA 包裹 nextConfig，再用 withBundleAnalyzer 包裹
+  : withPWA(nextConfig) // 否则直接用 withPWA 包裹 nextConfig
+
+// eslint-disable-next-line @next/next/no-document-import-in-page
+// import BLOG from '@/blog.config' // 这一行应该删除，因为它在文件顶部已经引入了 BLOG
+// import Document, { Head, Html, Main, NextScript } from 'next/document' // 这一行也应该删除，因为它不属于 next.config.js

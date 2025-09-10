@@ -1,4 +1,4 @@
-// themes/heo/index.js (最终修复版，所有功能按钮都在，所有组件都已恢复，并已处理顶部导航不浮动和底部导航)
+// themes/heo/index.js (最终修复版，已集成PWA安装提示)
 
 import Comment from '@/components/Comment'
 import { AdSlot } from '@/components/GoogleAdsense'
@@ -39,8 +39,11 @@ import { Style } from './style'
 import AISummary from '@/components/AISummary'
 import ArticleExpirationNotice from '@/components/ArticleExpirationNotice'
 import GlosbeSearchCard from '@/components/GlosbeSearchCard'
-// --- 新增导入底部导航组件 ---
+// --- 导入底部导航组件 ---
 import BottomNav from './components/BottomNav'
+// --- 导入 PWA 安装提示组件 ---
+import PwaInstallPrompt from './components/PwaInstallPrompt'
+
 
 /**
  * 基础布局
@@ -107,6 +110,10 @@ const LayoutBase = props => {
       <Footer />
       {/* --- 引入底部导航栏 --- */}
       <BottomNav />
+      
+      {/* --- 在这里添加 PWA 安装提示组件 --- */}
+      <PwaInstallPrompt />
+
       {HEO_LOADING_COVER && <LoadingCover />}
     </div>
   )
