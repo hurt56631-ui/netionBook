@@ -1,4 +1,4 @@
-// themes/heo/index.js (最终修复版，所有功能按钮都在，所有组件都已恢复)
+// themes/heo/index.js (最终修复版，所有功能按钮都在，所有组件都已恢复，并已处理顶部导航不浮动和底部导航)
 
 import Comment from '@/components/Comment'
 import { AdSlot } from '@/components/GoogleAdsense'
@@ -39,6 +39,8 @@ import { Style } from './style'
 import AISummary from '@/components/AISummary'
 import ArticleExpirationNotice from '@/components/ArticleExpirationNotice'
 import GlosbeSearchCard from '@/components/GlosbeSearchCard'
+// --- 新增导入底部导航组件 ---
+import BottomNav from './components/BottomNav'
 
 /**
  * 基础布局
@@ -103,12 +105,14 @@ const LayoutBase = props => {
         </div>
       </main>
       <Footer />
+      {/* --- 引入底部导航栏 --- */}
+      <BottomNav />
       {HEO_LOADING_COVER && <LoadingCover />}
     </div>
   )
 }
 
-// --- MODIFIED START ---
+// --- MODIFIED START (你的原始 FunctionButton 代码已保留并修复) ---
 /**
  * 功能按钮 (单个按钮样式) - 已修复
  */
