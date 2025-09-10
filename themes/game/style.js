@@ -12,6 +12,10 @@ export function Style () {
     /* -- 通用基础样式 -- */
     html, body {
         overflow-x: hidden;
+        /* [优化] 解决背景放大问题：确保根元素占据整个视口高度 */
+        height: 100%;
+        margin: 0;
+        padding: 0;
     }
     body { -webkit-tap-highlight-color: transparent; }
 
@@ -23,11 +27,13 @@ export function Style () {
     #theme-game {
       background-image: url('/images/shujiabeijing.png');
       background-size: cover;
-      background-attachment: fixed; 
+      background-attachment: fixed;
       background-position: center;
       backdrop-filter: blur(3px);
       -webkit-backdrop-filter: blur(3px);
       position: relative;
+      /* [优化] 解决背景放大问题：确保主容器至少占据整个视口高度，为背景图提供稳定参照 */
+      min-height: 100vh;
     }
 
     /* 全局光照效果 */
@@ -42,7 +48,7 @@ export function Style () {
 
     /* 顶部和底部导航栏样式 - 保持不变 */
     .top-app-bar, .footer-container {
-        position: sticky; top: 0; z-index: 50; 
+        position: sticky; top: 0; z-index: 50;
         padding: 0.8rem 1rem;
         display: flex; align-items: center; justify-content: space-between;
         background-image: url('/images/wood-texture.jpg');
@@ -71,103 +77,131 @@ export function Style () {
         position: relative;
         margin-bottom: 3.5rem;
         display: flex; justify-content: center; align-items: flex-end;
-        padding-bottom: 13px;
+        padding-bottom: 15px; /* 调整回15px以匹配底板高度 */
         z-index: 5;
-        perspective: 1500px;
+        perspective: 1500px; /* 透视效果可以稍微柔和一些 */
     }
 
     .shelf-row:first-of-type { margin-top: 4rem; }
-    
+
     .books-on-shelf {
-        display: flex; justify-content: center; align-items: flex-end; 
-        gap: 1.3rem; padding: 0 1.5rem; width: 100%;
+        display: flex; justify-content: center; align-items: flex-end;
+        gap: 1.5rem; /* 稍微增加间距 */
+        padding: 0 1.5rem; width: 100%;
     }
-    
-    .book-card-item { 
+
+    .book-card-item {
         position: relative;
-        width: calc(33.33% - 1.5rem); 
-        max-width: 160px;
+        width: calc(33.33% - 1.5rem);
+        max-width: 150px; /* 统一尺寸 */
         z-index: 20;
-        transition: transform 0.35s ease-out;
+        /* [优化] 动画曲线更生动 (ease-out-back 效果)，带有回弹感 */
+        transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         transform-style: preserve-3d;
-        
-        /* 【核心修正】加入 rotateY 来创建正确的透视效果 */
         transform: rotateX(0.1deg) rotateY(-17deg) rotateZ(0.6deg);
     }
 
+    /* [优化] 增加书本摆放的自然随机感，打破完美统一 */
+    .books-on-shelf .book-card-item:nth-child(3n+1) {
+        transform: rotateX(0.2deg) rotateY(-16.5deg) rotateZ(0.4deg);
+    }
+    .books-on-shelf .book-card-item:nth-child(3n+2) {
+        transform: rotateX(-0.1deg) rotateY(-17.5deg) rotateZ(0.7deg);
+    }
+
     .book-card-item:hover {
-        /* 悬停时，所有角度恢复为0，让书本完全“正”对我们 */
+        /* [优化] 悬停时向上移动距离可以更明显 */
         transform: translateY(-30px) scale(1.88) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
         z-index: 30;
     }
-    
+
     .book-cover-wrapper {
         width: 100%;
         aspect-ratio: 3 / 4;
         position: relative;
         transform-style: preserve-3d;
-        box-shadow: inset 6px 0 6px -3px rgba(0,0,0,0.55);
-        border-radius: 4.3px 2.3px 2.3px 3px;
+        /* [优化] 增加边缘细节和过渡效果 */
+        box-shadow:
+            inset 4px 0 8px -4px rgba(0,0,0,0.7), /* 主要内阴影，模拟深度 */
+            inset 0.5px 0 0.5px rgba(255,255,255,0.1); /* 边缘微弱高光 */
+        border-radius: 5px 2px 2px 4px; /* 微调圆角，使其更像真实书本 */
+        transition: box-shadow 0.3s ease-out; /* 为悬停效果添加过渡 */
     }
-    
+
+    /* [优化] 悬停时增加外发光效果，让书本更突出 */
+    .book-card-item:hover .book-cover-wrapper {
+        box-shadow:
+            inset 5px 0 10px -4px rgba(0,0,0,0.8),
+            inset 0.5px 0 0.5px rgba(255,255,255,0.15),
+            0 0 15px rgba(255, 255, 255, 0.2);
+    }
+
     .book-cover-wrapper::before {
         content: '';
         position: absolute;
         width: 100%;
-        height: 18px; 
+        height: 16px; /* 书本厚度 */
         background: linear-gradient(to right, #e8e8e8, #ffffff, #f0f0f0);
         border-top-left-radius: 7px;
         transform-origin: bottom;
         transform: translateY(-16px) rotateX(90deg);
+        /* [优化] 为页面边缘增加细微阴影，增加层次感 */
+        box-shadow: 0 1px 2px rgba(0,0,0,0.1);
     }
-    
+
     .book-cover-wrapper img {
         width: 100%; height: 100%; object-fit: cover;
         display: block;
         border-radius: inherit;
-        filter: drop-shadow(-6px 8px 12px rgba(0,0,0,0.45)) 
-                drop-shadow(-8px 2px 5px rgba(0,0,0,0.5)); 
+        /* [优化] 使用多层阴影模拟更真实的光照效果 */
+        filter:
+            drop-shadow(-8px 10px 15px rgba(0, 0, 0, 0.35))   /* 主光源阴影 */
+            drop-shadow(-4px 6px 20px rgba(0, 0, 0, 0.2))    /* 环境光阴影 */
+            drop-shadow(1px -1px 1px rgba(255, 255, 255, 0.05)); /* 模拟边缘反射光 */
         transition: filter 0.3s ease-out;
     }
 
     .book-card-item:hover .book-cover-wrapper img {
-      filter: drop-shadow(-10px 14px 20px rgba(0,0,0,0.4))
-              drop-shadow(-12px 4px 8px rgba(0,0,0,0.45));
+      /* [优化] 悬停时阴影加深、变广，模拟书本被“拿起”的效果 */
+      filter:
+          drop-shadow(-15px 20px 25px rgba(0, 0, 0, 0.5))
+          drop-shadow(-8px 12px 30px rgba(0, 0, 0, 0.3))
+          drop-shadow(2px -2px 2px rgba(255, 255, 255, 0.1));
     }
-    
+
     /*
     ============================================================
     【【【 视觉优化版 3：底板与护栏细节 】】】
     ============================================================
     */
     .shelf-plank {
-        position: absolute; bottom: 0; 
-        left: 5%; width: 90%; height: 15px; 
+        position: absolute; bottom: 0;
+        left: 5%; width: 90%; height: 15px;
         background-image: url('/images/muban.jpg');
         background-size: cover; background-position: center;
         border-radius: 3px; z-index: 10;
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
     }
-    
+
     /* 护栏样式 */
     .shelf-row::before {
-        content: ''; 
+        content: '';
         position: absolute;
-        bottom: 10px; 
-        left: 7%; 
-        width: 86%; 
+        bottom: 10px;
+        left: 7%;
+        width: 86%;
         height: 8px;
         background-image: url('/images/muban.jpg'); /* <-- 这里是护栏图片 */
         background-size: cover;
         background-position: center;
-        border-radius: 2px; 
-        z-index: 25; 
+        border-radius: 2px;
+        z-index: 25;
         box-shadow: 0 1px 3px rgba(0,0,0,0.4);
     }
 
     .shelf-plank::after {
       content: ''; position: absolute;
-      bottom: -8px; left: 0; width: 100%; 
+      bottom: -8px; left: 0; width: 100%;
       height: 15px; background: transparent;
       box-shadow: 0 10px 20px 8px rgba(0, 0, 0, 0.8);
       filter: blur(12px); z-index: -1;
