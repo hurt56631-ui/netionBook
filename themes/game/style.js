@@ -99,6 +99,10 @@ export function Style () {
         transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         transform-style: preserve-3d;
         transform: rotateX(0.1deg) rotateY(-17deg) rotateZ(0.6deg);
+
+        /* [优化] 确保触摸时不会有额外的默认行为干扰 */
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation; /* 提高响应速度，防止双击缩放等 */
     }
 
     /* [优化] 增加书本摆放的自然随机感，打破完美统一 */
@@ -109,7 +113,8 @@ export function Style () {
         transform: rotateX(-0.1deg) rotateY(-17.5deg) rotateZ(0.7deg);
     }
 
-    .book-card-item:hover {
+    /* [优化] 移动端只使用 .is-active 类控制放大效果 */
+    .book-card-item.is-active {
         /* [优化] 悬停时向上移动距离可以更明显 */
         transform: translateY(-30px) scale(1.88) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
         z-index: 30;
@@ -123,13 +128,13 @@ export function Style () {
         /* [优化] 增加边缘细节和过渡效果 */
         box-shadow:
             inset 4px 0 8px -4px rgba(0,0,0,0.7), /* 主要内阴影，模拟深度 */
-            inset 0.5px 0 0.5px rgba(255,255,255,0.1); /* 边缘微弱高光 */
-        border-radius: 5px 2px 2px 4px; /* 微调圆角，使其更像真实书本 */
+            inset 0.5px 0 0.5px rgba(255,255,255,0.05); /* 边缘微弱高光 */
+        border-radius: 4px 2px 2px 4px; /* 微调圆角，使其更像真实书本 */
         transition: box-shadow 0.3s ease-out; /* 为悬停效果添加过渡 */
     }
 
     /* [优化] 悬停时增加外发光效果，让书本更突出 */
-    .book-card-item:hover .book-cover-wrapper {
+    .book-card-item.is-active .book-cover-wrapper {
         box-shadow:
             inset 5px 0 10px -4px rgba(0,0,0,0.8),
             inset 0.5px 0 0.5px rgba(255,255,255,0.15),
@@ -161,7 +166,7 @@ export function Style () {
         transition: filter 0.3s ease-out;
     }
 
-    .book-card-item:hover .book-cover-wrapper img {
+    .book-card-item.is-active .book-cover-wrapper img {
       /* [优化] 悬停时阴影加深、变广，模拟书本被“拿起”的效果 */
       filter:
           drop-shadow(-15px 20px 25px rgba(0, 0, 0, 0.5))
