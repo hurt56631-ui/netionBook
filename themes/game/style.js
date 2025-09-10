@@ -23,7 +23,7 @@ export function Style () {
     #theme-game {
       background-image: url('/images/shujiabeijing.png');
       background-size: cover;
-      background-attachment: scroll; 
+      background-attachment: fixed; 
       background-position: center;
       backdrop-filter: blur(3px);
       -webkit-backdrop-filter: blur(3px);
@@ -71,22 +71,22 @@ export function Style () {
         position: relative;
         margin-bottom: 3.5rem;
         display: flex; justify-content: center; align-items: flex-end;
-        padding-bottom: 15px;
+        padding-bottom: 13px;
         z-index: 5;
-        perspective: 2000px;
+        perspective: 1500px;
     }
 
     .shelf-row:first-of-type { margin-top: 4rem; }
     
     .books-on-shelf {
         display: flex; justify-content: center; align-items: flex-end; 
-        gap: 1.5rem; padding: 0 1.5rem; width: 100%;
+        gap: 1.3rem; padding: 0 1.5rem; width: 100%;
     }
     
     .book-card-item { 
         position: relative;
         width: calc(33.33% - 1.5rem); 
-        max-width: 150px;
+        max-width: 160px;
         z-index: 20;
         transition: transform 0.35s ease-out;
         transform-style: preserve-3d;
@@ -97,7 +97,7 @@ export function Style () {
 
     .book-card-item:hover {
         /* 悬停时，所有角度恢复为0，让书本完全“正”对我们 */
-        transform: translateY(-20px) scale(1.88) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+        transform: translateY(-30px) scale(1.88) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
         z-index: 30;
     }
     
@@ -106,15 +106,15 @@ export function Style () {
         aspect-ratio: 3 / 4;
         position: relative;
         transform-style: preserve-3d;
-        box-shadow: inset 4px 0 6px -3px rgba(0,0,0,0.55);
-        border-radius: 3px 2.3px 2.3px 3px;
+        box-shadow: inset 6px 0 6px -3px rgba(0,0,0,0.55);
+        border-radius: 4.3px 2.3px 2.3px 3px;
     }
     
     .book-cover-wrapper::before {
         content: '';
         position: absolute;
         width: 100%;
-        height: 16px; 
+        height: 18px; 
         background: linear-gradient(to right, #e8e8e8, #ffffff, #f0f0f0);
         border-top-left-radius: 7px;
         transform-origin: bottom;
