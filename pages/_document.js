@@ -1,7 +1,7 @@
 // pages/_document.js (修改版 - 添加 PWA meta 标签)
 
 // eslint-disable-next-line @next/next/no-document-import-in-page
-import BLOG from './blog.config' // 假设 blog.config 在根目录，或者你需要调整导入路径
+import BLOG from '../blog.config' // 假设 blog.config 在根目录，或者你需要调整导入路径
 import Document, { Head, Html, Main, NextScript } from 'next/document'
 
 // 预先设置深色模式的脚本内容
