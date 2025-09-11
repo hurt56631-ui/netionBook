@@ -15,7 +15,7 @@ const SocialButton = () => {
   const CONTACT_WEIBO = siteConfig('CONTACT_WEIBO')
   const CONTACT_INSTAGRAM = siteConfig('CONTACT_INSTAGRAM')
   const CONTACT_EMAIL = siteConfig('CONTACT_EMAIL')
-  const ENABLE_RSS = siteConfig('ENABLE_RSS')
+  // const ENABLE_RSS = siteConfig('ENABLE_RSS') // 这一行不再需要，因为我们直接移除了RSS链接
   const CONTACT_BILIBILI = siteConfig('CONTACT_BILIBILI')
   const CONTACT_YOUTUBE = siteConfig('CONTACT_YOUTUBE')
 
@@ -87,6 +87,9 @@ const SocialButton = () => {
             <i className='transform hover:scale-125 duration-150 fas fa-envelope dark:hover:text-indigo-400 hover:text-indigo-600' />
           </a>
         )}
+        {/*
+          以下是原有的RSS订阅链接代码块，已被移除以消除RSS图标和其占据的空白区域。
+          如果你将来需要恢复RSS功能，可以取消注释此段代码，并确保在blog.config.js中ENABLE_RSS设置为true。
         {ENABLE_RSS && (
           <a
             target='_blank'
@@ -96,6 +99,7 @@ const SocialButton = () => {
             <i className='transform hover:scale-125 duration-150 fas fa-rss dark:hover:text-indigo-400 hover:text-indigo-600' />
           </a>
         )}
+        */}
         {CONTACT_BILIBILI && (
           <a
             target='_blank'
