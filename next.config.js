@@ -106,17 +106,7 @@ const nextConfig = {
       'raw.githubusercontent.com'
     ]
   },
-  redirects: process.env.EXPORT
-    ? undefined
-    : () => {
-        return [
-          {
-            source: '/feed',
-            destination: '/rss/feed.xml',
-            permanent: true
-          }
-        ]
-      },
+
   rewrites: process.env.EXPORT
     ? undefined
     : () => {
