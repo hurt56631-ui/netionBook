@@ -15,16 +15,16 @@ import BLOG from '@/blog.config'
 import ExternalPlugins from '@/components/ExternalPlugins'
 import SEO from '@/components/SEO'
 
-// --- 删除所有 Clerk 相关的导入 ---
-// import { zhCN } from '@clerk/localizations' // <-- 确认已删除
-// import dynamic from 'next/dynamic' // <-- 确认已删除
+// --- 删除 Clerk 相关的导入 ---
+// import { zhCN } from '@clerk/localizations' // <-- 确保已删除
+// import dynamic from 'next/dynamic' // <-- 确保已删除
 
 import { GlobalStyle } from '@/components/GlobalStyle'
 import SplashScreen from '@/components/SplashScreen'
 
 // --- 删除 ClerkProvider 的定义 ---
-// const ClerkProvider = dynamic(() => // <-- 确认已删除
-//   import('@clerk/nextjs').then(m => m.ClerkProvider) // <-- 确认已删除
+// const ClerkProvider = dynamic(() => // <-- 确保已删除
+//   import('@clerk/nextjs').then(m => m.ClerkProvider) // <-- 确保已删除
 // ) // <-- 确认已删除
 
 
