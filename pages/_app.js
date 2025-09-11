@@ -1,12 +1,11 @@
-// pages/_app.js (最终修改版 - 移除 Clerk 并引入 Firebase AuthProvider)
+// pages/_app.js (最终修正版 - 彻底移除 Clerk，并引入 Firebase AuthProvider)
 
 import '@/styles/globals.css'
 import '@/styles/utility-patterns.css'
 import '@/styles/notion.css'
 import 'react-notion-x/src/styles.css'
 import useAdjustStyle from '@/hooks/useAdjustStyle'
-// --- 导入 AuthProvider (来自 lib/authContext.js) ---
-import { AuthProvider } from '@/lib/authContext' 
+import { AuthProvider } from '@/lib/authContext' // <-- 确保这里正确导入
 import { GlobalContextProvider } from '@/lib/global'
 import { getBaseLayoutByTheme } from '@/themes/theme'
 import { useRouter } from 'next/router'
@@ -16,17 +15,18 @@ import BLOG from '@/blog.config'
 import ExternalPlugins from '@/components/ExternalPlugins'
 import SEO from '@/components/SEO'
 
-// --- 删除 Clerk 相关的导入 ---
-// import { zhCN } from '@clerk/localizations'
-// import dynamic from 'next/dynamic'
+// --- 删除所有 Clerk 相关的导入 ---
+// import { zhCN } from '@clerk/localizations' // <-- 确认已删除
+// import dynamic from 'next/dynamic' // <-- 确认已删除
 
 import { GlobalStyle } from '@/components/GlobalStyle'
 import SplashScreen from '@/components/SplashScreen'
 
-// --- 删除 ClerkProvider 的动态导入定义 ---
-// const ClerkProvider = dynamic(() =>
-//   import('@clerk/nextjs').then(m => m.ClerkProvider)
-// )
+// --- 删除 ClerkProvider 的定义 ---
+// const ClerkProvider = dynamic(() => // <-- 确认已删除
+//   import('@clerk/nextjs').then(m => m.ClerkProvider) // <-- 确认已删除
+// ) // <-- 确认已删除
+
 
 const MyApp = ({ Component, pageProps }) => {
   useAdjustStyle()
@@ -48,7 +48,7 @@ const MyApp = ({ Component, pageProps }) => {
   )
 
   // --- 删除 enableClerk 变量和其判断逻辑 ---
-  // const enableClerk = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY 
+  // const enableClerk = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY // <-- 确认已删除
   const content = (
     <GlobalContextProvider {...pageProps}>
       <GLayout {...pageProps}>
@@ -62,15 +62,10 @@ const MyApp = ({ Component, pageProps }) => {
   return (
     <>
       <SplashScreen />
-      {/* --- 用 AuthProvider 包裹 content --- */}
-      {/* {enableClerk ? ( // <-- 删除这行
-        <ClerkProvider localization={zhCN}>{content}</ClerkProvider> // <-- 删除这行
-      ) : ( // <-- 删除这行
-        content // <-- 这行保留
-      )} */}
-      <AuthProvider> {/* <-- 添加 AuthProvider */}
+      {/* --- 确保这里是 AuthProvider 包裹 content，并且没有 Clerk 的条件渲染 --- */}
+      <AuthProvider> 
         {content}
-      </AuthProvider> {/* <-- 结束 AuthProvider */}
+      </AuthProvider>
     </>
   )
 }
