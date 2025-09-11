@@ -1,7 +1,11 @@
+/* styles/globals.css */
+
+/* Tailwind CSS 基础指令 */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* 你提供的原有全局样式 */
 html {
   overflow-x: hidden;
 }
@@ -99,7 +103,6 @@ nav {
   @apply right-auto left-0 hidden lg:block z-10 !important;
 }
 
-/* 隐藏滚动条 */
 .scroll-hidden {
   -ms-overflow-style: none;
   overflow: -moz-scrollbars-none;
@@ -118,7 +121,6 @@ nav {
 
 .medium-zoom-overlay {
   background: none !important;
-  /* background: rgba(0, 0, 0, 0.01) none repeat scroll 0% 0% !important; */
 }
 
 .shadow-text {
@@ -164,17 +166,14 @@ nav {
   margin: -0.125em 0.25em;
 }
 
-/* twikoo 评论区超链接样式 */
 .tk-main a {
   @apply text-blue-700;
 }
 
-/* twikoo 内置的 element-ui 加载样式 */
 .el-loading-spinner {
   @apply flex justify-center items-center;
 }
 
-/* Webmention style */
 .webmention-block {
   background: rgba(0, 116, 222, 0.2);
   padding: 1rem 2rem;
@@ -209,9 +208,6 @@ nav {
   margin-right: 0.2rem;
 }
 
-/* .webmention-counts .counts > span {
-  margin-right: .8rem;
-} */
 .webmention-counts .counts > span:not(:last-child):after {
   content: ' • ';
 }
@@ -267,11 +263,10 @@ a.avatar-wrapper {
 }
 
 .writing-vertical {
-  writing-mode: vertical-rl; /* 竖向排列从右向左 */
-  text-orientation: upright; /* 文字方向正常 */
+  writing-mode: vertical-rl;
+  text-orientation: upright;
 }
 
-/* Chatbase 在移动端禁止遮挡 */
 @media (max-width: 700px) {
   button#chatbase-bubble-button {
     margin-bottom: 42px;
@@ -287,16 +282,194 @@ img {
   overflow: hidden;
 }
 
-
 .lazy-image-placeholder{
   background: 
       linear-gradient(90deg,#0001 33%,#0005 50%,#0001 66%)
       #f2f2f2;
   background-size:300% 100%;
   animation: l1 1s infinite linear;
-  }
-  @keyframes l1 {
+}
+@keyframes l1 {
   0% {background-position: right}
 }
 
-/* -- 书架样式 -- (此部分已被删除以避免冲突) */
+
+/* --- 新增的美化样式开始 --- */
+
+/* 1. 整体背景 */
+.app-container {
+    background: linear-gradient(180deg, #f0f4f8 0%, #ffffff 100%);
+}
+.dark .app-container {
+    background: linear-gradient(180deg, #1a202c 0%, #171923 100%);
+}
+
+/* 2. 顶部导航栏美化 */
+.header-base {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+.dark .header-base {
+    background: rgba(26, 32, 44, 0.7);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* 6. 汉缅词典组件美化 */
+#glose-search-card {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 1rem;
+}
+.dark #glose-search-card {
+    background: rgba(45, 55, 72, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+#glose-search-card input[type="text"] {
+    background-color: #f0f4f8;
+    border-radius: 0.5rem;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+    border: none;
+}
+.dark #glose-search-card input[type="text"] {
+    background-color: #2d3748;
+    color: #e2e8f0;
+}
+
+/* 7. 快捷入口和学习工具按钮美化 */
+.function-button {
+    background-color: #f7fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: all 0.2s ease-in-out;
+    height: 6rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.dark .function-button {
+    background-color: #2d3748;
+    border-color: #4a5568;
+}
+.function-button:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+.function-button .function-button-icon {
+    font-size: 1.875rem;
+    color: #4a5568;
+    transition: color 0.2s;
+}
+.dark .function-button .function-button-icon {
+    color: #a0aec0;
+}
+.function-button:hover .function-button-icon {
+    color: #4299e1;
+}
+.dark .function-button:hover .function-button-icon {
+    color: #63b3ed;
+}
+.function-button .function-button-title {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: #2d3748;
+}
+.dark .function-button .function-button-title {
+    color: #e2e8f0;
+}
+
+/* 9. 底部导航栏美化 */
+#bottom-nav {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.1);
+}
+.dark #bottom-nav {
+    background: rgba(26, 32, 44, 0.7);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* 全屏模态框美化 */
+.function-modal-container {
+    padding-top: 4rem; /* 为固定的关闭按钮留出空间 */
+}
+
+.modal-close-button {
+    position: fixed;
+    top: 1rem; /* 将关闭按钮移到顶部 */
+    right: 1rem;
+    padding: 0.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: rgba(0, 0, 0, 0.2);
+    color: white;
+    border-radius: 9999px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    font-weight: 600;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.function-category-card {
+    position: relative;
+    padding: 1rem;
+    border-radius: 1rem;
+    overflow: hidden;
+    color: white;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+.category-background {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+}
+.function-category-card:hover .category-background {
+    transform: scale(1.0);
+}
+.category-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 100%);
+}
+.category-title {
+    position: relative;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+.category-item-link {
+    position: relative;
+    display: block;
+    text-align: center;
+    padding: 0.75rem;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 0.5rem;
+    transition: background-color 0.2s;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+.category-item-link:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+}
+/* --- 新增的美化样式结束 --- */
