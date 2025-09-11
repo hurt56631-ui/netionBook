@@ -49,6 +49,7 @@
     "react-hotkeys-hook": "^4.5.0",
     "react-notion-x": "7.3.0",
     "react-share": "^5.2.2",
+    "react-swipeable": "^7.0.2",
     "react-tweet-embed": "~2.0.0"
   },
   "devDependencies": {
