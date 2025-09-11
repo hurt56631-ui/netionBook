@@ -1,8 +1,11 @@
+// themes/gitbook/components/Header.js (修改版 - 彻底移除 Clerk 相关代码)
+
 import Collapse from '@/components/Collapse'
 import DarkModeButton from '@/components/DarkModeButton'
 import { siteConfig } from '@/lib/config'
 import { useGlobal } from '@/lib/global'
-import { SignInButton, SignedOut, UserButton } from '@clerk/nextjs'
+// --- 删除 Clerk 相关的导入 ---
+// import { SignInButton, SignedOut, UserButton } from '@clerk/nextjs'
 import { useRef, useState } from 'react'
 import CONFIG from '../config'
 import LogoBar from './LogoBar'
@@ -60,7 +63,8 @@ export default function Header(props) {
     links = customMenu
   }
 
-  const enableClerk = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+  // --- 删除 enableClerk 变量的定义 ---
+  // const enableClerk = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
 
   return (
     <div id='top-nav' className={'fixed top-0 w-full z-20 ' + className}>
@@ -82,8 +86,8 @@ export default function Header(props) {
 
           {/* 右侧 */}
           <div className='flex items-center gap-4'>
-            {/* 登录相关 */}
-            {enableClerk && (
+            {/* --- 删除登录相关的所有 Clerk UI --- */}
+            {/* {enableClerk && (
               <>
                 <SignedOut>
                   <SignInButton mode='modal'>
@@ -94,7 +98,7 @@ export default function Header(props) {
                 </SignedOut>
                 <UserButton />
               </>
-            )}
+            )} */}
             <DarkModeButton className='text-sm items-center h-full hidden md:flex' />
             <SearchInput className='hidden md:flex md:w-52 lg:w-72' />
             {/* 折叠按钮、仅移动端显示 */}
