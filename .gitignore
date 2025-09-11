@@ -50,3 +50,13 @@ yarn-error.log*
 # yarn
 package-lock.json
 # yarn.lock
+# .gitignore
+
+# Firebase Admin SDK Key
+firebase-admin-key.json
+
+# --- 其他已有内容 ---
+# .env.local
+# .next/
+# node_modules/
+# ...
