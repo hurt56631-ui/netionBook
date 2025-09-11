@@ -1,10 +1,12 @@
-// pages/_app.js
+// pages/_app.js (最终修改版 - 移除 Clerk 并引入 Firebase AuthProvider)
 
 import '@/styles/globals.css'
 import '@/styles/utility-patterns.css'
 import '@/styles/notion.css'
 import 'react-notion-x/src/styles.css'
 import useAdjustStyle from '@/hooks/useAdjustStyle'
+// --- 导入 AuthProvider (来自 lib/authContext.js) ---
+import { AuthProvider } from '@/lib/authContext' 
 import { GlobalContextProvider } from '@/lib/global'
 import { getBaseLayoutByTheme } from '@/themes/theme'
 import { useRouter } from 'next/router'
@@ -13,15 +15,18 @@ import { getQueryParam } from '../lib/utils'
 import BLOG from '@/blog.config'
 import ExternalPlugins from '@/components/ExternalPlugins'
 import SEO from '@/components/SEO'
-import { zhCN } from '@clerk/localizations'
-import dynamic from 'next/dynamic'
+
+// --- 删除 Clerk 相关的导入 ---
+// import { zhCN } from '@clerk/localizations'
+// import dynamic from 'next/dynamic'
 
 import { GlobalStyle } from '@/components/GlobalStyle'
-import SplashScreen from '@/components/SplashScreen' // <-- 1. 导入 SplashScreen 组件
+import SplashScreen from '@/components/SplashScreen'
 
-const ClerkProvider = dynamic(() =>
-  import('@clerk/nextjs').then(m => m.ClerkProvider)
-)
+// --- 删除 ClerkProvider 的动态导入定义 ---
+// const ClerkProvider = dynamic(() =>
+//   import('@clerk/nextjs').then(m => m.ClerkProvider)
+// )
 
 const MyApp = ({ Component, pageProps }) => {
   useAdjustStyle()
@@ -42,7 +47,8 @@ const MyApp = ({ Component, pageProps }) => {
     [theme]
   )
 
-  const enableClerk = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+  // --- 删除 enableClerk 变量和其判断逻辑 ---
+  // const enableClerk = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY 
   const content = (
     <GlobalContextProvider {...pageProps}>
       <GLayout {...pageProps}>
@@ -55,12 +61,16 @@ const MyApp = ({ Component, pageProps }) => {
   )
   return (
     <>
-      <SplashScreen /> {/* <-- 2. 在这里渲染 SplashScreen */}
-      {enableClerk ? (
-        <ClerkProvider localization={zhCN}>{content}</ClerkProvider>
-      ) : (
-        content
-      )}
+      <SplashScreen />
+      {/* --- 用 AuthProvider 包裹 content --- */}
+      {/* {enableClerk ? ( // <-- 删除这行
+        <ClerkProvider localization={zhCN}>{content}</ClerkProvider> // <-- 删除这行
+      ) : ( // <-- 删除这行
+        content // <-- 这行保留
+      )} */}
+      <AuthProvider> {/* <-- 添加 AuthProvider */}
+        {content}
+      </AuthProvider> {/* <-- 结束 AuthProvider */}
     </>
   )
 }
