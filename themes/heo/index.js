@@ -1,4 +1,4 @@
-// themes/heo/index.js (最终修复版)
+// themes/heo/index.js (最终修复版 - 修正了 JSX 语法错误)
 
 import Comment from '@/components/Comment'
 import { AdSlot } from '@/components/GoogleAdsense'
@@ -152,7 +152,7 @@ const ModalFunctionButton = ({ title, icon, modalContent }) => {
                 <div className="function-button-title">{title}</div>
             </button>
 
-            <Transition show={isOpen} as="div">
+            <Transition show={isOpen} as="div" className="fixed inset-0 z-50">
                 <Transition.Child
                     as="div"
                     enter="ease-out duration-300"
@@ -170,10 +170,9 @@ const ModalFunctionButton = ({ title, icon, modalContent }) => {
                 >
                     <i className="fas fa-times" />
                 </button>
-            </Transition.Child>
-        </Transition>
-    </>
-);
+            </Transition>
+        </>
+    );
 };
 
 
