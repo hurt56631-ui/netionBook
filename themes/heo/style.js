@@ -4,6 +4,11 @@
  * 此处不支持tailwindCSS的 @apply 语法
  * @returns
  */
+// themes/heo/style.js
+
+import './style/custom.css' // <-- 添加这一行
+
+// ... (文件剩余的其他代码保持不变)
 const Style = () => {
   return (
     <style jsx global>{`
