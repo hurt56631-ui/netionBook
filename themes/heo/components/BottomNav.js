@@ -15,7 +15,7 @@ const BottomNav = () => {
     { name: 'AI助手', path: '#ai-chat', icon: 'fas fa-robot', isLink: false }, // isLink: false 表示这是一个触发器
     { name: '论坛', path: '/forum', icon: 'fas fa-comments', isLink: true },
     { name: '找工作', path: '/jobs', icon: 'fas fa-briefcase', isLink: true },
-    { name: '书柜', path: '/bookshelf', icon: 'fas fa-book', isLink: true },
+    { name: '书柜', path: 'https://books.843075.xyz', icon: 'fas fa-book', isLink: true },
   ]
 
   // Drawer 打开/关闭处理
